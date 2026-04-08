@@ -1,59 +1,85 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Vyora API - Premium E-commerce Core
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Vyora is a high-performance, SKU-centric e-commerce backend built with **Laravel 12**. Designed for scalability and speed, it provides a comprehensive suite of API endpoints and an admin dashboard to power modern retail experiences.
 
-## About Laravel
+## 🚀 Key Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 📦 Advanced Product Management
+- **SKU-Level Control**: Manage inventory with precision using a robust SKU system.
+- **Dynamic Attributes**: Full support for product variants including colors, sizes, and custom attributes.
+- **Product Collections**: Organize products into curated collections and multi-level categories.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 🖼️ Media & SEO
+- **Color-Synced Galleries**: Automatically group and display product images based on selected color variants.
+- **SEO Optimized**: Custom metadata controls for every product, category, and page.
+- **Image Processing**: On-the-fly image optimization and resizing using Intervention Image.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 💳 Payments & Security
+- **Payment Integration**: Native Support for **Razorpay** for seamless checkout experiences.
+- **API Authentication**: Secure access via **Laravel Sanctum**.
+- **Admin Workspace**: A premium, high-fidelity administrative dashboard for managing operations.
 
-## Learning Laravel
+### 🛠️ Extensible Architecture
+- **API-First**: Built to power headless frontends (Vue, React, Next.js).
+- **Clean Code**: Follows Laravel best practices and modern PHP 8.2 standards.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Technology Stack
 
-## Laravel Sponsors
+- **Framework**: [Laravel 12](https://laravel.com)
+- **Language**: PHP 8.2+
+- **Database**: MySQL / PostgreSQL
+- **Payments**: Razorpay
+- **Image handling**: Intervention Image
+- **Auth**: Laravel Sanctum
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## ⚙️ Installation & Setup
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+To get started with Vyora API, follow these steps:
 
-## Contributing
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/WitReach/vyora-api.git
+   cd vyora-api
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2. **Install dependencies:**
+   ```bash
+   composer install
+   npm install
+   ```
 
-## Code of Conduct
+3. **Configure Environment:**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   *Note: Update your database and Razorpay credentials in the `.env` file.*
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. **Run Migrations & Seeders:**
+   ```bash
+   php artisan migrate --seed
+   ```
 
-## Security Vulnerabilities
+5. **Start the Development Server:**
+   ```bash
+   php artisan serve
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🤝 Contributing
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+As an open-source project, we welcome contributions! 
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is open-sourced software licensed under the **MIT license**.

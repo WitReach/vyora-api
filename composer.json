@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "witreach/vyora-api",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Vyora API: A premium, SKU-centric e-commerce core built with Laravel.",
+    "keywords": ["ecommerce", "api", "laravel", "sku-management", "razorpay"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
