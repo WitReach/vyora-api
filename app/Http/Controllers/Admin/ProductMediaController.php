@@ -11,6 +11,43 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductMediaController extends Controller
 {
+    public function uploadMasterPreview(Request $request, Product $product)
+    {
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120'
+        ]);
+
+        if ($product->preview_image) {
+            $oldPath = base_path("../frontend-user/public/{$product->preview_image}");
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+        }
+
+        $file = $request->file('file');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $relativePath = "uploads/products/preview"; // Use uploads for consistency
+
+        $frontendPath = base_path("../frontend-user/public/{$relativePath}");
+        $backendPath = public_path($relativePath);
+
+        // Create directories
+        if (!file_exists($frontendPath)) mkdir($frontendPath, 0755, true);
+        if (!file_exists($backendPath)) mkdir($backendPath, 0755, true);
+
+        // Move to frontend
+        $file->move($frontendPath, $fileName);
+        // Copy to backend
+        copy($frontendPath . '/' . $fileName, $backendPath . '/' . $fileName);
+
+        $product->update(['preview_image' => "/{$relativePath}/{$fileName}"]);
+
+        return response()->json([
+            'success' => true,
+            'url' => asset($product->preview_image)
+        ]);
+    }
+
     public function upload(Request $request, Product $product)
     {
         $request->validate([
@@ -28,41 +65,56 @@ class ProductMediaController extends Controller
             if ($isVideo) {
                 // Handle video upload
                 $fileName = uniqid() . '.' . $extension;
-                $relativePath = "storage/products/{$product->id}/colors/{$request->color_id}";
-                $destinationPath = base_path("../frontend-user/public/{$relativePath}");
+                $relativePath = "uploads/products/{$product->id}/colors/{$request->color_id}";
+                $frontendPath = base_path("../frontend-user/public/{$relativePath}");
+                $backendPath = public_path($relativePath);
 
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0755, true);
-                }
+                if (!file_exists($frontendPath)) mkdir($frontendPath, 0755, true);
+                if (!file_exists($backendPath)) mkdir($backendPath, 0755, true);
 
-                $file->move($destinationPath, $fileName);
+                $file->move($frontendPath, $fileName);
+                copy($frontendPath . '/' . $fileName, $backendPath . '/' . $fileName);
 
                 $media = ProductImage::create([
                     'product_id' => $product->id,
                     'color_id' => $request->color_id,
-                    'image_path' => "{$relativePath}/{$fileName}",
+                    'image_path' => "/{$relativePath}/{$fileName}",
                     'media_type' => 'video',
                     'is_primary' => false
                 ]);
             } else {
                 // Handle image upload with WebP conversion
                 $fileName = uniqid() . '.webp';
-                $relativePath = "storage/products/{$product->id}/colors/{$request->color_id}";
-                $destinationPath = base_path("../frontend-user/public/{$relativePath}");
+                $relativePath = "uploads/products/{$product->id}/colors/{$request->color_id}";
+                $frontendPath = base_path("../frontend-user/public/{$relativePath}");
+                $backendPath = public_path($relativePath);
 
-                // Ensure directory exists
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0755, true);
+                if (!file_exists($frontendPath)) mkdir($frontendPath, 0755, true);
+                if (!file_exists($backendPath)) mkdir($backendPath, 0755, true);
+
+                try {
+                    // Save original first to frontend
+                    $file->move($frontendPath, $fileName);
+                    // Copy to backend
+                    copy($frontendPath . '/' . $fileName, $backendPath . '/' . $fileName);
+                    
+                    // Optional WebP conversion
+                    try {
+                        $image = Image::read($backendPath . '/' . $fileName);
+                        $image->toWebp(85)->save($backendPath . '/' . $fileName);
+                        $image->toWebp(85)->save($frontendPath . '/' . $fileName);
+                    } catch (\Exception $e) {
+                        \Log::warning("WebP conversion failed: " . $e->getMessage());
+                    }
+                } catch (\Exception $e) {
+                    \Log::error("Product media upload failed: " . $e->getMessage());
+                    continue; // Skip this file
                 }
-
-                // Convert to WebP
-                $image = Image::read($file);
-                $image->toWebp(85)->save("{$destinationPath}/{$fileName}");
 
                 $media = ProductImage::create([
                     'product_id' => $product->id,
                     'color_id' => $request->color_id,
-                    'image_path' => "{$relativePath}/{$fileName}",
+                    'image_path' => "/{$relativePath}/{$fileName}",
                     'media_type' => 'image',
                     'is_primary' => false
                 ]);

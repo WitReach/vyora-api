@@ -13,7 +13,8 @@ class ProductImage extends Model
         'attribute_value_id',
         'image_path',
         'media_type',
-        'is_primary'
+        'is_primary',
+        'sort_order',
     ];
 
     public function product()

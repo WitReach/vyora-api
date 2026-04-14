@@ -73,23 +73,8 @@
 
                 <!-- Content Options -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-base font-semibold leading-7 text-gray-900 border-b pb-4 mb-4">Buttons & Actions</h3>
+                    <h3 class="text-base font-semibold leading-7 text-gray-900 border-b pb-4 mb-4">Image</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Call To Action Button</label>
-                            <select name="pc_btn_layout" id="pc_btn_layout" class="block w-full rounded-xl border border-gray-300 py-2.5 px-3 focus:ring-black focus:border-black sm:text-sm">
-                                <option value="text_only" {{ $settings['pc_btn_layout'] === 'text_only' ? 'selected' : '' }}>Text Only (Buy Now)</option>
-                                <option value="icon_only" {{ $settings['pc_btn_layout'] === 'icon_only' ? 'selected' : '' }}>Icon Only</option>
-                                <option value="both" {{ $settings['pc_btn_layout'] === 'both' ? 'selected' : '' }}>Icon + Text</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Wishlist Button</label>
-                            <select name="pc_show_wishlist" id="pc_show_wishlist" class="block w-full rounded-xl border border-gray-300 py-2.5 px-3 focus:ring-black focus:border-black sm:text-sm">
-                                <option value="true" {{ $settings['pc_show_wishlist'] === 'true' ? 'selected' : '' }}>Show Wishlist Pattern</option>
-                                <option value="false" {{ $settings['pc_show_wishlist'] === 'false' ? 'selected' : '' }}>Hide</option>
-                            </select>
-                        </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Image Aspect Ratio</label>
                             <select name="pc_image_aspect" id="pc_image_aspect" class="block w-full rounded-xl border border-gray-300 py-2.5 px-3 focus:ring-black focus:border-black sm:text-sm">
@@ -98,6 +83,71 @@
                                 <option value="aspect-[3/4]" {{ $settings['pc_image_aspect'] === 'aspect-[3/4]' ? 'selected' : '' }}>Tall Portrait (3:4)</option>
                             </select>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Button Settings -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-base font-semibold leading-7 text-gray-900 border-b pb-4 mb-4">Buttons &amp; Actions</h3>
+                    <div class="space-y-4">
+
+                        {{-- Buy Now --}}
+                        <div class="flex items-center gap-4 bg-gray-50 rounded-xl px-5 py-4">
+                            <div class="w-9 h-9 flex items-center justify-center bg-black text-white rounded-lg shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-800">Buy Now</p>
+                                <p class="text-xs text-gray-400 mt-0.5">Primary action button on the card</p>
+                            </div>
+                            <div class="shrink-0 w-44">
+                                <select name="pc_buynow_style" id="pc_buynow_style" class="block w-full rounded-xl border border-gray-300 py-2 px-3 text-sm focus:ring-black focus:border-black">
+                                    <option value="text_only" {{ ($settings['pc_buynow_style'] ?? 'text_only') === 'text_only' ? 'selected' : '' }}>Text Only</option>
+                                    <option value="icon_only" {{ ($settings['pc_buynow_style'] ?? 'text_only') === 'icon_only' ? 'selected' : '' }}>Icon Only</option>
+                                    <option value="text_icon" {{ ($settings['pc_buynow_style'] ?? 'text_only') === 'text_icon' ? 'selected' : '' }}>Text + Icon</option>
+                                    <option value="hidden" {{ ($settings['pc_buynow_style'] ?? 'text_only') === 'hidden' ? 'selected' : '' }}>Hidden</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- Add to Cart --}}
+                        <div class="flex items-center gap-4 bg-gray-50 rounded-xl px-5 py-4">
+                            <div class="w-9 h-9 flex items-center justify-center bg-gray-700 text-white rounded-lg shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-800">Add to Cart</p>
+                                <p class="text-xs text-gray-400 mt-0.5">Secondary cart action button</p>
+                            </div>
+                            <div class="shrink-0 w-44">
+                                <select name="pc_cart_style" id="pc_cart_style" class="block w-full rounded-xl border border-gray-300 py-2 px-3 text-sm focus:ring-black focus:border-black">
+                                    <option value="text_only" {{ ($settings['pc_cart_style'] ?? 'hidden') === 'text_only' ? 'selected' : '' }}>Text Only</option>
+                                    <option value="icon_only" {{ ($settings['pc_cart_style'] ?? 'hidden') === 'icon_only' ? 'selected' : '' }}>Icon Only</option>
+                                    <option value="text_icon" {{ ($settings['pc_cart_style'] ?? 'hidden') === 'text_icon' ? 'selected' : '' }}>Text + Icon</option>
+                                    <option value="hidden" {{ ($settings['pc_cart_style'] ?? 'hidden') === 'hidden' ? 'selected' : '' }}>Hidden</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {{-- Wishlist --}}
+                        <div class="flex items-center gap-4 bg-gray-50 rounded-xl px-5 py-4">
+                            <div class="w-9 h-9 flex items-center justify-center bg-rose-500 text-white rounded-lg shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-800">Wishlist</p>
+                                <p class="text-xs text-gray-400 mt-0.5">Save-for-later heart button</p>
+                            </div>
+                            <div class="shrink-0 w-44">
+                                <select name="pc_wishlist_style" id="pc_wishlist_style" class="block w-full rounded-xl border border-gray-300 py-2 px-3 text-sm focus:ring-black focus:border-black">
+                                    <option value="text_only" {{ ($settings['pc_wishlist_style'] ?? 'icon_only') === 'text_only' ? 'selected' : '' }}>Text Only</option>
+                                    <option value="icon_only" {{ ($settings['pc_wishlist_style'] ?? 'icon_only') === 'icon_only' ? 'selected' : '' }}>Icon Only</option>
+                                    <option value="text_icon" {{ ($settings['pc_wishlist_style'] ?? 'icon_only') === 'text_icon' ? 'selected' : '' }}>Text + Icon</option>
+                                    <option value="hidden" {{ ($settings['pc_wishlist_style'] ?? 'icon_only') === 'hidden' ? 'selected' : '' }}>Hidden</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 
@@ -136,14 +186,26 @@
                                 </div>
 
                                 <!-- Actions -->
-                                <div class="flex items-center gap-2 mt-3 pt-2">
-                                    <button id="preview-main-btn" class="flex-1 bg-black text-white text-xs font-bold uppercase py-2.5 rounded-lg flex items-center justify-center gap-2">
-                                        <svg id="preview-btn-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-                                        <span id="preview-btn-text">Buy Now</span>
+                                <div id="preview-actions" class="flex items-center gap-2 mt-3 pt-2">
+
+                                    {{-- Buy Now --}}
+                                    <button id="preview-buynow-btn" class="flex-1 bg-black text-white text-xs font-bold uppercase py-2.5 rounded-lg flex items-center justify-center gap-1.5">
+                                        <svg id="preview-buynow-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                                        <span id="preview-buynow-text">Buy Now</span>
                                     </button>
-                                    <button id="preview-wishlist-btn" class="w-9 h-9 flex shrink-0 items-center justify-center border border-gray-200 text-gray-400 rounded-lg">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+
+                                    {{-- Add to Cart --}}
+                                    <button id="preview-cart-btn" class="flex-1 bg-gray-100 text-gray-800 text-xs font-bold uppercase py-2.5 rounded-lg flex items-center justify-center gap-1.5 hidden">
+                                        <svg id="preview-cart-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                        <span id="preview-cart-text">Add to Cart</span>
                                     </button>
+
+                                    {{-- Wishlist --}}
+                                    <button id="preview-wishlist-btn" class="w-9 h-9 shrink-0 flex items-center justify-center border border-gray-200 text-gray-400 rounded-lg gap-1.5">
+                                        <svg id="preview-wishlist-icon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                                        <span id="preview-wishlist-text" class="hidden text-xs font-bold">Wishlist</span>
+                                    </button>
+
                                 </div>
                             </div>
                         </div>
@@ -159,103 +221,104 @@
     document.addEventListener('DOMContentLoaded', () => {
         const card = document.getElementById('preview-card');
         const aspectBox = document.getElementById('preview-aspect');
-        const mainBtn = document.getElementById('preview-main-btn');
-        const btnIcon = document.getElementById('preview-btn-icon');
-        const btnText = document.getElementById('preview-btn-text');
-        const wishlistBtn = document.getElementById('preview-wishlist-btn');
+
+        // Buy Now elements
+        const buyNowBtn  = document.getElementById('preview-buynow-btn');
+        const buyNowIcon = document.getElementById('preview-buynow-icon');
+        const buyNowText = document.getElementById('preview-buynow-text');
+
+        // Cart elements
+        const cartBtn  = document.getElementById('preview-cart-btn');
+        const cartIcon = document.getElementById('preview-cart-icon');
+        const cartText = document.getElementById('preview-cart-text');
+
+        // Wishlist elements
+        const wishlistBtn  = document.getElementById('preview-wishlist-btn');
+        const wishlistIcon = document.getElementById('preview-wishlist-icon');
+        const wishlistText = document.getElementById('preview-wishlist-text');
 
         const inputs = {
-            style: document.getElementById('pc_style'),
-            bgColor: document.getElementById('pc_bg_color'),
-            bgLabel: document.getElementById('bg-color-label'),
-            radius: document.getElementById('pc_border_radius'),
-            shadow: document.getElementById('pc_shadow'),
-            btnLayout: document.getElementById('pc_btn_layout'),
-            wishlist: document.getElementById('pc_show_wishlist'),
-            aspect: document.getElementById('pc_image_aspect')
+            style:        document.getElementById('pc_style'),
+            bgColor:      document.getElementById('pc_bg_color'),
+            bgLabel:      document.getElementById('bg-color-label'),
+            radius:       document.getElementById('pc_border_radius'),
+            shadow:       document.getElementById('pc_shadow'),
+            aspect:       document.getElementById('pc_image_aspect'),
+            buynowStyle:  document.getElementById('pc_buynow_style'),
+            cartStyle:    document.getElementById('pc_cart_style'),
+            wishlistStyle:document.getElementById('pc_wishlist_style'),
         };
 
-        function updatePreview() {
-            // Apply Bg Color
-            card.style.backgroundColor = inputs.bgColor.value;
-            inputs.bgLabel.textContent = inputs.bgColor.value;
-
-            // Reset specific tailwind classes for replacement
-            card.classList.remove('rounded-none', 'rounded-2xl', 'rounded-[2rem]', 'border-gray-100', 'border-gray-200', 'shadow-sm', 'shadow-md', 'shadow-lg', 'shadow-[0_4px_20px_rgb(0,0,0,0.04)]', 'hover:-translate-y-1', 'hover:-translate-y-1.5', 'border-transparent');
-            aspectBox.classList.remove('rounded-none', 'rounded-xl', 'rounded-[1.75rem]');
-            aspectBox.classList.remove('aspect-[4/5]', 'aspect-square', 'aspect-[3/4]');
-
-            // Apply Radius
-            if (inputs.radius.value === 'square') {
-                card.classList.add('rounded-none');
-                aspectBox.classList.add('rounded-none');
-            } else if (inputs.radius.value === 'pill') {
-                card.classList.add('rounded-[2rem]');
-                aspectBox.classList.add('rounded-[1.75rem]');
-            } else {
-                card.classList.add('rounded-2xl');
-                aspectBox.classList.add('rounded-xl');
+        /**
+         * Apply a button mode to icon + text elements.
+         * mode: 'text_only' | 'icon_only' | 'text_icon' | 'hidden'
+         */
+        function applyBtnMode(btn, icon, textEl, mode, isIconOnlySquare = false) {
+            if (mode === 'hidden') {
+                btn.classList.add('hidden');
+                return;
             }
+            btn.classList.remove('hidden');
 
-            // Apply Aspect
-            aspectBox.classList.add(inputs.aspect.value);
-
-            // Apply Borders & Shadows
-            let style = inputs.style.value;
-            let shadow = inputs.shadow.value;
-
-            if (style === 'outline') {
-                card.classList.add('border-gray-200');
-            } else if (style === 'solid') {
-                card.classList.add('border-gray-100');
-            } else { // lift
-                card.classList.add('border-gray-100');
-            }
-
-            // Shadows logic
-            if (style === 'lift') {
-                card.classList.add('hover:-translate-y-1');
-                if (shadow === 'soft') card.classList.add('shadow-[0_4px_20px_rgb(0,0,0,0.04)]');
-                if (shadow === 'strong') card.classList.add('shadow-lg', 'hover:-translate-y-1.5');
-            } else {
-                if (shadow === 'soft') card.classList.add('shadow-sm');
-                if (shadow === 'strong') card.classList.add('shadow-md');
-            }
-
-            // Buttons Logic
-            let btnL = inputs.btnLayout.value;
-            if (btnL === 'text_only') {
-                btnIcon.classList.add('hidden');
-                btnText.classList.remove('hidden');
-            } else if (btnL === 'icon_only') {
-                btnIcon.classList.remove('hidden');
-                btnText.classList.add('hidden');
-                btnIcon.classList.replace('w-4', 'w-5'); // make icon slightly bigger if alone
-                btnIcon.classList.replace('h-4', 'h-5');
-            } else {
-                btnIcon.classList.remove('hidden');
-                btnText.classList.remove('hidden');
-                btnIcon.classList.replace('w-5', 'w-4');
-                btnIcon.classList.replace('h-5', 'h-4');
-            }
-
-            // Wishlist logic
-            if (inputs.wishlist.value === 'true') {
-                wishlistBtn.classList.remove('hidden');
-            } else {
-                wishlistBtn.classList.add('hidden');
+            if (mode === 'text_only') {
+                icon.classList.add('hidden');
+                textEl.classList.remove('hidden');
+                if (isIconOnlySquare) { btn.classList.remove('w-9', 'h-9', 'shrink-0'); btn.classList.add('flex-1'); }
+            } else if (mode === 'icon_only') {
+                icon.classList.remove('hidden');
+                textEl.classList.add('hidden');
+                if (isIconOnlySquare) { btn.classList.remove('flex-1'); btn.classList.add('w-9', 'h-9', 'shrink-0'); }
+            } else { // text_icon
+                icon.classList.remove('hidden');
+                textEl.classList.remove('hidden');
+                if (isIconOnlySquare) { btn.classList.remove('w-9', 'h-9', 'shrink-0'); btn.classList.add('flex-1'); }
             }
         }
 
-        // Attach listeners
+        function updatePreview() {
+            // Background
+            card.style.backgroundColor = inputs.bgColor.value;
+            inputs.bgLabel.textContent = inputs.bgColor.value;
+
+            // Reset classes
+            card.classList.remove('rounded-none', 'rounded-2xl', 'rounded-[2rem]', 'border-gray-100', 'border-gray-200', 'shadow-sm', 'shadow-md', 'shadow-lg', 'shadow-[0_4px_20px_rgb(0,0,0,0.04)]', 'hover:-translate-y-1', 'hover:-translate-y-1.5');
+            aspectBox.classList.remove('rounded-none', 'rounded-xl', 'rounded-[1.75rem]');
+            aspectBox.classList.remove('aspect-[4/5]', 'aspect-square', 'aspect-[3/4]');
+
+            // Border Radius
+            const r = inputs.radius.value;
+            card.classList.add(r === 'square' ? 'rounded-none' : r === 'pill' ? 'rounded-[2rem]' : 'rounded-2xl');
+            aspectBox.classList.add(r === 'square' ? 'rounded-none' : r === 'pill' ? 'rounded-[1.75rem]' : 'rounded-xl');
+
+            // Aspect
+            aspectBox.classList.add(inputs.aspect.value);
+
+            // Style + Shadow
+            const style  = inputs.style.value;
+            const shadow = inputs.shadow.value;
+            card.classList.add(style === 'outline' ? 'border-gray-200' : 'border-gray-100');
+            if (style === 'lift') {
+                card.classList.add('hover:-translate-y-1');
+                if (shadow === 'soft')   card.classList.add('shadow-[0_4px_20px_rgb(0,0,0,0.04)]');
+                if (shadow === 'strong') card.classList.add('shadow-lg', 'hover:-translate-y-1.5');
+            } else {
+                if (shadow === 'soft')   card.classList.add('shadow-sm');
+                if (shadow === 'strong') card.classList.add('shadow-md');
+            }
+
+            // Buttons
+            applyBtnMode(buyNowBtn,  buyNowIcon,  buyNowText,  inputs.buynowStyle.value,   false);
+            applyBtnMode(cartBtn,    cartIcon,    cartText,    inputs.cartStyle.value,      false);
+            applyBtnMode(wishlistBtn, wishlistIcon, wishlistText, inputs.wishlistStyle.value, true);
+        }
+
         Object.values(inputs).forEach(el => {
-            if (el && el.tagName) { // exclude bgLabel
+            if (el && el.tagName) {
                 el.addEventListener('input', updatePreview);
                 el.addEventListener('change', updatePreview);
             }
         });
 
-        // Initialize
         updatePreview();
     });
 </script>

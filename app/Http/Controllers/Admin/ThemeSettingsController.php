@@ -60,6 +60,13 @@ class ThemeSettingsController extends Controller
                 $file->move($destinationPath, $fileName);
                 $finalPath = "{$relativePath}/{$fileName}";
 
+                // Also copy to backend storage for admin preview consistency
+                $backendPath = public_path($relativePath);
+                if (!file_exists($backendPath)) {
+                    mkdir($backendPath, 0755, true);
+                }
+                copy($destinationPath . '/' . $fileName, $backendPath . '/' . $fileName);
+
                 \App\Models\ThemeSetting::updateOrCreate(
                     ['key' => $key],
                     [

@@ -526,6 +526,17 @@
                             class="banner-text w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-sm font-bold text-gray-900 outline-none h-[120px]"
                             placeholder="Optional text associated with banner"></textarea>
                     </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Text
+                            Position</label>
+                        <select
+                            class="banner-text-position w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
+                            <option value="center">Center</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="top">Top</option>
+                            <option value="below">Below Image</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             @include('admin.pages.partials.builder_section_settings')
@@ -1813,11 +1824,10 @@
 
             if (slideData) {
                 const el = clone.querySelector('.slide-item');
-                const inputs = el.querySelectorAll('input');
-                inputs[0].value = slideData.image || ''; // Image
-                inputs[1].value = slideData.link || '';  // Link
-                inputs[2].value = slideData.title || ''; // Title
-                inputs[3].value = slideData.subtitle || ''; // Subtitle
+                if (el.querySelector('.slide-image')) el.querySelector('.slide-image').value = slideData.image || '';
+                if (el.querySelector('.slide-link')) el.querySelector('.slide-link').value = slideData.link || '';
+                if (el.querySelector('.slide-title')) el.querySelector('.slide-title').value = slideData.title || '';
+                if (el.querySelector('.slide-subtitle')) el.querySelector('.slide-subtitle').value = slideData.subtitle || '';
             }
             slidesContainer.appendChild(clone);
         }
@@ -2026,12 +2036,11 @@
                 if (type === 'hero_slider') {
                     data.slides = [];
                     section.querySelectorAll('.slide-item').forEach(slide => {
-                        const inputs = slide.querySelectorAll('input');
                         data.slides.push({
-                            image: inputs[0]?.value || '',
-                            link: inputs[1]?.value || '',
-                            title: inputs[2]?.value || '',
-                            subtitle: inputs[3]?.value || '',
+                            image: slide.querySelector('.slide-image')?.value || '',
+                            link: slide.querySelector('.slide-link')?.value || '',
+                            title: slide.querySelector('.slide-title')?.value || '',
+                            subtitle: slide.querySelector('.slide-subtitle')?.value || '',
                         });
                     });
                 } else if (type === 'product_carousel') {
@@ -2254,10 +2263,10 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Find the text input for image URL and set value
-                            const container = input.closest('.flex'); // The div wrapping text and label
-                            // generic selector to support slide-image, item-image, banner-image, card-image
-                            const urlInput = container.querySelector('input[type="text"]');
+                            // Find the text input for image URL and set value.
+                            // We use label.parentElement because the upload <label> itself has class="flex",
+                            // so input.closest('.flex') would wrongly match the label, not the outer wrapper div.
+                            const urlInput = label.parentElement.querySelector('input[type="text"]');
                             if (urlInput) {
                                 urlInput.value = data.url;
                                 triggerAutoSave(); // Save after upload

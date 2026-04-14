@@ -20,25 +20,34 @@ class PageUploadController extends Controller
             $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.webp';
 
             // Store in frontend-user/public/uploads
-            // Assuming backend-admin and frontend-user are siblings
             $destinationPath = base_path('../frontend-user/public/uploads');
+            $backendPath = public_path('uploads');
 
-            // Create directory if not exists
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0755, true);
-            }
+            // Create directories if not exists
+            if (!file_exists($destinationPath)) mkdir($destinationPath, 0755, true);
+            if (!file_exists($backendPath)) mkdir($backendPath, 0755, true);
 
-            // Convert to WebP and save
             try {
-                // Use Intervention Image to read and encode
-                $image = \Intervention\Image\Laravel\Facades\Image::read($file);
-                $image->toWebp(80)->save($destinationPath . '/' . $filename);
+                // First move to frontend
+                $file->move($destinationPath, $filename);
+                
+                // Then copy to backend
+                copy($destinationPath . '/' . $filename, $backendPath . '/' . $filename);
+
+                // Try to convert to webp if it's not already (Optional, don't fail if processing fails)
+                try {
+                    $img = \Intervention\Image\Laravel\Facades\Image::read($backendPath . '/' . $filename);
+                    $img->toWebp(80)->save($backendPath . '/' . $filename);
+                    $img->toWebp(80)->save($destinationPath . '/' . $filename);
+                } catch (\Exception $e) {
+                    \Log::warning("WebP conversion failed for CMS upload: " . $e->getMessage());
+                }
+
             } catch (\Exception $e) {
-                return response()->json(['error' => 'Image processing failed: ' . $e->getMessage()], 500);
+                \Log::error("CMS Upload failed: " . $e->getMessage());
+                return response()->json(['error' => 'Upload failed: ' . $e->getMessage()], 500);
             }
 
-            // Return the URL that the frontend will use to access the image
-            // Since it's in frontend's public folder, we just return the relative path
             return response()->json([
                 'url' => '/uploads/' . $filename,
                 'success' => true

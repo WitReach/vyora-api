@@ -230,6 +230,13 @@ class ProductController extends Controller
 
             $file->move($destinationPath, $fileName);
             $data['preview_image'] = "{$relativePath}/{$fileName}";
+
+            // Mirror to backend for admin preview consistency
+            $backendPath = public_path($relativePath);
+            if (!file_exists($backendPath)) {
+                mkdir($backendPath, 0755, true);
+            }
+            copy($destinationPath . '/' . $fileName, $backendPath . '/' . $fileName);
         } elseif ($request->file('preview_image') && !$request->file('preview_image')->isValid()) {
             return redirect()->back()
                 ->withInput()

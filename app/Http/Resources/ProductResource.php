@@ -20,7 +20,7 @@ class ProductResource extends JsonResource
             'long_description' => $this->long_description,
             'brand' => $this->brand_name,
             'product_type' => $this->productType?->name,
-            
+
             // Global List Properties mapping securely
             'price' => (float) $minPrice,
             'price_formatted' => '₹' . number_format($minPrice),
@@ -33,12 +33,14 @@ class ProductResource extends JsonResource
             // Categories
             'categories' => $this->categories->map(fn($c) => ['id' => $c->id, 'name' => $c->name, 'slug' => $c->slug]),
 
-            // Images
+            // Images — ordered by sort_order via the model relation
             'images' => $this->images->map(fn($img) => [
                 'id' => $img->id,
-                'url' => $img->url,
+                'url' => $img->image_path, // relative path, served from frontend public/
                 'is_primary' => $img->is_primary,
-                'color_id' => $img->color_id, // To filter images by selected color
+                'color_id' => $img->color_id,
+                'sort_order' => $img->sort_order,
+                'media_type' => $img->media_type,
             ]),
 
             // SKUs (Variants)

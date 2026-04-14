@@ -49,6 +49,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
         // Media routes
         Route::post('/{product}/media/upload', [\App\Http\Controllers\Admin\ProductMediaController::class, 'upload'])->name('media.upload');
+        Route::post('/{product}/media/upload-preview', [\App\Http\Controllers\Admin\ProductMediaController::class, 'uploadMasterPreview'])->name('media.upload-preview');
         Route::delete('/{product}/media/{productImage}', [\App\Http\Controllers\Admin\ProductMediaController::class, 'delete'])->name('media.delete');
         Route::post('/{product}/media/{productImage}/primary', [\App\Http\Controllers\Admin\ProductMediaController::class, 'setPrimary'])->name('media.setPrimary');
         Route::post('/{product}/media/reorder', [\App\Http\Controllers\Admin\ProductMediaController::class, 'reorder'])->name('media.reorder');
@@ -101,6 +102,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/policy-settings', [\App\Http\Controllers\Admin\PolicySettingsController::class, 'index'])->name('policy-settings.index');
         Route::put('/policy-settings', [\App\Http\Controllers\Admin\PolicySettingsController::class, 'update'])->name('policy-settings.update');
 
+        // Delivery PIN Settings
+        Route::get('/delivery-pins', [\App\Http\Controllers\Admin\DeliveryPinController::class, 'index'])->name('delivery-pins.index');
+        Route::post('/delivery-pins', [\App\Http\Controllers\Admin\DeliveryPinController::class, 'update'])->name('delivery-pins.update');
+
         // Product Card Settings
         Route::get('/product-card-settings', [\App\Http\Controllers\Admin\ProductCardSettingsController::class, 'index'])->name('product-card-settings.index');
         Route::put('/product-card-settings', [\App\Http\Controllers\Admin\ProductCardSettingsController::class, 'update'])->name('product-card-settings.update');
@@ -108,6 +113,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         // PDP Settings
         Route::get('/pdp-settings', [\App\Http\Controllers\Admin\PdpSettingsController::class, 'index'])->name('pdp-settings.index');
         Route::put('/pdp-settings', [\App\Http\Controllers\Admin\PdpSettingsController::class, 'update'])->name('pdp-settings.update');
+
+        // Auth Settings
+        Route::get('/auth-settings', [\App\Http\Controllers\Admin\AuthSettingsController::class, 'index'])->name('auth-settings.index');
+        Route::put('/auth-settings', [\App\Http\Controllers\Admin\AuthSettingsController::class, 'update'])->name('auth-settings.update');
 
         // Coupons
         Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
