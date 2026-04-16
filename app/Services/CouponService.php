@@ -89,6 +89,10 @@ class CouponService
         $discountAmount = 0;
         if ($coupon->type === 'percentage') {
             $discountAmount = ($eligibleTotal * $coupon->discount_amount) / 100;
+            // Apply "upto" cap if set (e.g. 50% OFF upto ₹80)
+            if ($coupon->max_discount_amount && $discountAmount > $coupon->max_discount_amount) {
+                $discountAmount = $coupon->max_discount_amount;
+            }
         } elseif ($coupon->type === 'fixed') {
             $discountAmount = min($coupon->discount_amount, $eligibleTotal); // Cap at cart subtotal
         } elseif ($coupon->type === 'free_shipping') {

@@ -52,7 +52,33 @@
                             </div>
                             <div id="val-wrap" class="{{ in_array($coupon->type, ['bogo', 'free_shipping']) ? 'hidden' : '' }}">
                                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Value</label>
-                                <input type="number" step="0.01" name="discount_amount" value="{{ old('discount_amount', $coupon->discount_amount) }}" class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                                <input type="number" step="0.01" name="discount_amount" id="discount_amount" value="{{ old('discount_amount', $coupon->discount_amount) }}" class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                            </div>
+                        </div>
+
+                        {{-- Upto / Max Discount Cap (only for Percentage type) --}}
+                        <div id="upto-wrap" class="{{ $coupon->type == 'percentage' ? '' : 'hidden' }} p-4 bg-amber-50 rounded-lg border border-amber-200 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-xs font-bold uppercase text-amber-700">Upto / Max Discount Cap</h4>
+                                    <p class="text-[11px] text-amber-600 mt-0.5">Limit the maximum discount granted. e.g. <span class="font-bold">50% OFF upto ₹80</span></p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex-1">
+                                    <label class="block text-[10px] font-bold uppercase mb-1 text-amber-700">Max Discount Amount (₹)</label>
+                                    <input type="number" step="0.01" min="0" name="max_discount_amount" id="max_discount_amount"
+                                        placeholder="e.g. 80"
+                                        value="{{ old('max_discount_amount', $coupon->max_discount_amount) }}"
+                                        oninput="updatePreview()"
+                                        class="w-full border border-amber-300 bg-white rounded px-3 py-2 text-sm placeholder-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                                </div>
+                                <div class="text-amber-400 pt-5 text-lg font-bold">→</div>
+                                <div class="flex-1 pt-5">
+                                    <div id="upto-badge" class="text-sm font-bold text-amber-700 bg-amber-100 border border-amber-200 rounded px-3 py-2 text-center">
+                                        {{ $coupon->max_discount_amount ? 'Upto ₹' . $coupon->max_discount_amount : 'Max cap not set' }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -167,8 +193,32 @@
         const t = document.getElementById('type').value;
         const b = document.getElementById('bogo-wrap');
         const v = document.getElementById('val-wrap');
+        const upto = document.getElementById('upto-wrap');
         b.classList.toggle('hidden', t !== 'bogo');
         v.classList.toggle('hidden', t === 'bogo' || t === 'free_shipping');
+        upto.classList.toggle('hidden', t !== 'percentage');
+        updatePreview();
     }
+    function updatePreview() {
+        const pct = document.getElementById('discount_amount')?.value;
+        const cap = document.getElementById('max_discount_amount')?.value;
+        const badge = document.getElementById('upto-badge');
+        if (!badge) return;
+        if (pct && cap) {
+            badge.textContent = pct + '% OFF upto ₹' + cap;
+            badge.className = 'text-sm font-bold text-green-700 bg-green-100 border border-green-200 rounded px-3 py-2 text-center';
+        } else if (pct) {
+            badge.textContent = pct + '% OFF (no cap)';
+            badge.className = 'text-sm font-bold text-amber-700 bg-amber-100 border border-amber-200 rounded px-3 py-2 text-center';
+        } else {
+            badge.textContent = 'Max cap not set';
+            badge.className = 'text-sm font-bold text-amber-700 bg-amber-100 border border-amber-200 rounded px-3 py-2 text-center';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const da = document.getElementById('discount_amount');
+        if (da) da.addEventListener('input', updatePreview);
+        updatePreview(); // Initialize badge with existing values
+    });
 </script>
 @endsection

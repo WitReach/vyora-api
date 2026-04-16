@@ -83,6 +83,3 @@ As an open-source project, we welcome contributions!
 ## 📄 License
 
 This project is open-sourced software licensed under the **MIT license**.
-
----
-Built with ❤️ by [Wit Reach](https://witreach.com) and [Dope Style](https://dopestyle.in)

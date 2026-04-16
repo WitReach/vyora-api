@@ -9,6 +9,11 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
 Route::get('/products/{slug}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
+Route::get('/categories', function() {
+    return \App\Models\Category::with(['children.children' => function($q) {
+        $q->orderBy('sort_order');
+    }])->whereNull('parent_id')->orderBy('sort_order')->get();
+});
 Route::post('/checkout', [\App\Http\Controllers\Api\OrderController::class, 'store']);
 
 Route::post('/payment/initiate', [\App\Http\Controllers\Api\PaymentController::class, 'initiate']);

@@ -118,6 +118,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/auth-settings', [\App\Http\Controllers\Admin\AuthSettingsController::class, 'index'])->name('auth-settings.index');
         Route::put('/auth-settings', [\App\Http\Controllers\Admin\AuthSettingsController::class, 'update'])->name('auth-settings.update');
 
+        // Navbar Settings
+        Route::get('/navbar-settings', [\App\Http\Controllers\Admin\NavbarSettingsController::class, 'index'])->name('navbar-settings.index');
+        Route::put('/navbar-settings', [\App\Http\Controllers\Admin\NavbarSettingsController::class, 'update'])->name('navbar-settings.update');
+
         // Coupons
         Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
 

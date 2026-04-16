@@ -17,6 +17,7 @@ class Coupon extends Model
         'bogo_get_qty',
         'bogo_max_discount',
         'discount_amount',
+        'max_discount_amount',
         'is_active',
         'is_default_magic',
         'show_on_product_page',
