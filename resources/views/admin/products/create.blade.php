@@ -187,20 +187,39 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
                     <div class="max-h-48 overflow-y-auto border border-gray-200 rounded p-2 space-y-2">
                         @foreach($categories as $category)
-                            <div>
-                                <label class="inline-flex items-center">
+                            <div class="category-group">
+                                <label class="block items-center">
                                     <input type="checkbox" name="categories[]" value="{{ $category->id }}"
-                                        class="rounded border-gray-300 text-black shadow-sm focus:border-black focus:ring-black">
-                                    <span class="ml-2 text-sm text-gray-700 font-medium">{{ $category->name }}</span>
+                                        data-id="{{ $category->id }}"
+                                        class="cat-checkbox rounded border-gray-300 text-black shadow-sm focus:border-black focus:ring-black">
+                                    <span class="ml-2 text-sm text-gray-700 font-bold uppercase tracking-wide">{{ $category->name }}</span>
                                 </label>
                                 @if($category->children->isNotEmpty())
-                                    <div class="ml-6 mt-1 space-y-1">
+                                    <div class="ml-6 mt-1 space-y-2 border-l-2 border-gray-100 pl-3">
                                         @foreach($category->children as $child)
-                                            <label class="block items-center">
-                                                <input type="checkbox" name="categories[]" value="{{ $child->id }}"
-                                                    class="rounded border-gray-300 text-black shadow-sm focus:border-black focus:ring-black">
-                                                <span class="ml-2 text-sm text-gray-600">{{ $child->name }}</span>
-                                            </label>
+                                            <div class="category-group font-medium">
+                                                <label class="block items-center">
+                                                    <input type="checkbox" name="categories[]" value="{{ $child->id }}"
+                                                        data-id="{{ $child->id }}"
+                                                        data-parent-id="{{ $category->id }}"
+                                                        class="cat-checkbox rounded border-gray-300 text-black shadow-sm focus:border-black focus:ring-black">
+                                                    <span class="ml-2 text-sm text-gray-800">{{ $child->name }}</span>
+                                                </label>
+                                                
+                                                @if($child->children && $child->children->isNotEmpty())
+                                                    <div class="ml-6 mt-1 space-y-1 border-l-2 border-gray-100 pl-3">
+                                                        @foreach($child->children as $subchild)
+                                                            <label class="block items-center">
+                                                                <input type="checkbox" name="categories[]" value="{{ $subchild->id }}"
+                                                                    data-id="{{ $subchild->id }}"
+                                                                    data-parent-id="{{ $child->id }}"
+                                                                    class="cat-checkbox rounded border-gray-300 text-black shadow-sm focus:border-black focus:ring-black">
+                                                                <span class="ml-2 text-sm text-gray-500">{{ $subchild->name }}</span>
+                                                            </label>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
                                         @endforeach
                                     </div>
                                 @endif
@@ -450,6 +469,22 @@
                 shortDescInput.value = quillShort.root.innerHTML;
                 longDescInput.value = quillLong.root.innerHTML;
             };
+
+            // Category Auto-check Parent Logic
+            document.querySelectorAll('.cat-checkbox').forEach(chk => {
+                chk.addEventListener('change', function() {
+                    if (this.checked) {
+                        let parentId = this.dataset.parentId;
+                        if (parentId) {
+                            let parentBox = document.querySelector(`.cat-checkbox[data-id="${parentId}"]`);
+                            if (parentBox && !parentBox.checked) {
+                                parentBox.checked = true;
+                                parentBox.dispatchEvent(new Event('change')); // Trigger event up the chain
+                            }
+                        }
+                    }
+                });
+            });
         });
     </script>
 @endpush

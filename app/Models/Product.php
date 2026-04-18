@@ -15,11 +15,16 @@ class Product extends Model
 
     public function getImageUrlAttribute()
     {
-        if (!$this->preview_image) return null;
-        if (str_starts_with($this->preview_image, 'storage/')) {
-            return asset($this->preview_image);
+        $path = $this->preview_image;
+        if (!$path) return null;
+        if (str_starts_with($path, 'http')) return $path;
+
+        $cleanPath = ltrim($path, '/');
+        if (str_starts_with($cleanPath, 'storage/') || str_starts_with($cleanPath, 'uploads/')) {
+            return asset($cleanPath);
         }
-        return asset('storage/' . $this->preview_image);
+
+        return asset('storage/' . $cleanPath);
     }
 
     public function skus()

@@ -40,7 +40,7 @@ class ProductController extends Controller
 
     public function create()
     {
-        $categories = \App\Models\Category::whereNull('parent_id')->with('children')->get();
+        $categories = \App\Models\Category::whereNull('parent_id')->with('children.children')->get();
         $collections = \App\Models\Collection::where('is_active', true)->get();
         $productTypes = \App\Models\ProductType::all();
         $sizeCharts = \App\Models\SizeChart::where('is_active', true)->orderBy('name')->get();
@@ -152,7 +152,7 @@ class ProductController extends Controller
             'productType'
         ]);
 
-        $categories = \App\Models\Category::whereNull('parent_id')->with('children')->get();
+        $categories = \App\Models\Category::whereNull('parent_id')->with('children.children')->get();
         $collections = \App\Models\Collection::where('is_active', true)->get();
         $productTypes = \App\Models\ProductType::all();
 
@@ -185,6 +185,7 @@ class ProductController extends Controller
             'skus' => 'nullable|array',
             'skus.*.code' => 'required|string|max:255',
             'skus.*.price' => 'required|numeric|min:0',
+            'skus.*.mrp' => 'nullable|numeric|min:0',
             'skus.*.stock' => 'required|integer|min:0',
         ]);
 
@@ -272,11 +273,15 @@ class ProductController extends Controller
                 // Ensure we only update SKUs belonging to this product
                 $sku = $product->skus()->find($skuId);
                 if ($sku) {
-                    $sku->update([
+                    $skuDataToUpdate = [
                         'code' => $skuData['code'],
                         'price' => $skuData['price'],
                         'stock' => $skuData['stock'],
-                    ]);
+                    ];
+                    if (array_key_exists('mrp', $skuData)) {
+                        $skuDataToUpdate['mrp'] = $skuData['mrp'] !== null && $skuData['mrp'] !== '' ? $skuData['mrp'] : null;
+                    }
+                    $sku->update($skuDataToUpdate);
                 }
             }
         }

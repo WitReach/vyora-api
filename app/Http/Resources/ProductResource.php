@@ -76,6 +76,14 @@ class ProductResource extends JsonResource
                 'title' => $this->seo_title,
                 'description' => $this->seo_description,
             ],
+            
+            // Size Chart
+            'size_chart' => $this->sizeChart->first() ? [
+                'id' => $this->sizeChart->first()->id,
+                'name' => $this->sizeChart->first()->name,
+                'description' => $this->sizeChart->first()->description,
+                'measurements' => $this->sizeChart->first()->data?->table_data ?? [],
+            ] : null,
         ];
     }
 }

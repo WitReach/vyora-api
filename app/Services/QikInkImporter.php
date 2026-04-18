@@ -41,8 +41,9 @@ class QikInkImporter
                     'product_id' => $product->id,
                     'design_sku' => $row['Design SKU'] ?? null,
                     'product_sku' => $row['Product SKU'] ?? null,
-                    'price' => $this->parsePrice($row['Selling price'] ?? 0),
-                    'cost_price' => $this->parsePrice($row['Product price'] ?? 0),
+                    'price' => $this->parsePrice($row['Product price'] ?? 0),
+                    'mrp' => $this->parsePrice($row['Product price'] ?? 0),
+                    'cost_price' => $this->parsePrice($row['Selling price'] ?? 0),
                     'stock' => 100, // Default stock
                     'color_id' => $parsed['color_id'],
                     'size_id' => $parsed['size_id'],

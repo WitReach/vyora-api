@@ -174,15 +174,14 @@ class ProductMediaController extends Controller
     public function reorder(Request $request, Product $product)
     {
         $request->validate([
-            'order' => 'required|array',
-            'order.*.id' => 'required|exists:product_images,id',
-            'order.*.sort_order' => 'required|integer'
+            'media_ids' => 'required|array',
+            'media_ids.*' => 'required|exists:product_images,id'
         ]);
 
-        foreach ($request->order as $item) {
-            ProductImage::where('id', $item['id'])
+        foreach ($request->media_ids as $index => $id) {
+            ProductImage::where('id', $id)
                 ->where('product_id', $product->id)
-                ->update(['sort_order' => $item['sort_order']]);
+                ->update(['sort_order' => $index]);
         }
 
         return response()->json(['success' => true]);

@@ -64,7 +64,7 @@
                                 <div class="flex items-center gap-4">
                                     <div class="w-12 h-12 bg-gray-100 rounded-md overflow-hidden border border-gray-100 flex-shrink-0">
                                         @if($product->preview_image)
-                                            <img src="/{{ $product->preview_image }}" class="w-full h-full object-cover">
+                                            <img src="{{ $product->image_url }}" class="w-full h-full object-cover">
                                         @endif
                                     </div>
                                     <div>
