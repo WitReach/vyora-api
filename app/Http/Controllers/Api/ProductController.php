@@ -14,7 +14,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = Product::where('is_active', true)
-            ->with(['skus', 'images', 'categories']);
+            ->with(['skus', 'images', 'categories.parent.parent', 'categoryMasterImages']);
 
         // Slugs filter
         if ($request->has('slugs')) {
@@ -174,12 +174,40 @@ class ProductController extends Controller
         return ProductListResource::collection($products);
     }
 
-    public function show($slug)
+    public function show(Request $request, $slug)
     {
         $product = Product::where('slug', $slug)
             ->where('is_active', true)
-            ->with(['skus.attributeValues.attribute', 'images', 'categories', 'productType', 'sizeChart.data'])
+            ->with(['skus.attributeValues.attribute', 'images', 'categories.parent.parent', 'productType', 'sizeChart.data', 'categoryMasterImages'])
             ->firstOrFail();
+
+        if ($request->filled('category')) {
+            $requestedSlugs = explode(',', $request->category);
+            $matchedCategories = $product->categories->whereIn('slug', $requestedSlugs);
+            
+            foreach ($matchedCategories as $cat) {
+                $catImage = null;
+                $current = $cat;
+                
+                // Walk up the category tree to find an image
+                while ($current && !$catImage) {
+                    $catImage = $product->categoryMasterImages->where('category_id', $current->id)->first();
+                    $current = $current->parent;
+                }
+                
+                if ($catImage && ($catImage->image_path || $catImage->video_path)) {
+                    // Force override the appended attribute dynamically
+                    if ($catImage->video_path) {
+                        $product->video_url = $catImage->video_url;
+                    }
+                    if ($catImage->image_path) {
+                        $product->image_url = $catImage->image_url;
+                        $product->preview_image = $catImage->image_path;
+                    }
+                    break;
+                }
+            }
+        }
 
         return new ProductResource($product);
     }

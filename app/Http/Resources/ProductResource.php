@@ -27,6 +27,7 @@ class ProductResource extends JsonResource
             'mrp' => (float) $mrp,
             'discount_percentage' => ($mrp > $minPrice) ? round((($mrp - $minPrice) / $mrp) * 100) : 0,
             'image' => $this->image_url,
+            'video' => $this->video_url ?? null,
             'category' => $this->categories->first()?->name ?? 'General',
             'is_new' => $this->created_at->diffInDays(now()) < 7,
 

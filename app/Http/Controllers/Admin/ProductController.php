@@ -149,12 +149,15 @@ class ProductController extends Controller
                 $query->orderBy('sort_order', 'asc');
             },
             'images.color',
-            'productType'
+            'productType',
+            'categoryMasterImages'
         ]);
 
         $categories = \App\Models\Category::whereNull('parent_id')->with('children.children')->get();
         $collections = \App\Models\Collection::where('is_active', true)->get();
         $productTypes = \App\Models\ProductType::all();
+
+        $productParentCategories = $product->categories->whereNull('parent_id');
 
         // Get unique colors from product SKUs
         $productColors = $product->skus->pluck('color')->unique('id')->filter();
@@ -169,7 +172,7 @@ class ProductController extends Controller
         $colors = \App\Models\Color::orderBy('name')->get();
         $sizes = \App\Models\Size::orderBy('name')->get();
 
-        return view('admin.products.edit', compact('product', 'categories', 'collections', 'productTypes', 'productColors', 'mediaByColor', 'sizeCharts', 'colors', 'sizes'));
+        return view('admin.products.edit', compact('product', 'categories', 'collections', 'productTypes', 'productColors', 'mediaByColor', 'sizeCharts', 'colors', 'sizes', 'productParentCategories'));
     }
 
     public function update(Request $request, \App\Models\Product $product)

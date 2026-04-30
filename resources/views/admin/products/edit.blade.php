@@ -334,6 +334,71 @@
                         </div>
                     </div>
                 </div>
+
+                @if($productParentCategories->count() > 0)
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mt-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Category Specific Master Images</h3>
+                        <p class="text-xs text-gray-500 mb-6">Optional: Upload a different master image for specific parent categories. If no image is provided, the main master preview image above will be used.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            @foreach($productParentCategories as $parentCat)
+                                @php
+                                    $catImage = $product->categoryMasterImages->where('category_id', $parentCat->id)->first();
+                                @endphp
+                                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                                    <h4 class="font-bold text-sm text-gray-900 mb-4 text-center">{{ $parentCat->name }}</h4>
+                                    
+                                    <div class="flex gap-4 justify-center">
+                                        <!-- Image Dropzone -->
+                                        <div class="relative group aspect-square rounded-xl border border-dashed border-gray-300 overflow-hidden shadow-sm bg-white dropzone-area cursor-pointer hover:border-black transition-all w-[100px]"
+                                             onclick="document.getElementById('cat-master-img-input-{{ $parentCat->id }}').click()"
+                                             ondragover="handleDragOver(event)" 
+                                             ondragleave="handleDragLeave(event)" 
+                                             ondrop="handleCatMasterDrop(event, {{ $parentCat->id }}, 'image')">
+                                            @if($catImage && $catImage->image_path)
+                                                <img src="{{ $catImage->image_url }}" class="w-full h-full object-cover">
+                                            @else
+                                                <div class="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-2 p-2 text-center">
+                                                    <span class="text-[9px] font-bold uppercase tracking-wider text-gray-500">Image</span>
+                                                </div>
+                                            @endif
+                                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-2">
+                                                <span class="bg-white text-black px-3 py-1.5 rounded text-[10px] font-bold shadow-xl">Change</span>
+                                                @if($catImage && $catImage->image_path)
+                                                    <button type="button" class="bg-red-600 text-white px-3 py-1.5 rounded text-[10px] font-bold shadow-xl hover:bg-red-700 transition-colors" onclick="event.stopPropagation(); deleteCatMasterPreview({{ $parentCat->id }}, 'image')">Delete</button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <input type="file" id="cat-master-img-input-{{ $parentCat->id }}" class="hidden" accept="image/*" onchange="if(this.files.length) uploadCatMasterPreview(this.files[0], {{ $parentCat->id }}, 'image')">
+
+                                        <!-- Video Dropzone -->
+                                        <div class="relative group aspect-square rounded-xl border border-dashed border-gray-300 overflow-hidden shadow-sm bg-white dropzone-area cursor-pointer hover:border-black transition-all w-[100px]"
+                                             onclick="document.getElementById('cat-master-vid-input-{{ $parentCat->id }}').click()"
+                                             ondragover="handleDragOver(event)" 
+                                             ondragleave="handleDragLeave(event)" 
+                                             ondrop="handleCatMasterDrop(event, {{ $parentCat->id }}, 'video')">
+                                            @if($catImage && $catImage->video_path)
+                                                <video src="{{ $catImage->video_url }}" class="w-full h-full object-cover" autoplay loop muted playsinline></video>
+                                            @else
+                                                <div class="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-2 p-2 text-center">
+                                                    <span class="text-[9px] font-bold uppercase tracking-wider text-gray-500">Video</span>
+                                                </div>
+                                            @endif
+                                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-2">
+                                                <span class="bg-white text-black px-3 py-1.5 rounded text-[10px] font-bold shadow-xl">Change</span>
+                                                @if($catImage && $catImage->video_path)
+                                                    <button type="button" class="bg-red-600 text-white px-3 py-1.5 rounded text-[10px] font-bold shadow-xl hover:bg-red-700 transition-colors" onclick="event.stopPropagation(); deleteCatMasterPreview({{ $parentCat->id }}, 'video')">Delete</button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <input type="file" id="cat-master-vid-input-{{ $parentCat->id }}" class="hidden" accept="video/mp4,video/quicktime,video/webm" onchange="if(this.files.length) uploadCatMasterPreview(this.files[0], {{ $parentCat->id }}, 'video')">
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
                 @foreach($productColors as $color)
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
                         <div class="flex items-center justify-between mb-8">
@@ -524,44 +589,242 @@
                 if (e.dataTransfer.files.length) uploadMasterPreview(e.dataTransfer.files[0]);
             };
 
+            window.handleCatMasterDrop = function(e, categoryId, type) {
+                e.preventDefault();
+                e.currentTarget.classList.remove('border-black', 'bg-gray-50');
+                if (e.dataTransfer.files.length) uploadCatMasterPreview(e.dataTransfer.files[0], categoryId, type);
+            };
+
+            function createProgressOverlay(container) {
+                let overlay = container.querySelector('.progress-overlay');
+                if (!overlay) {
+                    overlay = document.createElement('div');
+                    overlay.className = 'progress-overlay absolute inset-0 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center z-50 transition-opacity';
+                    overlay.innerHTML = `
+                        <div class="text-[10px] font-bold text-gray-900 mb-2 uppercase tracking-wider progress-text">0%</div>
+                        <div class="w-3/4 h-1 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-black transition-all duration-200 w-0 progress-bar"></div>
+                        </div>
+                    `;
+                    container.appendChild(overlay);
+                }
+                overlay.style.opacity = '1';
+                overlay.querySelector('.progress-text').textContent = '0%';
+                overlay.querySelector('.progress-bar').style.width = '0%';
+                return overlay;
+            }
+
+            window.uploadCatMasterPreview = function(file, categoryId, type) {
+                // Basic frontend size check (warn if > 50MB)
+                if (file.size > 50 * 1024 * 1024) {
+                    alert('File is too large. Maximum size is 50MB.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('category_id', categoryId);
+                formData.append('type', type);
+                
+                const inputId = type === 'image' ? 'cat-master-img-input-' : 'cat-master-vid-input-';
+                const container = document.getElementById(inputId + categoryId).parentElement;
+                const overlay = createProgressOverlay(container);
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', `/admin/products/{{ $product->id }}/media/upload-cat-preview`);
+                xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+                xhr.setRequestHeader('Accept', 'application/json');
+
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percent = (e.loaded / e.total) * 100;
+                        overlay.querySelector('.progress-text').textContent = Math.round(percent) + '%';
+                        overlay.querySelector('.progress-bar').style.width = percent + '%';
+                    }
+                });
+
+                xhr.onload = function() {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        if (xhr.status === 200 && data.success) {
+                            location.reload();
+                        } else if (xhr.status === 422) {
+                            const errorMsg = data.errors && Object.values(data.errors)[0] ? Object.values(data.errors)[0][0] : data.message;
+                            alert('Validation failed: ' + errorMsg);
+                            overlay.style.opacity = '0';
+                        } else {
+                            alert('Upload failed: ' + (data.message || xhr.statusText));
+                            overlay.style.opacity = '0';
+                        }
+                    } catch(err) {
+                        console.error('Server response:', xhr.responseText);
+                        if (xhr.status === 500) {
+                            alert('Server Error 500: Database error or syntax error. Please check your backend terminal, laravel.log, or ensure migrations are run.');
+                        } else if (xhr.status === 413) {
+                            alert('Payload Too Large: The file exceeds the server PHP upload limit.');
+                        } else {
+                            alert('Server error (' + xhr.status + '). Check browser console for the response text. It might be an upload size limit or backend crash.');
+                        }
+                        overlay.style.opacity = '0';
+                    }
+                };
+
+                xhr.onerror = function() {
+                    alert('Network error during upload.');
+                    overlay.style.opacity = '0';
+                };
+
+                xhr.send(formData);
+            };
+
+            window.deleteCatMasterPreview = function(categoryId, type) {
+                if (!confirm(`Are you sure you want to delete this ${type}?`)) return;
+                
+                const inputId = type === 'image' ? 'cat-master-img-input-' : 'cat-master-vid-input-';
+                const container = document.getElementById(inputId + categoryId).parentElement;
+                container.style.opacity = '0.5';
+
+                fetch(`/admin/products/{{ $product->id }}/media/delete-cat-preview`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ category_id: categoryId, type: type })
+                }).then(r => r.json()).then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Delete failed: ' + (data.message || 'Unknown error'));
+                        container.style.opacity = '1';
+                    }
+                }).catch(err => {
+                    alert('Server error deleting media.');
+                    container.style.opacity = '1';
+                });
+            };
+
             window.uploadMasterPreview = function(file) {
+                if (file.size > 50 * 1024 * 1024) {
+                    alert('File is too large. Maximum size is 50MB.');
+                    return;
+                }
                 const formData = new FormData();
                 formData.append('file', file);
                 
-                document.getElementById('master-preview-container').style.opacity = '0.5';
+                const container = document.getElementById('master-preview-container');
+                const overlay = createProgressOverlay(container);
 
-                fetch(`/admin/products/{{ $product->id }}/media/upload-preview`, {
-                    method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                    body: formData
-                }).then(r => r.json()).then(data => {
-                    if (data.success) {
-                        const img = document.getElementById('master-preview-img');
-                        if (img) img.src = data.url;
-                        else location.reload();
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', `/admin/products/{{ $product->id }}/media/upload-preview`);
+                xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+                xhr.setRequestHeader('Accept', 'application/json');
+
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percent = (e.loaded / e.total) * 100;
+                        overlay.querySelector('.progress-text').textContent = Math.round(percent) + '%';
+                        overlay.querySelector('.progress-bar').style.width = percent + '%';
                     }
-                }).finally(() => {
-                    document.getElementById('master-preview-container').style.opacity = '1';
                 });
+
+                xhr.onload = function() {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        if (xhr.status === 200 && data.success) {
+                            const img = document.getElementById('master-preview-img');
+                            if (img) img.src = data.url;
+                            else location.reload();
+                            overlay.style.opacity = '0';
+                        } else if (xhr.status === 422) {
+                            const errorMsg = data.errors && Object.values(data.errors)[0] ? Object.values(data.errors)[0][0] : data.message;
+                            alert('Validation failed: ' + errorMsg);
+                            overlay.style.opacity = '0';
+                        } else {
+                            alert('Upload failed: ' + (data.message || xhr.statusText));
+                            overlay.style.opacity = '0';
+                        }
+                    } catch(err) {
+                        console.error('Server response:', xhr.responseText);
+                        if (xhr.status === 500) {
+                            alert('Server Error 500: Database error or syntax error. Please check your backend terminal, laravel.log, or ensure migrations are run.');
+                        } else if (xhr.status === 413) {
+                            alert('Payload Too Large: The file exceeds the server PHP upload limit.');
+                        } else {
+                            alert('Server error (' + xhr.status + '). Check browser console for the response text. It might be an upload size limit or backend crash.');
+                        }
+                        overlay.style.opacity = '0';
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    alert('Network error.');
+                    overlay.style.opacity = '0';
+                };
+
+                xhr.send(formData);
             }
 
             function uploadFiles(files, colorId) {
+                let totalSize = 0;
+                Array.from(files).forEach(f => totalSize += f.size);
+                if (totalSize > 50 * 1024 * 1024) {
+                    alert('Total size of files is too large. Maximum combined size is 50MB.');
+                    return;
+                }
+
                 const formData = new FormData();
                 Array.from(files).forEach(f => formData.append('files[]', f));
                 
-                // Show a loading state (optional)
-                document.getElementById(`media-gallery-${colorId}`).style.opacity = '0.5';
+                const container = document.getElementById(`media-gallery-${colorId}`).parentElement;
+                const overlay = createProgressOverlay(container);
 
-                fetch(`/admin/products/{{ $product->id }}/media/upload?color_id=${colorId}`, {
-                    method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                    body: formData
-                }).then(r => r.json()).then(data => {
-                    if (data.success) location.reload();
-                    else alert('Upload failed: ' + (data.message || 'Unknown error'));
-                }).finally(() => {
-                    document.getElementById(`media-gallery-${colorId}`).style.opacity = '1';
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', `/admin/products/{{ $product->id }}/media/upload?color_id=${colorId}`);
+                xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+                xhr.setRequestHeader('Accept', 'application/json');
+
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percent = (e.loaded / e.total) * 100;
+                        overlay.querySelector('.progress-text').textContent = Math.round(percent) + '%';
+                        overlay.querySelector('.progress-bar').style.width = percent + '%';
+                    }
                 });
+
+                xhr.onload = function() {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        if (xhr.status === 200 && data.success) {
+                            location.reload();
+                        } else if (xhr.status === 422) {
+                            const errorMsg = data.errors && Object.values(data.errors)[0] ? Object.values(data.errors)[0][0] : data.message;
+                            alert('Validation failed: ' + errorMsg);
+                            overlay.style.opacity = '0';
+                        } else {
+                            alert('Upload failed: ' + (data.message || xhr.statusText));
+                            overlay.style.opacity = '0';
+                        }
+                    } catch(err) {
+                        console.error('Server response:', xhr.responseText);
+                        if (xhr.status === 500) {
+                            alert('Server Error 500: Database error or syntax error. Please check your backend terminal, laravel.log, or ensure migrations are run.');
+                        } else if (xhr.status === 413) {
+                            alert('Payload Too Large: The files exceed the server PHP upload limit.');
+                        } else {
+                            alert('Server error (' + xhr.status + '). Check browser console for the response text. It might be an upload size limit or backend crash.');
+                        }
+                        overlay.style.opacity = '0';
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    alert('Network error.');
+                    overlay.style.opacity = '0';
+                };
+
+                xhr.send(formData);
             }
 
             document.querySelectorAll('.media-upload-input').forEach(input => {

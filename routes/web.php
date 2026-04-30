@@ -50,6 +50,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         // Media routes
         Route::post('/{product}/media/upload', [\App\Http\Controllers\Admin\ProductMediaController::class, 'upload'])->name('media.upload');
         Route::post('/{product}/media/upload-preview', [\App\Http\Controllers\Admin\ProductMediaController::class, 'uploadMasterPreview'])->name('media.upload-preview');
+        Route::post('/{product}/media/upload-cat-preview', [\App\Http\Controllers\Admin\ProductMediaController::class, 'uploadCategoryMasterPreview'])->name('media.upload-cat-preview');
+        Route::delete('/{product}/media/delete-cat-preview', [\App\Http\Controllers\Admin\ProductMediaController::class, 'deleteCategoryMasterPreview'])->name('media.delete-cat-preview');
         Route::delete('/{product}/media/{productImage}', [\App\Http\Controllers\Admin\ProductMediaController::class, 'delete'])->name('media.delete');
         Route::post('/{product}/media/{productImage}/primary', [\App\Http\Controllers\Admin\ProductMediaController::class, 'setPrimary'])->name('media.setPrimary');
         Route::post('/{product}/media/reorder', [\App\Http\Controllers\Admin\ProductMediaController::class, 'reorder'])->name('media.reorder');

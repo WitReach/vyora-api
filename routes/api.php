@@ -27,6 +27,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
     Route::get('/user', [\App\Http\Controllers\Api\AuthController::class, 'user']);
     Route::get('/my-orders', [\App\Http\Controllers\Api\OrderController::class, 'index']);
+
+    // Account
+    Route::put('/account/profile',  [\App\Http\Controllers\Api\AccountController::class, 'updateProfile']);
+    Route::put('/account/password', [\App\Http\Controllers\Api\AccountController::class, 'updatePassword']);
+    Route::get('/account/addresses',           [\App\Http\Controllers\Api\AccountController::class, 'listAddresses']);
+    Route::post('/account/addresses',          [\App\Http\Controllers\Api\AccountController::class, 'storeAddress']);
+    Route::delete('/account/addresses/{address}', [\App\Http\Controllers\Api\AccountController::class, 'deleteAddress']);
+    Route::put('/account/addresses/{address}/default', [\App\Http\Controllers\Api\AccountController::class, 'setDefaultAddress']);
 });
 
 // Settings

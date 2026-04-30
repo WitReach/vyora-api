@@ -79,7 +79,8 @@ class OrderController extends Controller
                         'sku' => $sku,
                         'qty' => $item['quantity'],
                         'price' => $sku->price,
-                        'total' => $lineTotal
+                        'total' => $lineTotal,
+                        'image_url' => $item['image'] ?? null
                     ];
                 }
 
@@ -100,6 +101,7 @@ class OrderController extends Controller
                         'sku_id' => $data['sku']->id,
                         'product_name' => $data['sku']->product->name,
                         'variant_name' => '', // TODO: Generate variant name
+                        'image_url' => $data['image_url'],
                         'quantity' => $data['qty'],
                         'price' => $data['price'],
                         'total' => $data['total'],

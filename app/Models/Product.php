@@ -56,4 +56,9 @@ class Product extends Model
     {
         return $this->belongsToMany(SizeChart::class, 'product_size_chart');
     }
+
+    public function categoryMasterImages()
+    {
+        return $this->hasMany(ProductCategoryMasterImage::class);
+    }
 }
