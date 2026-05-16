@@ -47,4 +47,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // ── Gift Card Relationships ───────────────────────────────────────────────
+
+    public function assignedGiftCards()
+    {
+        return $this->hasMany(GiftCard::class, 'assigned_to');
+    }
+
+    public function purchasedGiftCards()
+    {
+        return $this->hasMany(GiftCard::class, 'purchased_by');
+    }
+
+    public function createdGiftCards()
+    {
+        return $this->hasMany(GiftCard::class, 'created_by');
+    }
 }

@@ -136,10 +136,21 @@
                                 class="h-4 w-4 text-black focus:ring-black border-gray-300 rounded">
                         </div>
 
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between mb-4">
                             <span class="text-gray-700">On Sale</span>
                             <input type="checkbox" name="on_sale" value="1" {{ old('on_sale', $product->on_sale) ? 'checked' : '' }}
                                 class="h-4 w-4 text-black focus:ring-black border-gray-300 rounded">
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div>
+                                <span class="text-gray-700 block font-bold">QikInk Fulfillment</span>
+                                <span class="text-[10px] text-gray-400 block">Process orders via Qikink API</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" name="use_qikink" value="1" {{ old('use_qikink', $product->use_qikink) ? 'checked' : '' }}>
+                                <span class="slider round"></span>
+                            </label>
                         </div>
                     </div>
 
@@ -155,6 +166,18 @@
                                     @foreach($productTypes as $type)
                                         <option value="{{ $type->id }}" {{ old('product_type_id', $product->product_type_id) == $type->id ? 'selected' : '' }}>
                                             {{ $type->name }} (HSN: {{ $type->hsn_code }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Tax Class</label>
+                                <select name="tax_class" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2">
+                                    <option value="">None (No Tax)</option>
+                                    @foreach($taxes as $tax)
+                                        <option value="{{ $tax['id'] }}" {{ old('tax_class', $product->tax_class) == $tax['id'] ? 'selected' : '' }}>
+                                            {{ $tax['name'] }} ({{ $tax['rate'] }}%)
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -245,6 +268,8 @@
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SKU Code</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Color</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Design SKU</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product SKU</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price/MRP</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dims (W/H/L/Kg)</th>
@@ -266,6 +291,12 @@
                                         </td>
                                         <td class="px-3 py-4 text-xs">
                                             {{ $sku->size->name ?? 'N/A' }}
+                                        </td>
+                                        <td class="px-3 py-4">
+                                            <input type="text" name="skus[{{ $sku->id }}][design_sku]" value="{{ $sku->design_sku }}" class="block w-full border-gray-300 rounded-md sm:text-xs font-mono" placeholder="Design SKU">
+                                        </td>
+                                        <td class="px-3 py-4">
+                                            <input type="text" name="skus[{{ $sku->id }}][product_sku]" value="{{ $sku->product_sku }}" class="block w-full border-gray-300 rounded-md sm:text-xs font-mono" placeholder="Product SKU">
                                         </td>
                                         <td class="px-3 py-4">
                                             <div class="flex flex-col gap-1">
@@ -476,8 +507,15 @@
             <div class="col-span-2">
                 <input type="text" name="new_skus[INDEX][size]" placeholder="SIZE" class="w-full border-gray-200 rounded-lg text-xs p-2 font-bold uppercase">
             </div>
-            <div class="col-span-2">
+            <div class="col-span-1">
+                <input type="text" name="new_skus[INDEX][design_sku]" placeholder="DESIGN SKU" class="w-full border-gray-200 rounded-lg text-xs p-2 font-mono">
+            </div>
+            <div class="col-span-1">
+                <input type="text" name="new_skus[INDEX][product_sku]" placeholder="PRODUCT SKU" class="w-full border-gray-200 rounded-lg text-xs p-2 font-mono">
+            </div>
+            <div class="col-span-2 flex flex-col gap-1">
                 <input type="number" step="0.01" name="new_skus[INDEX][price]" placeholder="SP" class="sku-price w-full border-gray-200 rounded-lg text-xs p-2 font-bold">
+                <input type="number" step="0.01" name="new_skus[INDEX][mrp]" placeholder="MRP" class="sku-mrp w-full border-gray-200 rounded-lg text-[10px] p-2 text-gray-500">
             </div>
             <div class="col-span-2">
                 <input type="number" name="new_skus[INDEX][stock]" placeholder="QTY" class="sku-stock w-full border-gray-200 rounded-lg text-xs p-2 font-bold">

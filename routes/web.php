@@ -17,7 +17,16 @@ use App\Http\Controllers\InstallerController;
 Route::get('/', function () {
     return redirect()->route('login');
 })->name('home');
-// Route::get('/pages/{slug}', [\App\Http\Controllers\StoreController::class, 'page'])->name('store.page');
+Route::get('/add-tax-class', function () {
+    try {
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('products', 'tax_class')) {
+            \Illuminate\Support\Facades\DB::statement('ALTER TABLE products ADD COLUMN tax_class VARCHAR(255) NULL');
+        }
+        return "Added tax_class column successfully";
+    } catch (\Exception $e) {
+        return $e->getMessage();
+    }
+});
 
 // Installer Routes
 Route::prefix('install')->name('install.')->group(function () {
@@ -120,12 +129,37 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/auth-settings', [\App\Http\Controllers\Admin\AuthSettingsController::class, 'index'])->name('auth-settings.index');
         Route::put('/auth-settings', [\App\Http\Controllers\Admin\AuthSettingsController::class, 'update'])->name('auth-settings.update');
 
+        // Tax & Shipping
+        Route::get('/tax-shipping', [\App\Http\Controllers\Admin\TaxShippingSettingsController::class, 'index'])->name('tax-shipping.index');
+        Route::put('/tax-shipping', [\App\Http\Controllers\Admin\TaxShippingSettingsController::class, 'update'])->name('tax-shipping.update');
+
+        // Integrations
+        Route::get('/integrations', [\App\Http\Controllers\Admin\IntegrationSettingsController::class, 'index'])->name('integrations.index');
+        Route::get('/integrations/{slug}', [\App\Http\Controllers\Admin\IntegrationSettingsController::class, 'show'])->name('integrations.show');
+        Route::put('/integrations/{slug}', [\App\Http\Controllers\Admin\IntegrationSettingsController::class, 'update'])->name('integrations.update');
+        Route::post('/integrations/razorpay/test', [\App\Http\Controllers\Admin\IntegrationSettingsController::class, 'testRazorpay'])->name('integrations.razorpay.test');
+        Route::post('/integrations/qikink/test', [\App\Http\Controllers\Admin\IntegrationSettingsController::class, 'testQikink'])->name('integrations.qikink.test');
+
         // Navbar Settings
         Route::get('/navbar-settings', [\App\Http\Controllers\Admin\NavbarSettingsController::class, 'index'])->name('navbar-settings.index');
         Route::put('/navbar-settings', [\App\Http\Controllers\Admin\NavbarSettingsController::class, 'update'])->name('navbar-settings.update');
 
         // Coupons
         Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
+
+        // Gift Cards – Templates
+        Route::prefix('gift-cards')->name('gift-cards.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\GiftCardController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\GiftCardController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\GiftCardController::class, 'store'])->name('store');
+            // Template actions (giftCard = GiftCardTemplate model)
+            Route::get('/{giftCard}', [\App\Http\Controllers\Admin\GiftCardController::class, 'show'])->name('show');
+            Route::post('/{giftCard}/toggle', [\App\Http\Controllers\Admin\GiftCardController::class, 'toggleTemplate'])->name('toggle');
+            Route::delete('/{giftCard}', [\App\Http\Controllers\Admin\GiftCardController::class, 'destroyTemplate'])->name('destroy');
+            // Issued card actions
+            Route::get('/cards/{card}', [\App\Http\Controllers\Admin\GiftCardController::class, 'showCard'])->name('cards.show');
+            Route::post('/cards/{card}/withdraw', [\App\Http\Controllers\Admin\GiftCardController::class, 'withdraw'])->name('cards.withdraw');
+        });
 
         // CMS Pages (Placeholder for next step)
         Route::post('/mnpages/upload-image', [\App\Http\Controllers\Admin\PageUploadController::class, 'upload'])->name('mnpages.upload-image');

@@ -130,21 +130,25 @@ class GeneralProductImporter
 
             $sku = Sku::create(
                 [
-                    'code' => $skuCode,
+                    'code'       => $skuCode,
                     'product_id' => $product->id,
-                    'price' => $this->parsePrice($sellingPrice),
-                    'mrp' => $this->parsePrice($labelPrice),
-                    'stock' => intval($row['Stock per sku'] ?? 0),
+                    'price'      => $this->parsePrice($sellingPrice),
+                    'mrp'        => $this->parsePrice($labelPrice),
+                    'stock'      => intval($row['Stock per sku'] ?? 0),
                     'min_order_quantity' => intval($row['Minimum order'] ?? 1),
                     'max_order_quantity' => $row['Maximum order'] ? intval($row['Maximum order']) : null,
 
+                    // QikInk fields
+                    'design_sku'  => $row['Design SKU']  ?? null,
+                    'product_sku' => $row['Product SKU'] ?? null,
+
                     // Link Color and Size directly
                     'color_id' => $colorId,
-                    'size_id' => $sizeId,
+                    'size_id'  => $sizeId,
 
                     // Dimensions - convert empty strings to null for decimal fields
                     'weight' => !empty($row['Package weight']) ? floatval($row['Package weight']) : null,
-                    'width' => !empty($row['Package width']) ? floatval($row['Package width']) : null,
+                    'width'  => !empty($row['Package width'])  ? floatval($row['Package width'])  : null,
                     'height' => !empty($row['Package height']) ? floatval($row['Package height']) : null,
                     'length' => !empty($row['Package length']) ? floatval($row['Package length']) : null,
                 ]

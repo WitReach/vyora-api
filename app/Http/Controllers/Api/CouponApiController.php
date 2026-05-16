@@ -33,10 +33,12 @@ class CouponApiController extends Controller
 
         $magicCoupons = $coupons->where('is_default_magic', true)->values();
         $productPageCoupons = $coupons->where('show_on_product_page', true)->values();
+        $checkoutCoupons = $coupons->where('show_on_checkout_page', true)->values();
 
         return response()->json([
             'magic_coupons' => $magicCoupons,
             'product_coupons' => $productPageCoupons,
+            'checkout_coupons' => $checkoutCoupons,
         ]);
     }
 

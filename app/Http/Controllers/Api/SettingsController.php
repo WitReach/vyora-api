@@ -11,10 +11,31 @@ class SettingsController extends Controller
     {
         $all = ThemeSetting::all();
 
-        // General settings as flat key→value
-        $settings = $all->pluck('value', 'key');
+        // 1. Separate integration settings from general ones
+        $integrationSettings = $all->filter(fn($s) => str_starts_with($s->group, 'integration.'))
+            ->groupBy('group')
+            ->map(function ($groupSettings) {
+                return $groupSettings->keyBy('key')->map(function ($s) {
+                    // Exclude sensitive keys
+                    if (in_array($s->key, ['key_id', 'key_secret', 'smtp_password'])) {
+                        return null;
+                    }
+                    return $s->value;
+                })->filter()->toArray();
+            });
 
-        // Policy settings as a structured object
+        // 2. Map standard settings (excluding integrations handled above)
+        $allData = $all->filter(fn($s) => !str_starts_with($s->group, 'integration.'))
+            ->pluck('value', 'key')->toArray();
+
+        if (isset($allData['taxes'])) {
+            $allData['taxes'] = json_decode($allData['taxes'], true);
+        }
+        if (isset($allData['shipping_rules'])) {
+            $allData['shipping_rules'] = json_decode($allData['shipping_rules'], true);
+        }
+
+        // Policy & General keys for backward compatibility/specific UI needs
         $policyKeys = [
             'cod_charges', 'prepaid_charges', 'delivery_timeline',
             'return_policy', 'exchange_policy', 'refund_method',
@@ -33,8 +54,12 @@ class SettingsController extends Controller
         $general  = $all->whereIn('key', $generalKeys)->pluck('value', 'key');
 
         return response()->json(array_merge(
-            $all->pluck('value', 'key')->toArray(),
-            ['policies' => $policies, 'general' => $general]
+            $allData,
+            [
+                'integrations' => $integrationSettings,
+                'policies'     => $policies,
+                'general'      => $general
+            ]
         ));
     }
 }

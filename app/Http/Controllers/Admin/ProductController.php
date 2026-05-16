@@ -47,7 +47,10 @@ class ProductController extends Controller
         $colors = \App\Models\Color::orderBy('name')->get();
         $sizes = \App\Models\Size::orderBy('name')->get();
 
-        return view('admin.products.create', compact('categories', 'collections', 'productTypes', 'sizeCharts', 'colors', 'sizes'));
+        $taxRows = \App\Models\ThemeSetting::where('group', 'tax_shipping')->get()->keyBy('key');
+        $taxes = json_decode($taxRows->get('taxes')?->value ?? '[{"id":"t1","name":"GST 5%","rate":5},{"id":"t2","name":"GST 18%","rate":18}]', true);
+
+        return view('admin.products.create', compact('categories', 'collections', 'productTypes', 'sizeCharts', 'colors', 'sizes', 'taxes'));
     }
 
     public function store(Request $request)
@@ -76,6 +79,8 @@ class ProductController extends Controller
             'is_active' => false, // Products are inactive by default until admin activates
             'is_returnable' => $request->has('is_returnable'),
             'on_sale' => $request->has('on_sale'),
+            'use_qikink' => $request->has('use_qikink'),
+            'tax_class' => $request->tax_class,
         ];
 
         // Handle preview image upload
@@ -124,6 +129,7 @@ class ProductController extends Controller
                     $product->skus()->create([
                         'code' => $newSku['code'],
                         'price' => $newSku['price'] ?: 0,
+                        'mrp' => !empty($newSku['mrp']) ? $newSku['mrp'] : null,
                         'stock' => $newSku['stock'],
                         'color_id' => $newSku['color_id'] ?: null,
                         'size_id' => $sizeId,
@@ -172,7 +178,10 @@ class ProductController extends Controller
         $colors = \App\Models\Color::orderBy('name')->get();
         $sizes = \App\Models\Size::orderBy('name')->get();
 
-        return view('admin.products.edit', compact('product', 'categories', 'collections', 'productTypes', 'productColors', 'mediaByColor', 'sizeCharts', 'colors', 'sizes', 'productParentCategories'));
+        $taxRows = \App\Models\ThemeSetting::where('group', 'tax_shipping')->get()->keyBy('key');
+        $taxes = json_decode($taxRows->get('taxes')?->value ?? '[{"id":"t1","name":"GST 5%","rate":5},{"id":"t2","name":"GST 18%","rate":18}]', true);
+
+        return view('admin.products.edit', compact('product', 'categories', 'collections', 'productTypes', 'productColors', 'mediaByColor', 'sizeCharts', 'colors', 'sizes', 'productParentCategories', 'taxes'));
     }
 
     public function update(Request $request, \App\Models\Product $product)
@@ -207,6 +216,8 @@ class ProductController extends Controller
             'is_active' => $request->has('is_active'),
             'is_returnable' => $request->has('is_returnable'),
             'on_sale' => $request->has('on_sale'),
+            'use_qikink' => $request->has('use_qikink'),
+            'tax_class' => $request->tax_class,
         ];
 
         // Handle Master Image Upload
@@ -277,9 +288,11 @@ class ProductController extends Controller
                 $sku = $product->skus()->find($skuId);
                 if ($sku) {
                     $skuDataToUpdate = [
-                        'code' => $skuData['code'],
-                        'price' => $skuData['price'],
-                        'stock' => $skuData['stock'],
+                        'code'        => $skuData['code'],
+                        'price'       => $skuData['price'],
+                        'stock'       => $skuData['stock'],
+                        'design_sku'  => $skuData['design_sku']  ?? null,
+                        'product_sku' => $skuData['product_sku'] ?? null,
                     ];
                     if (array_key_exists('mrp', $skuData)) {
                         $skuDataToUpdate['mrp'] = $skuData['mrp'] !== null && $skuData['mrp'] !== '' ? $skuData['mrp'] : null;
@@ -305,11 +318,14 @@ class ProductController extends Controller
                     }
 
                     $product->skus()->create([
-                        'code' => $newSku['code'],
-                        'price' => $newSku['price'] ?: 0,
-                        'stock' => $newSku['stock'],
-                        'color_id' => $newSku['color_id'] ?: null,
-                        'size_id' => $sizeId,
+                        'code'        => $newSku['code'],
+                        'price'       => $newSku['price'] ?: 0,
+                        'mrp'         => !empty($newSku['mrp']) ? $newSku['mrp'] : null,
+                        'stock'       => $newSku['stock'],
+                        'color_id'    => $newSku['color_id'] ?: null,
+                        'size_id'     => $sizeId,
+                        'design_sku'  => $newSku['design_sku']  ?? null,
+                        'product_sku' => $newSku['product_sku'] ?? null,
                     ]);
                 }
             }

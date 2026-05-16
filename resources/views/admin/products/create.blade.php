@@ -118,10 +118,21 @@
                     class="h-4 w-4 text-black focus:ring-black border-gray-300 rounded">
             </div>
 
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mb-4">
                 <span class="text-gray-700">On Sale</span>
                 <input type="checkbox" name="on_sale" value="1" {{ old('on_sale') ? 'checked' : '' }}
                     class="h-4 w-4 text-black focus:ring-black border-gray-300 rounded">
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                <div>
+                    <span class="text-gray-700 block font-bold">QikInk Fulfillment</span>
+                    <span class="text-[10px] text-gray-400 block">Process orders via Qikink API</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" name="use_qikink" value="1" {{ old('use_qikink') ? 'checked' : '' }}>
+                    <span class="slider round"></span>
+                </label>
             </div>
         </div>
 
@@ -179,6 +190,18 @@
                         @foreach($productTypes as $type)
                             <option value="{{ $type->id }}" {{ old('product_type_id') == $type->id ? 'selected' : '' }}>
                                 {{ $type->name }} (HSN: {{ $type->hsn_code }})</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Tax Class</label>
+                    <select name="tax_class" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2">
+                        <option value="">None (No Tax)</option>
+                        @foreach($taxes as $tax)
+                            <option value="{{ $tax['id'] }}" {{ old('tax_class') == $tax['id'] ? 'selected' : '' }}>
+                                {{ $tax['name'] }} ({{ $tax['rate'] }}%)
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -289,8 +312,9 @@
             <div class="col-span-2">
                 <input type="text" name="new_skus[INDEX][size]" placeholder="Size (e.g., S, M, L, A3)" class="w-full border-gray-300 rounded text-xs p-1">
             </div>
-            <div class="col-span-2">
-                <input type="number" step="0.01" name="new_skus[INDEX][price]" placeholder="Price" class="w-full border-gray-300 rounded text-xs p-1">
+            <div class="col-span-2 flex flex-col gap-1">
+                <input type="number" step="0.01" name="new_skus[INDEX][price]" placeholder="SP" class="w-full border-gray-300 rounded text-xs p-1">
+                <input type="number" step="0.01" name="new_skus[INDEX][mrp]" placeholder="MRP" class="w-full border-gray-300 rounded text-[10px] p-1 text-gray-500">
             </div>
             <div class="col-span-2">
                 <input type="number" name="new_skus[INDEX][stock]" placeholder="Stock" class="w-full border-gray-300 rounded text-xs p-1">

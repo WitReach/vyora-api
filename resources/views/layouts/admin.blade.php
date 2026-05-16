@@ -83,6 +83,11 @@
                     <span class="text-sm">Coupons</span>
                 </a>
 
+                <a href="{{ route('admin.online-store.gift-cards.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.online-store.gift-cards.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7M9 1v2m6-2v2"></path></svg>
+                    <span class="text-sm">Gift Cards</span>
+                </a>
+
                 <div class="pt-4 pb-2">
                     <p class="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Customise Store</p>
                 </div>
@@ -129,6 +134,16 @@
                 <a href="{{ route('admin.online-store.auth-settings.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.online-store.auth-settings.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 21a11.955 11.955 0 01-9.618-7.016m19.236 0a11.955 11.955 0 00-19.236 0M12 11V7a4 4 0 00-8 0v4h8z"></path></svg>
                     <span class="text-sm">Auth Settings</span>
+                </a>
+
+                <a href="{{ route('admin.online-store.tax-shipping.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.online-store.tax-shipping.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                    <span class="text-sm">Tax & Shipping</span>
+                </a>
+
+                <a href="{{ route('admin.online-store.integrations.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.online-store.integrations.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"></path></svg>
+                    <span class="text-sm">Integrations</span>
                 </a>
             </nav>
 

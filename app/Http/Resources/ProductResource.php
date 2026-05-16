@@ -20,6 +20,7 @@ class ProductResource extends JsonResource
             'long_description' => $this->long_description,
             'brand' => $this->brand_name,
             'product_type' => $this->productType?->name,
+            'tax_class' => $this->tax_class,
 
             // Global List Properties mapping securely
             'price' => (float) $minPrice,

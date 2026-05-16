@@ -154,6 +154,10 @@
                         <input type="checkbox" name="show_on_product_page" value="1" {{ $coupon->show_on_product_page ? 'checked' : '' }} class="h-4 w-4 rounded bg-gray-800 border-0">
                         <span class="text-xs font-bold">Show on PDP</span>
                     </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" name="show_on_checkout_page" value="1" {{ $coupon->show_on_checkout_page ? 'checked' : '' }} class="h-4 w-4 rounded bg-gray-800 border-0">
+                        <span class="text-xs font-bold">Show on Checkout</span>
+                    </label>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-6">

@@ -39,7 +39,7 @@ class QikInkImporter
                 ['code' => $skuCode],
                 [
                     'product_id' => $product->id,
-                    'design_sku' => $row['Design SKU'] ?? null,
+                    'design_sku'  => $row['Design SKU']  ?? null,
                     'product_sku' => $row['Product SKU'] ?? null,
                     'price' => $this->parsePrice($row['Product price'] ?? 0),
                     'mrp' => $this->parsePrice($row['Product price'] ?? 0),
