@@ -97,7 +97,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Orders
     Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
-    Route::patch('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::patch('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::patch('/orders/{order}/tracking', [\App\Http\Controllers\Admin\OrderController::class, 'updateTracking'])->name('orders.updateTracking');
 
     // Online Store
     Route::prefix('online-store')->name('online-store.')->group(function () {

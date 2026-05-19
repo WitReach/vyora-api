@@ -32,7 +32,10 @@ class OrderController extends Controller
             ->paginate(10);
 
         $orders->getCollection()->transform(function($order) {
-            $order->items_count = $order->items->sum('quantity');
+            $order->items_count   = $order->items->sum('quantity');
+            $order->tracking_url  = $order->tracking_url;
+            $order->has_tracking  = $order->has_tracking;
+            $order->courier_partner = $order->courier_partner;
             return $order;
         });
 
@@ -304,6 +307,13 @@ class OrderController extends Controller
             ->with(['items', 'shippingAddress'])
             ->firstOrFail();
 
-        return response()->json($order);
+        $data = $order->toArray();
+        $data['tracking_url']    = $order->tracking_url;
+        $data['tracking_number'] = $order->tracking_number;
+        $data['courier_partner'] = $order->courier_partner;
+        $data['has_tracking']    = $order->has_tracking;
+        $data['shipping_address'] = $order->shippingAddress;
+
+        return response()->json($data);
     }
 }

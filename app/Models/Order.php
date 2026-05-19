@@ -8,6 +8,11 @@ class Order extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'shipped_at'   => 'datetime',
+        'delivered_at' => 'datetime',
+    ];
+
     protected static function booted()
     {
         static::creating(function ($order) {
@@ -19,6 +24,10 @@ class Order extends Model
             }
         });
     }
+
+    /* ------------------------------------------------------------------ */
+    /*  Relations                                                           */
+    /* ------------------------------------------------------------------ */
 
     public function items()
     {
@@ -38,5 +47,65 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /*  Accessors                                                           */
+    /* ------------------------------------------------------------------ */
+
+    /**
+     * Subtotal = sum of all item totals (before shipping/tax/discount).
+     */
+    public function getSubtotalAttribute(): float
+    {
+        return $this->items->sum(fn($item) => (float) $item->total);
+    }
+
+    /**
+     * Whether the order has tracking info.
+     */
+    public function getHasTrackingAttribute(): bool
+    {
+        return !empty($this->tracking_url) || !empty($this->tracking_number);
+    }
+
+    /**
+     * Human-readable order status label.
+     */
+    public function getStatusLabelAttribute(): string
+    {
+        return match ($this->status) {
+            'pending'    => 'Pending',
+            'processing' => 'Processing',
+            'shipped'    => 'Shipped',
+            'delivered'  => 'Delivered',
+            'cancelled'  => 'Cancelled',
+            'refunded'   => 'Refunded',
+            default      => ucfirst($this->status),
+        };
+    }
+
+    /**
+     * Timeline steps for display.
+     */
+    public function getTimelineAttribute(): array
+    {
+        $steps = [
+            ['key' => 'pending',    'label' => 'Order Placed',   'icon' => 'shopping-bag'],
+            ['key' => 'processing', 'label' => 'Confirmed',      'icon' => 'check-circle'],
+            ['key' => 'shipped',    'label' => 'Shipped',        'icon' => 'truck'],
+            ['key' => 'delivered',  'label' => 'Delivered',      'icon' => 'home'],
+        ];
+
+        $order = ['pending', 'processing', 'shipped', 'delivered'];
+        $currentIdx = array_search($this->status, $order);
+        if ($currentIdx === false) $currentIdx = -1;
+
+        foreach ($steps as $i => &$step) {
+            $step['done']    = $i <= $currentIdx;
+            $step['current'] = $i === $currentIdx;
+        }
+
+        return $steps;
     }
 }
