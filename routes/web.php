@@ -43,7 +43,7 @@ Route::post('/login', [\App\Http\Controllers\Admin\LoginController::class, 'logi
 Route::post('/logout', [\App\Http\Controllers\Admin\LoginController::class, 'logout'])->name('logout');
 
 // Admin Dashboard Routes
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin_access'])->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard'); // Explicit admin dashboard
 
     // Products Management Group
@@ -55,6 +55,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/{product}/edit', [\App\Http\Controllers\Admin\ProductController::class, 'edit'])->name('edit');
         Route::put('/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'update'])->name('update');
         Route::delete('/{product}', [\App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('destroy');
+
+        Route::post('/{product}/shortlinks', [\App\Http\Controllers\Admin\ShortlinkController::class, 'store'])->name('shortlinks.store');
+        Route::delete('/shortlinks/{shortlink}', [\App\Http\Controllers\Admin\ShortlinkController::class, 'destroy'])->name('shortlinks.destroy');
 
         // Media routes
         Route::post('/{product}/media/upload', [\App\Http\Controllers\Admin\ProductMediaController::class, 'upload'])->name('media.upload');
@@ -168,5 +171,23 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::post('/mnpages/{mnpage}/publish', [\App\Http\Controllers\Admin\PageController::class, 'publish'])->name('mnpages.publish');
         Route::get('/mnpages/{mnpage}/design', [\App\Http\Controllers\Admin\PageController::class, 'design'])->name('mnpages.design');
         Route::resource('mnpages', \App\Http\Controllers\Admin\PageController::class);
+    });
+
+    // Admin Settings Section
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::get('/admin', [\App\Http\Controllers\Admin\AdminSettingController::class, 'index'])->name('index');
+        Route::put('/admin', [\App\Http\Controllers\Admin\AdminSettingController::class, 'update'])->name('update');
+
+        Route::get('/users', [\App\Http\Controllers\Admin\AdminSettingController::class, 'users'])->name('users');
+        Route::post('/users', [\App\Http\Controllers\Admin\AdminSettingController::class, 'storeUser'])->name('users.store');
+        Route::put('/users/{user}', [\App\Http\Controllers\Admin\AdminSettingController::class, 'updateUser'])->name('users.update');
+        Route::delete('/users/{user}', [\App\Http\Controllers\Admin\AdminSettingController::class, 'destroyUser'])->name('users.destroy');
+
+        Route::get('/vyora', [\App\Http\Controllers\Admin\AdminSettingController::class, 'vyora'])->name('vyora');
+
+        // System Updates
+        Route::get('/update', [\App\Http\Controllers\Admin\SystemUpdateController::class, 'index'])->name('update.index');
+        Route::post('/update', [\App\Http\Controllers\Admin\SystemUpdateController::class, 'update'])->name('update.process');
+        Route::post('/update/maintenance', [\App\Http\Controllers\Admin\SystemUpdateController::class, 'toggleMaintenance'])->name('update.maintenance');
     });
 });

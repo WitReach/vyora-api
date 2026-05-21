@@ -89,6 +89,7 @@ class InstallerController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'email_verified_at' => now(),
+            'role' => 'administrator',
         ]);
 
         // Mark installed

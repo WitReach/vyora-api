@@ -20,8 +20,42 @@
                         class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Store Email</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Legal Business Name</label>
+                    <input type="text" name="business_name" value="{{ $settings['business_name'] ?? '' }}"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Store Email (System/Sender)</label>
                     <input type="email" name="store_email" value="{{ $settings['store_email'] }}"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tax ID / GST Number</label>
+                    <input type="text" name="tax_id" value="{{ $settings['tax_id'] ?? '' }}"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Store Description (SEO/Footer)</label>
+                    <textarea name="store_description" rows="2"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">{{ $settings['store_description'] ?? '' }}</textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Store Address</label>
+                    <textarea name="store_address" rows="3"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">{{ $settings['store_address'] }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        {{-- ── CUSTOMER SUPPORT & CONTACTS ───────────────── --}}
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Customer Support</h3>
+            <p class="text-sm text-gray-500 mb-6">Contact channels displayed to your customers.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Support Email</label>
+                    <input type="email" name="support_email" value="{{ $settings['support_email'] ?? '' }}"
                         class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
                 </div>
                 <div>
@@ -29,10 +63,62 @@
                     <input type="text" name="support_phone" value="{{ $settings['support_phone'] }}"
                         class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
                 </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Store Address</label>
-                    <textarea name="store_address" rows="3"
-                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">{{ $settings['store_address'] }}</textarea>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp Number</label>
+                    <input type="text" name="whatsapp_number" value="{{ $settings['whatsapp_number'] ?? '' }}"
+                        placeholder="e.g. +91 9876543210"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Support Hours</label>
+                    <input type="text" name="customer_support_hours" value="{{ $settings['customer_support_hours'] ?? '' }}"
+                        placeholder="e.g. Mon-Fri 9AM - 6PM"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </div>
+            </div>
+        </div>
+
+        {{-- ── SOCIAL MEDIA LINKS ────────────────────────── --}}
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Social Media Links</h3>
+            <p class="text-sm text-gray-500 mb-6">Connect your social accounts to display icons in the footer.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Instagram URL</label>
+                    <input type="url" name="social_instagram" value="{{ $settings['social_instagram'] ?? '' }}"
+                        placeholder="https://instagram.com/..."
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Facebook URL</label>
+                    <input type="url" name="social_facebook" value="{{ $settings['social_facebook'] ?? '' }}"
+                        placeholder="https://facebook.com/..."
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Twitter (X) URL</label>
+                    <input type="url" name="social_twitter" value="{{ $settings['social_twitter'] ?? '' }}"
+                        placeholder="https://twitter.com/..."
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">YouTube URL</label>
+                    <input type="url" name="social_youtube" value="{{ $settings['social_youtube'] ?? '' }}"
+                        placeholder="https://youtube.com/..."
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">TikTok URL</label>
+                    <input type="url" name="social_tiktok" value="{{ $settings['social_tiktok'] ?? '' }}"
+                        placeholder="https://tiktok.com/..."
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pinterest URL</label>
+                    <input type="url" name="social_pinterest" value="{{ $settings['social_pinterest'] ?? '' }}"
+                        placeholder="https://pinterest.com/..."
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
                 </div>
             </div>
         </div>

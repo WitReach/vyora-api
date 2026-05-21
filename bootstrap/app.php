@@ -15,6 +15,18 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\CheckInstalled::class,
         ]);
+
+        $middleware->preventRequestsDuringMaintenance(
+            except: [
+                'admin/*',
+                'api/maintenance-status',
+                'api/settings',
+            ]
+        );
+
+        $middleware->alias([
+            'admin_access' => \App\Http\Middleware\AdminMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

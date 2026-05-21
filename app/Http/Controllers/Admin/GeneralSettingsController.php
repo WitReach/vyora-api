@@ -13,7 +13,9 @@ class GeneralSettingsController extends Controller
     const KEYS = [
         'store_name',
         'store_email',
+        'support_email',
         'support_phone',
+        'whatsapp_number',
         'store_address',
         'default_currency',
         'currency_symbol',
@@ -21,6 +23,16 @@ class GeneralSettingsController extends Controller
         'date_format',
         'weight_unit',
         'length_unit',
+        'social_instagram',
+        'social_facebook',
+        'social_twitter',
+        'social_youtube',
+        'social_tiktok',
+        'social_pinterest',
+        'business_name',
+        'tax_id',
+        'customer_support_hours',
+        'store_description',
     ];
 
     public function index()

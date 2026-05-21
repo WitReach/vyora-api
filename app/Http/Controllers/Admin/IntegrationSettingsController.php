@@ -43,6 +43,66 @@ class IntegrationSettingsController extends Controller
             'icon'        => 'send',
             'status'      => 'soon',
         ],
+        'whatsapp' => [
+            'name'        => 'WhatsApp Business API',
+            'description' => 'Connect WhatsApp for order notifications and customer support',
+            'icon'        => 'whatsapp',
+            'status'      => 'soon',
+        ],
+        'google-analytics' => [
+            'name'        => 'Google Analytics',
+            'description' => 'Track visitors and trace conversion data using GA4 properties',
+            'icon'        => 'google-analytics',
+            'status'      => 'soon',
+        ],
+        'meta-pixel' => [
+            'name'        => 'Meta Pixel API',
+            'description' => 'Track user behaviors and optimize Meta/Facebook ad campaigns',
+            'icon'        => 'meta-pixel',
+            'status'      => 'soon',
+        ],
+        'bing-webmaster' => [
+            'name'        => 'Bing Webmaster',
+            'description' => 'Submit sitemaps and index products with Microsoft Bing search engine',
+            'icon'        => 'bing',
+            'status'      => 'soon',
+        ],
+        'google-search-console' => [
+            'name'        => 'Google Search Console',
+            'description' => 'Monitor Google Search performance and crawl status for your storefront',
+            'icon'        => 'google-search-console',
+            'status'      => 'soon',
+        ],
+        'google-merchant' => [
+            'name'        => 'Google Merchant Center',
+            'description' => 'Sync your products with Google Shopping feeds and free listings',
+            'icon'        => 'google-merchant',
+            'status'      => 'soon',
+        ],
+        'ondc' => [
+            'name'        => 'ONDC Network Integration',
+            'description' => 'List and sell products across the open commerce network in India',
+            'icon'        => 'ondc',
+            'status'      => 'soon',
+        ],
+        'social-login' => [
+            'name'        => 'Social Login Integration',
+            'description' => 'Allow customers to log in using Google, Facebook, or Apple credentials',
+            'icon'        => 'social-login',
+            'status'      => 'soon',
+        ],
+        'twilio' => [
+            'name'        => 'SMS Integration (Twilio)',
+            'description' => 'Send instant order tracking and verification notifications via Twilio SMS API',
+            'icon'        => 'twilio',
+            'status'      => 'soon',
+        ],
+        'slack' => [
+            'name'        => 'Slack Integration',
+            'description' => 'Receive instant notifications for new orders and store alerts in your Slack channels',
+            'icon'        => 'slack',
+            'status'      => 'soon',
+        ],
     ];
 
     // ── Index ─────────────────────────────────────────────────────────────────

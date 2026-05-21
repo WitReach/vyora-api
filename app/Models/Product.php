@@ -61,4 +61,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductCategoryMasterImage::class);
     }
+
+    public function shortlinks()
+    {
+        return $this->hasMany(Shortlink::class);
+    }
 }

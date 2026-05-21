@@ -17,6 +17,7 @@
                     <button type="button" class="tab-button border-b-2 border-transparent text-gray-400 hover:text-black py-3 px-1 text-sm font-bold transition-all" data-tab="organization">Organization</button>
                     <button type="button" class="tab-button border-b-2 border-transparent text-gray-400 hover:text-black py-3 px-1 text-sm font-bold transition-all" data-tab="skus">SKUs & Variants</button>
                     <button type="button" class="tab-button border-b-2 border-transparent text-gray-400 hover:text-black py-3 px-1 text-sm font-bold transition-all" data-tab="media">Media Gallery</button>
+                    <button type="button" class="tab-button border-b-2 border-transparent text-gray-400 hover:text-black py-3 px-1 text-sm font-bold transition-all" data-tab="shortlinks">Share / Shortlinks</button>
                 </nav>
                 <div class="flex items-center gap-3">
                     <a href="{{ route('admin.products.index') }}" class="text-xs font-bold text-gray-500 hover:text-black">Cancel</a>
@@ -488,6 +489,132 @@
             </div>
             <!-- End Tab Content: Media Gallery -->
         </form>
+
+        <!-- Tab Content: Shortlinks -->
+        <div id="tab-shortlinks" class="tab-content hidden mt-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Create New Shortlink -->
+                <div class="lg:col-span-4 bg-white rounded-lg shadow p-6 h-fit">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Create New Shortlink</h3>
+                    
+                    <form action="{{ route('admin.products.shortlinks.store', $product) }}" method="POST">
+                        @csrf
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Destination URL <span class="text-red-500">*</span></label>
+                                <input type="url" name="actual_link" value="{{ url('/product/' . $product->slug) }}" required
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2">
+                                <p class="text-xs text-gray-500 mt-1">Default is the product page.</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Custom Short Code (Optional)</label>
+                                <div class="mt-1 flex rounded-md shadow-sm">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm font-mono">
+                                        {{ request()->getHost() }}/s/
+                                    </span>
+                                    <input type="text" name="short_code" placeholder="e.g. summer-sale"
+                                        class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-black focus:border-black sm:text-sm border border-gray-300 font-mono">
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Leave blank to auto-generate.</p>
+                            </div>
+
+                            <div class="pt-2">
+                                <h4 class="text-sm font-medium text-gray-900 mb-3 border-b pb-2">UTM Parameters</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">utm_source</label>
+                                        <input type="text" name="utm_source" placeholder="e.g. instagram"
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">utm_medium</label>
+                                        <input type="text" name="utm_medium" placeholder="e.g. social"
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">utm_campaign</label>
+                                        <input type="text" name="utm_campaign" placeholder="e.g. summer_promo"
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-4">
+                                <button type="submit" class="w-full bg-black text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-all shadow-sm">Generate Shortlink</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Existing Shortlinks -->
+                <div class="lg:col-span-8 bg-white rounded-lg shadow p-6 h-fit">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Existing Shortlinks</h3>
+                    
+                    @if($product->shortlinks && $product->shortlinks->count() > 0)
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shortlink</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Destination / UTMs</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">QR Code</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach($product->shortlinks as $link)
+                                        <tr>
+                                            <td class="px-4 py-4 whitespace-nowrap">
+                                                <div class="flex items-center gap-2">
+                                                    <a href="{{ url('/s/' . $link->short_code) }}" target="_blank" class="text-sm font-medium text-blue-600 hover:underline font-mono">{{ url('/s/' . $link->short_code) }}</a>
+                                                    <button onclick="navigator.clipboard.writeText('{{ url('/s/' . $link->short_code) }}'); alert('Copied!')" class="text-gray-400 hover:text-black" title="Copy to clipboard">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                                    </button>
+                                                </div>
+                                                <div class="text-xs text-gray-400 mt-1">Created: {{ $link->created_at->format('M d, Y') }}</div>
+                                            </td>
+                                            <td class="px-4 py-4">
+                                                <div class="text-sm text-gray-900 truncate max-w-[150px]" title="{{ $link->actual_link }}">{{ $link->actual_link }}</div>
+                                                <div class="flex flex-wrap gap-1 mt-1">
+                                                    @if($link->utm_source) <span class="px-2 py-0.5 bg-gray-100 rounded text-[10px] text-gray-600">src: {{ $link->utm_source }}</span> @endif
+                                                    @if($link->utm_medium) <span class="px-2 py-0.5 bg-gray-100 rounded text-[10px] text-gray-600">med: {{ $link->utm_medium }}</span> @endif
+                                                    @if($link->utm_campaign) <span class="px-2 py-0.5 bg-gray-100 rounded text-[10px] text-gray-600">cmp: {{ $link->utm_campaign }}</span> @endif
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-center">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    {{ number_format($link->click_count) }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-center">
+                                                <div class="flex flex-col items-center">
+                                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ urlencode($link->full_actual_link) }}" alt="QR Code" class="w-10 h-10 rounded border border-gray-200">
+                                                    <a href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{ urlencode($link->full_actual_link) }}" download="qr_{{ $link->short_code }}.png" target="_blank" class="text-[10px] text-blue-600 hover:underline mt-1">Download</a>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <form action="{{ route('admin.products.shortlinks.destroy', $link) }}" method="POST" onsubmit="return confirm('Delete this shortlink?');" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="text-center py-8 text-gray-500 border border-dashed border-gray-300 rounded-md bg-gray-50">
+                            <p class="text-sm font-medium text-gray-900">No shortlinks created yet.</p>
+                            <p class="text-sm mt-1">Use the form to generate custom, trackable links.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Template for new variant row -->

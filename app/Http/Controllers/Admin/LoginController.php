@@ -21,6 +21,18 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $adminRoles = ['administrator', 'editor', 'manager', 'customer_service'];
+            
+            if (!in_array($user->role, $adminRoles)) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return back()->withErrors([
+                    'email' => 'Access Denied: You do not have administrative privileges.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
             return redirect()->intended(route('admin.dashboard'));
         }

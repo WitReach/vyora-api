@@ -156,7 +156,8 @@ class ProductController extends Controller
             },
             'images.color',
             'productType',
-            'categoryMasterImages'
+            'categoryMasterImages',
+            'shortlinks'
         ]);
 
         $categories = \App\Models\Category::whereNull('parent_id')->with('children.children')->get();

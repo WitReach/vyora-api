@@ -65,3 +65,13 @@ Route::get('/gift-cards/share/{token}', [\App\Http\Controllers\Api\GiftCardApiCo
 
 // Webhooks
 Route::post('/webhooks/qikink', [\App\Http\Controllers\Api\WebhookController::class, 'handleQikink']);
+
+// Shortlinks
+Route::get('/shortlinks/{short_code}', [\App\Http\Controllers\Api\ShortlinkApiController::class, 'resolve']);
+
+// System Status
+Route::get('/maintenance-status', function () {
+    return response()->json([
+        'maintenance' => file_exists(storage_path('framework/down')),
+    ]);
+});
