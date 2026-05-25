@@ -75,13 +75,6 @@ class AuthSettingsController extends Controller
             // Save to backend public
             $file->move(public_path('uploads/auth'), $filename);
 
-            // Mirror to frontend public
-            $frontendPath = base_path('../frontend-user/public/uploads/auth');
-            if (!File::exists($frontendPath)) {
-                File::makeDirectory($frontendPath, 0755, true);
-            }
-            File::copy(public_path($path), $frontendPath . '/' . $filename);
-
             // Update JSON setting
             $setting = ThemeSetting::where('key', $settingKey)->first();
             $val = json_decode($setting?->value ?? '{}', true);

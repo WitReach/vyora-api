@@ -19,6 +19,13 @@ class IntegrationSettingsController extends Controller
             'icon'        => 'razorpay',
             'status'      => 'active',
         ],
+        
+        'algolia' => [
+            'name'        => 'Algolia Search',
+            'description' => 'Lightning-fast, typo-tolerant search for your products',
+            'icon'        => 'search',
+            'status'      => 'active',
+        ],
         'qikink' => [
             'name'        => 'Qikink',
             'description' => 'Automated Print on Demand and Dropshipping fulfillment',
@@ -140,6 +147,8 @@ class IntegrationSettingsController extends Controller
         $saved = [
             'enabled'       => $rows->get('enabled')?->value === '1',
             'mode'          => $rows->get('mode')?->value ?? 'test',
+            'app_id'          => $rows->get('app_id') ? $this->maybeDecrypt($rows->get('app_id')->value) : '',
+            'admin_api_key'   => $rows->get('admin_api_key') ? $this->maskedSecret($rows->get('admin_api_key')->value) : '',
             'key_id'        => $rows->get('key_id') ? $this->maybeDecrypt($rows->get('key_id')->value) : '',
             'key_secret'    => $rows->get('key_secret') ? $this->maskedSecret($rows->get('key_secret')->value) : '',
             'client_id'     => $rows->get('client_id') ? $this->maybeDecrypt($rows->get('client_id')->value) : '',
@@ -155,6 +164,10 @@ class IntegrationSettingsController extends Controller
     {
         if (!array_key_exists($slug, $this->integrations)) {
             abort(404);
+        }
+
+        if ($slug === 'algolia') {
+            return $this->updateAlgolia($request);
         }
 
         if ($slug === 'razorpay') {
@@ -248,6 +261,49 @@ class IntegrationSettingsController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Connection failed: ' . $e->getMessage()]);
         }
+    }
+
+        public function testAlgolia(Request $request)
+    {
+        $group = 'integration.algolia';
+        $rows  = ThemeSetting::where('group', $group)->get()->keyBy('key');
+
+        try {
+            $appId  = $this->maybeDecrypt($rows->get('app_id')?->value ?? '');
+            $apiKey = $this->maybeDecrypt($rows->get('admin_api_key')?->value ?? '');
+
+            if (!$appId || !$apiKey) {
+                return response()->json(['success' => false, 'message' => 'API credentials not configured. Save your keys first.']);
+            }
+
+            // Using Algolia Search Client
+            $client = AlgoliaAlgoliaSearchSearchClient::create($appId, $apiKey);
+            // Verify by fetching indices
+            $client->listIndices();
+
+            return response()->json(['success' => true, 'message' => 'Connection successful! Algolia credentials are valid.']);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Authentication failed. Check your App ID and Admin API Key.']);
+        }
+    }
+
+    private function updateAlgolia(Request $request)
+    {
+        $request->validate([
+            'app_id'        => 'required|string',
+            'admin_api_key' => 'required|string|min:4',
+        ]);
+
+        $group = 'integration.algolia';
+
+        ThemeSetting::updateOrCreate(['group' => $group, 'key' => 'enabled'],  ['value' => $request->boolean('enabled') ? '1' : '0']);
+        ThemeSetting::updateOrCreate(['group' => $group, 'key' => 'app_id'],   ['value' => Crypt::encryptString($request->app_id)]);
+
+        if (!str_contains($request->admin_api_key, '****')) {
+            ThemeSetting::updateOrCreate(['group' => $group, 'key' => 'admin_api_key'], ['value' => Crypt::encryptString($request->admin_api_key)]);
+        }
+
+        return redirect()->back()->with('success', 'Algolia settings saved successfully.');
     }
 
     private function updateQikink(Request $request)

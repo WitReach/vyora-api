@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Log;
 
 class SystemUpdateController extends Controller
 {
-    private $frontendRepo = 'WitReach/vyora-frontend';
     private $backendRepo = 'WitReach/vyora-api';
     private $githubToken = null;
 
@@ -53,17 +52,13 @@ class SystemUpdateController extends Controller
 
     public function index()
     {
-        $frontendCurrent = config('app.frontend_version', '1.0.0');
         $backendCurrent = config('app.version', '1.0.0');
 
-        $frontendRelease = $this->getLatestRelease($this->frontendRepo);
         $backendRelease = $this->getLatestRelease($this->backendRepo);
         $maintenanceMode = file_exists(storage_path('framework/down'));
 
         return view('admin.system.update', compact(
-            'frontendCurrent', 
             'backendCurrent', 
-            'frontendRelease', 
             'backendRelease',
             'maintenanceMode'
         ));
@@ -73,7 +68,7 @@ class SystemUpdateController extends Controller
     {
         $request->validate([
             'download_url' => 'required|url',
-            'type' => 'required|in:frontend,backend'
+            'type' => 'required|in:backend'
         ]);
 
         try {
@@ -100,19 +95,8 @@ class SystemUpdateController extends Controller
             $zip = new \ZipArchive;
             if ($zip->open($tempZipPath) === TRUE) {
                 
-                if ($type === 'frontend') {
-                    $extractPath = env('FRONTEND_DEPLOY_PATH', base_path('../frontend-user'));
-                    $zip->extractTo($extractPath);
-                    $zip->close();
-                    
-                    // Restart Node App
-                    $restartFile = $extractPath . '/tmp/restart.txt';
-                    if (!File::exists(dirname($restartFile))) {
-                        File::makeDirectory(dirname($restartFile), 0755, true);
-                    }
-                    File::put($restartFile, time());
-                    $message = 'Frontend updated successfully and restart triggered!';
-                } else {
+
+
                     // Backend Update
                     $extractPath = base_path();
                     $zip->extractTo($extractPath);
@@ -121,8 +105,7 @@ class SystemUpdateController extends Controller
                     // Run database migrations and clear cache via Artisan
                     \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
                     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
-                    $message = 'Admin Backend updated successfully. Cache cleared and migrations run!';
-                }
+                    $message = 'System updated successfully. Cache cleared and migrations run!';
 
                 File::delete($tempZipPath);
                 return redirect()->back()->with('success', $message);

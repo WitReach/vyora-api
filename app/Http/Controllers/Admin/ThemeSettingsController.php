@@ -51,21 +51,13 @@ class ThemeSettingsController extends Controller
                 // Determine destination
                 $fileName = time() . '_' . $key . '.' . $file->getClientOriginalExtension();
                 $relativePath = "storage/theme/logos";
-                $destinationPath = base_path("../frontend-user/public/{$relativePath}");
-
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0755, true);
-                }
-
-                $file->move($destinationPath, $fileName);
-                $finalPath = "{$relativePath}/{$fileName}";
-
-                // Also copy to backend storage for admin preview consistency
                 $backendPath = public_path($relativePath);
                 if (!file_exists($backendPath)) {
                     mkdir($backendPath, 0755, true);
                 }
-                copy($destinationPath . '/' . $fileName, $backendPath . '/' . $fileName);
+
+                $file->move($backendPath, $fileName);
+                $finalPath = "{$relativePath}/{$fileName}";
 
                 \App\Models\ThemeSetting::updateOrCreate(
                     ['key' => $key],

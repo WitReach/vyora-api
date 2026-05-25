@@ -25,6 +25,8 @@ class User extends Authenticatable
         'password',
         'role',
         'module_access',
+        'provider',
+        'provider_id',
     ];
 
     /**
@@ -49,6 +51,18 @@ class User extends Authenticatable
             'password' => 'hashed',
             'module_access' => 'array',
         ];
+    }
+
+    // ── Relationships ───────────────────────────────────────────────
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
     }
 
     // ── Gift Card Relationships ───────────────────────────────────────────────

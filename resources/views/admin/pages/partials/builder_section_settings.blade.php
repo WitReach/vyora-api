@@ -20,7 +20,7 @@
         </div>
     </button>
 
-    <div class="section-settings-body hidden pt-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div class="section-settings-body hidden pt-8 space-y-6">
         {{-- Background Color --}}
         <div class="space-y-3">
             <label class="text-sm font-black uppercase tracking-widest text-gray-700">Background Color</label>
@@ -54,7 +54,7 @@
         </div>
 
         {{-- Visibility --}}
-        <div class="md:col-span-2 space-y-3">
+        <div class="space-y-3">
             <label class="text-sm font-black uppercase tracking-widest text-gray-700">Visibility</label>
             <div class="flex gap-4">
                 <label class="flex-1 relative flex items-center justify-center p-4 bg-white rounded-2xl border-2 border-gray-50 cursor-pointer transition-all hover:border-black/5 has-[:checked]:border-gray-900 has-[:checked]:bg-gray-900 has-[:checked]:text-white">

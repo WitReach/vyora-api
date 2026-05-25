@@ -73,6 +73,11 @@
                     <p class="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Marketing & Sales</p>
                 </div>
 
+                <a href="{{ route('admin.customers.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.customers.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span class="text-sm">Customers</span>
+                </a>
+
                 <a href="{{ route('admin.orders.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.orders.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                     <span class="text-sm">Orders</span>
@@ -86,6 +91,11 @@
                 <a href="{{ route('admin.online-store.gift-cards.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.online-store.gift-cards.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7M9 1v2m6-2v2"></path></svg>
                     <span class="text-sm">Gift Cards</span>
+                </a>
+
+                <a href="{{ route('admin.online-store.marketing.search-queries.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.online-store.marketing.search-queries.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <span class="text-sm">Search Queries</span>
                 </a>
 
                 <div class="pt-4 pb-2">
@@ -172,7 +182,7 @@
             </nav>
 
             <div class="p-4 border-t border-gray-100 flex-shrink-0">
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
                     <button type="submit" class="w-full flex items-center space-x-3 p-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
@@ -186,9 +196,15 @@
         <div class="flex-1 ml-64 flex flex-col min-w-0">
             <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-30">
                 <h2 class="text-lg font-bold text-gray-800 truncate">@yield('header')</h2>
-                <div class="flex items-center space-x-4">
-                    <span class="text-sm text-gray-500 hidden sm:block">Administrator</span>
-                    <div class="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white text-xs font-bold">A</div>
+                <div class="flex items-center space-x-5">
+                    <a href="{{ url('/') }}" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors border border-slate-200 shadow-sm active:scale-95">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        Visit Store
+                    </a>
+                    <div class="flex items-center space-x-3 border-l border-gray-200 pl-5">
+                        <span class="text-sm text-gray-700 font-semibold hidden sm:block">{{ auth()->user()->name ?? 'Admin' }}</span>
+                        <div class="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm">{{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}</div>
+                    </div>
                 </div>
             </header>
 

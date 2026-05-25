@@ -8,7 +8,7 @@ use App\Models\CmsPage;
 
 class PageController extends Controller
 {
-    public function home()
+    public function home(Request $request)
     {
         $page = CmsPage::where('is_home', true)->where('is_active', true)->first();
 
@@ -21,11 +21,11 @@ class PageController extends Controller
             'layout' => $page->layout ?? 'default',
             'meta_title' => $page->meta_title,
             'meta_description' => $page->meta_description,
-            'content' => $page->content,
+            'content' => $request->has('preview') && $request->preview === 'true' ? $page->draft_content : $page->content,
         ]);
     }
 
-    public function show($slug)
+    public function show(Request $request, $slug)
     {
         $page = CmsPage::where('slug', $slug)->where('is_active', true)->first();
 
@@ -38,7 +38,7 @@ class PageController extends Controller
             'layout' => $page->layout ?? 'default',
             'meta_title' => $page->meta_title,
             'meta_description' => $page->meta_description,
-            'content' => $page->content,
+            'content' => $request->has('preview') && $request->preview === 'true' ? $page->draft_content : $page->content,
         ]);
     }
 }

@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
             \App\Http\Middleware\CheckInstalled::class,
+            \App\Http\Middleware\HandleInertiaRequests::class,
+        ]);
+
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
 
         $middleware->preventRequestsDuringMaintenance(
@@ -27,6 +32,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin_access' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
+
+        $middleware->redirectGuestsTo(function (\Illuminate\Http\Request $request) {
+            $adminPath = config('app.admin_path', 'admin');
+            if ($request->is($adminPath) || $request->is($adminPath . '/*')) {
+                return route('admin.login');
+            }
+            return route('login');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

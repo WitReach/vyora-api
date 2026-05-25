@@ -9,6 +9,7 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
 Route::get('/products/{slug}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
+Route::get('/search', [\App\Http\Controllers\Api\SearchController::class, 'index']);
 Route::get('/categories', function () {
     return \App\Models\Category::with([
         'children.children' => function ($q) {

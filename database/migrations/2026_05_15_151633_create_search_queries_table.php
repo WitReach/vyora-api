@@ -12,6 +12,8 @@ return new class extends Migration {
     {
         Schema::create('search_queries', function (Blueprint $table) {
             $table->id();
+            $table->string('query');
+            $table->integer('results_count')->default(0);
             $table->timestamps();
         });
     }

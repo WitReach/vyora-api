@@ -34,135 +34,94 @@
     <div class="min-h-screen flex flex-col">
         <!-- Top Bar -->
         <header
-            class="h-24 bg-white/90 backdrop-blur-2xl border-b border-gray-100/50 flex items-center justify-between px-12 fixed w-full top-0 z-50 shadow-[0_4px_30px_rgba(0,0,0,0.02)]">
+            class="h-24 bg-white border-b border-gray-100/50 flex items-center justify-between px-12 fixed w-full top-0 z-50 shadow-sm">
             <div class="flex items-center gap-6">
                 <a href="{{ route('admin.online-store.mnpages.index') }}"
-                    class="w-12 h-12 flex items-center justify-center bg-gray-50 text-gray-700 hover:text-black hover:bg-gray-100 rounded-2xl transition-all group">
-                    <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none"
+                    class="w-12 h-9 flex items-center justify-center bg-gray-50 text-gray-700 hover:text-black hover:bg-gray-100 rounded-md transition-all group">
+                    <svg class="w-5 h-5 transition-transform" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
                     </svg>
                 </a>
                 <div class="flex items-center gap-4">
-                    <div class="w-1.5 h-10 bg-black rounded-full"></div>
+                    <div class="w-1.5 h-10 bg-black rounded-md"></div>
                     <div>
-                        <h1 class="text-xl font-black text-gray-900 tracking-tighter uppercase">Design</h1>
-                        <p class="text-xs font-bold text-gray-700 mt-0.5 uppercase tracking-[0.2em] italic">
+                        <h1 class="text-xl font-semibold text-gray-900">Design</h1>
+                        <p class="text-xs font-bold text-gray-700 mt-0.5">
                             {{ $mnpage->title }}</p>
                     </div>
                 </div>
             </div>
 
-            <div class="flex items-center gap-8">
-                <div class="relative group">
-                    <button type="button"
-                        class="h-10 flex items-center gap-3 bg-gray-800 text-white px-6 rounded-xl text-xs font-black uppercase tracking-[0.2em] hover:bg-gray-900 transition-all shadow-xl shadow-black/5 overflow-hidden relative group/btn">
-                        <div
-                            class="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700">
-                        </div>
-                        <svg class="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4">
-                            </path>
-                        </svg>
-                        <span class="relative z-10">Add Section</span>
-                    </button>
-                    <div class="origin-top-right absolute right-0 w-64 hidden group-hover:block z-50 pt-3">
-                        <div class="rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] bg-white border border-gray-100/50 p-3 overflow-hidden"
-                            role="menu">
-                            <div class="max-h-[70vh] overflow-y-auto px-2 space-y-1 custom-scrollbar">
-                                <p class="px-4 pt-4 pb-2 text-sm font-black text-gray-400 uppercase tracking-widest">
-                                    Base Components</p>
-                                <button type="button" onclick="addSection('hero_slider')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest">Hero
-                                    Slider</button>
-                                <button type="button" onclick="addSection('product_carousel')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest">Product
-                                    Carousel</button>
-                                <button type="button" onclick="addSection('text_block')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest">Text
-                                    Block</button>
-                                <button type="button" onclick="addSection('image_grid')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest">Image
-                                    Grid</button>
-                                <button type="button" onclick="addSection('image_banner')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest">Image
-                                    Banner</button>
-
-                                <div class="h-px bg-gray-50 my-2"></div>
-                                <p class="px-4 pt-2 pb-2 text-sm font-black text-gray-400 uppercase tracking-widest">
-                                    Interactive</p>
-                                <button type="button" onclick="addSection('horizontal_scroll_cards')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest">Horizontal
-                                    Scroll Cards</button>
-                                <button type="button" onclick="addSection('product_horizontal_scroll')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest">Product
-                                    Horizontal Scroll</button>
-                                <button type="button" onclick="addSection('image_product_carousel')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest">Image
-                                    & Product Carousel</button>
-
-                                <div class="h-px bg-gray-50 my-2"></div>
-                                <p class="px-4 pt-2 pb-2 text-sm font-black text-gray-400 uppercase tracking-widest">
-                                    Essentials</p>
-                                <button type="button" onclick="addSection('announcement_marquee')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest italic">Announcement
-                                    Marquee</button>
-                                <button type="button" onclick="addSection('feature_highlights')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest italic">Feature
-                                    Highlights</button>
-                                <button type="button" onclick="addSection('category_grid')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest italic">Category
-                                    Grid</button>
-                                <button type="button" onclick="addSection('split_banner')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest italic">Split
-                                    Banner</button>
-                                <button type="button" onclick="addSection('newsletter_signup')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest italic">Newsletter
-                                    Signup</button>
-                                <button type="button" onclick="addSection('video_banner')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest italic">Video
-                                    Banner</button>
-                                <button type="button" onclick="addSection('testimonials_slider')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest italic">Testimonials
-                                    Slider</button>
-                                <button type="button" onclick="addSection('countdown_timer')"
-                                    class="w-full text-left px-4 py-3 text-xs font-black text-gray-700 hover:text-black hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest italic pb-6">Countdown
-                                    Timer</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="flex items-center gap-5">
+                <button type="button" onclick="openAddSectionModal()"
+                    class="h-10 flex items-center gap-2 bg-gray-900 text-white px-5 rounded text-xs font-semibold hover:bg-black transition-all shadow focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>Add Section</span>
+                </button>
 
                 <div class="flex items-center gap-6">
                     <div id="save-status"
-                        class="text-sm font-black uppercase tracking-widest text-emerald-500 italic opacity-0 transition-opacity">
+                        class="text-sm font-semibold text-emerald-500 opacity-0 transition-opacity">
                         Saved</div>
                     <button type="button" onclick="publishChanges()"
-                        class="h-10 bg-violet-600 text-white px-6 rounded-xl text-xs font-black uppercase tracking-[0.2em] hover:bg-violet-700 transition-all shadow-xl shadow-violet-500/20 active:scale-95">
+                        class="h-10 bg-violet-600 text-white px-6 rounded text-xs font-semibold hover:bg-violet-700 transition-all shadow">
                         Publish
                     </button>
                 </div>
             </div>
         </header>
 
-        <!-- Builder Workspace -->
-        <main class="flex-1 mt-24 p-12 bg-gray-50/50 overflow-y-auto custom-scrollbar">
-            <div class="max-w-5xl mx-auto w-full">
-                <div id="builder-container" class="space-y-12 min-h-[70vh] pb-32">
-                    <div id="empty-builder-msg"
-                        class="group py-32 bg-white rounded-[3rem] border-2 border-dashed border-gray-100 flex flex-col items-center justify-center transition-all hover:border-violet-200 hover:bg-violet-50/10 cursor-pointer">
+        <!-- 2-Column Builder Workspace -->
+        <main class="flex-1 mt-24 flex bg-gray-50 overflow-hidden" style="height: calc(100vh - 6rem);">
+            <!-- Left Sidebar (Builder List) -->
+            <div class="w-[500px] bg-white border-r border-gray-200 overflow-y-auto custom-scrollbar flex-shrink-0 p-5 shadow-[10px_0_15px_-3px_rgba(0,0,0,0.03)] z-10 relative">
+                <div id="builder-container" class="space-y-12 min-h-full pb-32">
+                    <div id="empty-builder-msg" onclick="openAddSectionModal()" class="group py-24 bg-gray-50/50 rounded-lg border-2 border-dashed border-gray-200 flex flex-col items-center justify-center transition-all hover:border-violet-300 hover:bg-violet-50/50 cursor-pointer" >
                         <div
-                            class="w-20 h-20 rounded-[2.5rem] bg-gray-50 flex items-center justify-center text-gray-200 group-hover:scale-110 group-hover:bg-violet-100 group-hover:text-violet-500 transition-all duration-500">
-                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            class="w-16 h-16 rounded-lg bg-white flex items-center justify-center text-gray-300 group-hover:bg-violet-100 group-hover:text-violet-500 transition-all duration-300 shadow-sm">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 4v16m8-8H4"></path>
                             </svg>
                         </div>
-                        <h3
-                            class="mt-8 text-xs font-black uppercase tracking-[0.3em] text-gray-700 group-hover:text-violet-600 transition-colors">
-                            Start Designing</h3>
-                        <p class="mt-2 text-xs font-bold text-gray-400 italic uppercase">Add sections from the menu
-                            above to begin</p>
+                        <h3 class="mt-6 text-sm font-semibold text-gray-700 group-hover:text-violet-600 transition-colors">Start Designing</h3>
+                        <p class="mt-1 text-xs text-gray-500">Add sections from the top menu</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Area (Live Preview) -->
+            <div class="flex-1 flex flex-col relative bg-[#f1f2f4]">
+                <!-- Device Toolbar -->
+                <div class="h-9 bg-white border-b border-gray-200 flex items-center justify-center gap-1 shadow-sm relative z-10">
+                    <button onclick="setPreviewWidth('100%')" class="px-4 py-1.5 rounded hover:bg-gray-100 text-gray-600 text-xs font-semibold flex items-center gap-2 transition-colors focus:bg-gray-100 focus:text-black">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        Desktop
+                    </button>
+                    <div class="w-px h-4 bg-gray-300 mx-2"></div>
+                    <button onclick="setPreviewWidth('768px')" class="px-4 py-1.5 rounded hover:bg-gray-100 text-gray-600 text-xs font-semibold flex items-center gap-2 transition-colors focus:bg-gray-100 focus:text-black">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        Tablet
+                    </button>
+                    <div class="w-px h-4 bg-gray-300 mx-2"></div>
+                    <button onclick="setPreviewWidth('375px')" class="px-4 py-1.5 rounded hover:bg-gray-100 text-gray-600 text-xs font-semibold flex items-center gap-2 transition-colors focus:bg-gray-100 focus:text-black">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        Mobile
+                    </button>
+                </div>
+                <!-- Iframe Container -->
+                <div class="flex-1 overflow-auto flex justify-center p-6 lg:p-5">
+                    @php
+                        $frontendUrl = url('/');
+                        $previewUrl = $mnpage->is_home ? $frontendUrl . '/?preview=true' : $frontendUrl . '/p/' . $mnpage->slug . '?preview=true';
+                    @endphp
+                    <div id="iframe-wrapper" class="w-full h-full transition-all duration-300 mx-auto" style="max-width: 100%;">
+                        <div class="w-full h-full rounded-xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.1)] border border-gray-300 bg-white">
+                            <iframe id="live-preview-iframe" src="{{ $previewUrl }}" class="w-full h-full border-0"></iframe>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -171,28 +130,42 @@
 
     <!-- Templates -->
     <template id="tpl-hero_slider">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="hero_slider">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-blue-50 flex items-center justify-center text-blue-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Hero Slider</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Full width rotating
+                    <h3 class="text-xs font-semibold text-gray-900">Hero Slider</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Full width rotating
                         banner</p>
                 </div>
             </div>
-            <div class="space-y-6">
-                <div class="slides-container space-y-8"></div>
+            
+            <div class="mb-5 space-y-2 border-b border-gray-50 pb-6">
+                <label class="text-sm font-semibold text-gray-700 ml-1">Image Fit</label>
+                <div class="relative group/select">
+                    <select class="section-image-fit w-full h-10 bg-white border border-gray-100 rounded-xl px-4 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all appearance-none cursor-pointer">
+                        <option value="cover">Fill Container (Cover)</option>
+                        <option value="contain">Show Entire Image (Contain)</option>
+                        <option value="none">Original Size (None)</option>
+                    </select>
+                    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <div class="slides-container space-y-5"></div>
                 <button type="button"
-                    class="group h-14 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-2xl text-sm font-black uppercase tracking-widest text-gray-700 hover:border-violet-500 hover:text-violet-600 hover:bg-violet-50 transition-all shadow-sm"
+                    class="group h-10 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-md text-sm font-semibold text-gray-700 hover:border-violet-500 hover:text-violet-600 hover:bg-violet-50 transition-all shadow-sm"
                     onclick="addSlide(this)">
-                    <svg class="w-4 h-4 transition-transform group-hover:scale-125" fill="none" stroke="currentColor"
+                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -205,52 +178,52 @@
 
     <template id="tpl-slide-item">
         <div
-            class="slide-item bg-gray-50/50 p-8 rounded-3xl border border-gray-100 relative group/slide transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-black/5">
+            class="slide-item bg-white p-5 rounded-md border border-gray-100 relative group/slide transition-all duration-300 hover:bg-white hover:shadow hover:shadow-black/5">
             <button type="button"
-                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow-xl shadow-black/5 flex items-center justify-center rounded-full text-gray-400 hover:text-red-500 opacity-0 group-hover/slide:opacity-100 transition-all border border-gray-50 z-20"
+                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow shadow-black/5 flex items-center justify-center rounded-md text-gray-400 hover:text-red-500 opacity-0 group-hover/slide:opacity-100 transition-all border border-gray-50 z-20"
                 onclick="this.closest('.slide-item').remove()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12">
                     </path>
                 </svg>
             </button>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="space-y-6">
+            <div class="space-y-4">
+                <div class="space-y-4">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Image
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Image
                             URL</label>
                         <div class="flex items-center gap-2">
                             <input type="text"
-                                class="slide-image flex-1 bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold text-gray-900 focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none"
+                                class="slide-image flex-1 bg-white border border-gray-100 rounded px-4 py-3 text-sm font-bold text-gray-900 focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none"
                                 placeholder="https://...">
                             <label
-                                class="cursor-pointer h-12 px-6 flex items-center justify-center bg-violet-600 text-white rounded-xl text-xs font-black uppercase tracking-[0.1em] hover:bg-gray-900 transition-all active:scale-95 shadow-lg shadow-violet-500/10">
+                                class="cursor-pointer h-9 px-6 flex items-center justify-center bg-violet-600 text-white rounded text-xs font-semibold hover:bg-gray-900 transition-all shadow">
                                 Upload
                                 <input type="file" class="hidden" accept="image/*" onchange="uploadImage(this)">
                             </label>
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Link
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Link
                             URL</label>
                         <input type="text"
-                            class="slide-link w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                            class="slide-link w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                             placeholder="/collections/new-arrivals">
                     </div>
                 </div>
-                <div class="space-y-6">
+                <div class="space-y-4">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Main
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Main
                             Heading</label>
                         <input type="text"
-                            class="slide-title w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                            class="slide-title w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                             placeholder="New Season Collection">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Sub
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Sub
                             Heading</label>
                         <input type="text"
-                            class="slide-subtitle w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                            class="slide-subtitle w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                             placeholder="Explore the latest trends">
                     </div>
                 </div>
@@ -259,36 +232,36 @@
     </template>
 
     <template id="tpl-product_carousel">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="product_carousel">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-emerald-50 flex items-center justify-center text-emerald-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Product Carousel</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Automated scrolling
+                    <h3 class="text-xs font-semibold text-gray-900">Product Carousel</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Automated scrolling
                         product grid</p>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="space-y-4">
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Section
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Section
                         Title</label>
                     <input type="text"
-                        class="section-title w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all"
+                        class="section-title w-full bg-gray-50 border-none rounded px-5 py-4 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all"
                         placeholder="e.g. Best Sellers">
                 </div>
                 <div class="space-y-2">
                     <label
-                        class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Collection</label>
+                        class="text-sm font-semibold text-gray-700 ml-1">Collection</label>
                     <div class="relative">
                         <select
-                            class="section-collection w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all appearance-none">
+                            class="section-collection w-full bg-gray-50 border-none rounded px-5 py-4 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all appearance-none">
                             <option value="new_arrivals">New Arrivals</option>
                             <option value="best_sellers">Best Sellers</option>
                             <option value="featured">Featured Products</option>
@@ -302,10 +275,10 @@
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Display
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Display
                         Limit</label>
                     <input type="number"
-                        class="section-limit w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all"
+                        class="section-limit w-full bg-gray-50 border-none rounded px-5 py-4 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all"
                         value="8">
                 </div>
             </div>
@@ -314,23 +287,23 @@
     </template>
 
     <template id="tpl-text_block">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="text_block">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center text-violet-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-violet-50 flex items-center justify-center text-violet-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Text Block</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Rich editor for
+                    <h3 class="text-xs font-semibold text-gray-900">Text Block</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Rich editor for
                         storytelling</p>
                 </div>
             </div>
-            <div class="rounded-3xl border border-gray-100 overflow-hidden shadow-sm">
+            <div class="rounded-md border border-gray-100 overflow-hidden shadow-sm">
                 <div class="quill-editor" style="height: 400px; border: none;"></div>
             </div>
             @include('admin.pages.partials.builder_section_settings')
@@ -338,36 +311,36 @@
     </template>
 
     <template id="tpl-image_grid">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="image_grid">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-indigo-50 flex items-center justify-center text-indigo-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Image Grid</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Multi-column visual
+                    <h3 class="text-xs font-semibold text-gray-900">Image Grid</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Multi-column visual
                         gallery</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Section
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Section
                         Title</label>
                     <input type="text"
-                        class="grid-title w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                        class="grid-title w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                         placeholder="Optional Title">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Grid
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Grid
                         Columns</label>
                     <select
-                        class="grid-columns w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
+                        class="grid-columns w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
                         <option value="2">2 Columns</option>
                         <option value="3">3 Columns</option>
                         <option value="4">4 Columns</option>
@@ -376,27 +349,27 @@
                     </select>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">CTA
+                    <label class="text-sm font-semibold text-gray-700 ml-1">CTA
                         Text</label>
                     <input type="text"
-                        class="grid-cta-text w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                        class="grid-cta-text w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                         placeholder="e.g. Shop Now">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">CTA
+                    <label class="text-sm font-semibold text-gray-700 ml-1">CTA
                         Link</label>
                     <input type="text"
-                        class="grid-cta-link w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                        class="grid-cta-link w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                         placeholder="/collections/all">
                 </div>
             </div>
 
-            <div class="space-y-8">
-                <div class="grid-items-container space-y-8"></div>
+            <div class="space-y-5">
+                <div class="grid-items-container space-y-5"></div>
                 <button type="button"
-                    class="group h-14 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-700 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm"
+                    class="group h-10 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-md text-xs font-semibold text-gray-700 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm"
                     onclick="addGridItem(this)">
-                    <svg class="w-4 h-4 transition-transform group-hover:scale-125" fill="none" stroke="currentColor"
+                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -409,60 +382,60 @@
 
     <template id="tpl-image_grid_item">
         <div
-            class="grid-item bg-gray-50/50 p-8 rounded-3xl border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-black/5">
+            class="grid-item bg-white p-5 rounded-md border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow hover:shadow-black/5">
             <button type="button"
-                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow-xl shadow-black/5 flex items-center justify-center rounded-full text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
+                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow shadow-black/5 flex items-center justify-center rounded-md text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
                 onclick="this.closest('.grid-item').remove()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12">
                     </path>
                 </svg>
             </button>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="space-y-6">
+            <div class="space-y-4">
+                <div class="space-y-4">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Image
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Image
                             URL</label>
                         <div class="flex items-center gap-2">
                             <input type="text"
-                                class="item-image flex-1 bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                class="item-image flex-1 bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                 placeholder="https://...">
                             <label
-                                class="cursor-pointer h-12 px-6 flex items-center justify-center bg-gray-800 text-white rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-900 transition-all shadow-lg shadow-black/5">
+                                class="cursor-pointer h-9 px-6 flex items-center justify-center bg-gray-800 text-white rounded text-sm font-semibold hover:bg-gray-900 transition-all shadow shadow-black/5">
                                 Upload
                                 <input type="file" class="hidden" accept="image/*" onchange="uploadImage(this)">
                             </label>
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Link
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Link
                             URL</label>
                         <input type="text"
-                            class="item-link w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                            class="item-link w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                             placeholder="Target Link">
                     </div>
                 </div>
-                <div class="space-y-6">
+                <div class="space-y-4">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Alt
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Alt
                             Text</label>
                         <input type="text"
-                            class="item-alt w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                            class="item-alt w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                             placeholder="SEO Description">
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-4">
                         <div class="space-y-2">
-                            <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">CTA
+                            <label class="text-sm font-semibold text-gray-700 ml-1">CTA
                                 Text</label>
                             <input type="text"
-                                class="item-cta-text w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                class="item-cta-text w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                 placeholder="Shop Now">
                         </div>
                         <div class="space-y-2">
                             <label
-                                class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Target</label>
+                                class="text-sm font-semibold text-gray-700 ml-1">Target</label>
                             <select
-                                class="item-target w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
+                                class="item-target w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
                                 <option value="_self">Same Tab</option>
                                 <option value="_blank">New Tab</option>
                             </select>
@@ -474,43 +447,43 @@
     </template>
 
     <template id="tpl-image_banner">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="image_banner">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center text-rose-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-rose-50 flex items-center justify-center text-rose-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Image Banner</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Standalone
+                    <h3 class="text-xs font-semibold text-gray-900">Image Banner</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Standalone
                         high-impact visual</p>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="space-y-6">
+            <div class="space-y-4">
+                <div class="space-y-4">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Image
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Image
                             URL</label>
                         <div class="flex items-center gap-2">
                             <input type="text"
-                                class="banner-image flex-1 bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                class="banner-image flex-1 bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                 placeholder="https://...">
                             <label
-                                class="cursor-pointer h-12 px-6 flex items-center justify-center bg-violet-600 text-white rounded-xl text-xs font-black uppercase tracking-[0.1em] hover:bg-gray-900 transition-all active:scale-95 shadow-lg shadow-violet-500/10">
+                                class="cursor-pointer h-9 px-6 flex items-center justify-center bg-violet-600 text-white rounded text-xs font-semibold hover:bg-gray-900 transition-all shadow">
                                 Upload
                                 <input type="file" class="hidden" accept="image/*" onchange="uploadImage(this)">
                             </label>
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Object
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Object
                             Fit</label>
                         <select
-                            class="banner-fit w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
+                            class="banner-fit w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
                             <option value="cover">Cover (Fill space, crop if needed)</option>
                             <option value="contain">Contain (Fit within space)</option>
                             <option value="fill">Fill (Stretch to fit)</option>
@@ -518,19 +491,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="space-y-6">
+                <div class="space-y-4">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Banner Text
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Banner Text
                             Overlay</label>
                         <textarea
-                            class="banner-text w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-sm font-bold text-gray-900 outline-none h-[120px]"
+                            class="banner-text w-full bg-gray-50 border-none rounded px-4 py-3 text-sm font-bold text-gray-900 outline-none h-[120px]"
                             placeholder="Optional text associated with banner"></textarea>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Text
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Text
                             Position</label>
                         <select
-                            class="banner-text-position w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
+                            class="banner-text-position w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
                             <option value="center">Center</option>
                             <option value="bottom">Bottom</option>
                             <option value="top">Top</option>
@@ -544,37 +517,37 @@
     </template>
 
     <template id="tpl-horizontal_scroll_cards">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="horizontal_scroll_cards">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-teal-50 flex items-center justify-center text-teal-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Horizontal Scroll Cards</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Swipeable custom
+                    <h3 class="text-xs font-semibold text-gray-900">Horizontal Scroll Cards</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Swipeable custom
                         card gallery</p>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+            <div class="space-y-4 mb-6">
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Section
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Section
                         Title</label>
                     <input type="text"
-                        class="vscroll-title w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                        class="vscroll-title w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                         placeholder="e.g. Featured Brands">
                 </div>
             </div>
-            <div class="space-y-8">
-                <div class="vscroll-cards-container space-y-8"></div>
+            <div class="space-y-5">
+                <div class="vscroll-cards-container space-y-5"></div>
                 <button type="button"
-                    class="group h-14 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-700 hover:border-teal-500 hover:text-teal-600 hover:bg-teal-50 transition-all shadow-sm"
+                    class="group h-10 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-md text-xs font-semibold text-gray-700 hover:border-teal-500 hover:text-teal-600 hover:bg-teal-50 transition-all shadow-sm"
                     onclick="addScrollCard(this)">
-                    <svg class="w-4 h-4 transition-transform group-hover:scale-125" fill="none" stroke="currentColor"
+                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -587,94 +560,94 @@
 
     <template id="tpl-horizontal_scroll_card_item">
         <div
-            class="vscroll-card bg-gray-50/50 p-8 rounded-3xl border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-black/5">
+            class="vscroll-card bg-white p-5 rounded-md border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow hover:shadow-black/5">
             <button type="button"
-                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow-xl shadow-black/5 flex items-center justify-center rounded-full text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
+                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow shadow-black/5 flex items-center justify-center rounded-md text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
                 onclick="this.closest('.vscroll-card').remove()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12">
                     </path>
                 </svg>
             </button>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="space-y-6">
+            <div class="space-y-4">
+                <div class="space-y-4">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Image
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Image
                             URL</label>
                         <div class="flex items-center gap-2">
                             <input type="text"
-                                class="card-image flex-1 bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                class="card-image flex-1 bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                 placeholder="https://...">
                             <label
-                                class="cursor-pointer h-12 px-6 flex items-center justify-center bg-gray-800 text-white rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-900 transition-all shadow-lg shadow-black/5">
+                                class="cursor-pointer h-9 px-6 flex items-center justify-center bg-gray-800 text-white rounded text-sm font-semibold hover:bg-gray-900 transition-all shadow shadow-black/5">
                                 Upload
                                 <input type="file" class="hidden" accept="image/*" onchange="uploadImage(this)">
                             </label>
                         </div>
                     </div>
                 </div>
-                <div class="space-y-6">
+                <div class="space-y-4">
                     <div class="space-y-2">
                         <label
-                            class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Headline</label>
+                            class="text-sm font-semibold text-gray-700 ml-1">Headline</label>
                         <input type="text"
-                            class="card-headline w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none">
+                            class="card-headline w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none">
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-4">
                         <div class="space-y-2">
-                            <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">CTA
+                            <label class="text-sm font-semibold text-gray-700 ml-1">CTA
                                 Text</label>
                             <input type="text"
-                                class="card-cta-text w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none">
+                                class="card-cta-text w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none">
                         </div>
                         <div class="space-y-2">
-                            <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">CTA
+                            <label class="text-sm font-semibold text-gray-700 ml-1">CTA
                                 Link</label>
                             <input type="text"
-                                class="card-cta-link w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none">
+                                class="card-cta-link w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none">
                         </div>
                     </div>
                 </div>
                 <div class="col-span-1 md:col-span-2 space-y-2">
                     <label
-                        class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Paragraph</label>
+                        class="text-sm font-semibold text-gray-700 ml-1">Paragraph</label>
                     <textarea
-                        class="card-paragraph w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold text-gray-900 focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none h-20"></textarea>
+                        class="card-paragraph w-full bg-white border border-gray-100 rounded px-4 py-3 text-sm font-bold text-gray-900 focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none h-20"></textarea>
                 </div>
             </div>
         </div>
     </template>
 
     <template id="tpl-product_horizontal_scroll">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="product_horizontal_scroll">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-emerald-50 flex items-center justify-center text-emerald-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Product Scroll</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Selected product
+                    <h3 class="text-xs font-semibold text-gray-900">Product Scroll</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Selected product
                         showcase</p>
                 </div>
             </div>
-            <div class="mb-10">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Section
+            <div class="mb-6">
+                <label class="text-sm font-semibold text-gray-700 ml-1">Section
                     Title</label>
                 <input type="text"
-                    class="section-title w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none"
+                    class="section-title w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none"
                     placeholder="e.g. Hand-picked products">
             </div>
-            <div class="space-y-8">
+            <div class="space-y-5">
                 <div class="product-scroll-container space-y-4"></div>
                 <button type="button"
-                    class="group h-14 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-700 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all shadow-sm"
+                    class="group h-10 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-md text-xs font-semibold text-gray-700 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all shadow-sm"
                     onclick="addScrollProduct(this)">
-                    <svg class="w-4 h-4 transition-transform group-hover:scale-125" fill="none" stroke="currentColor"
+                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -686,47 +659,47 @@
     </template>
 
     <template id="tpl-image_product_carousel">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="image_product_carousel">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-indigo-50 flex items-center justify-center text-indigo-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Image & Product Carousel</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Split layout visual
+                    <h3 class="text-xs font-semibold text-gray-900">Image & Product Carousel</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Split layout visual
                         showcase</p>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div class="space-y-6">
+            <div class="space-y-4 gap-6">
+                <div class="space-y-4">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Left Block
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Left Block
                             Image</label>
                         <div class="flex items-center gap-2">
                             <input type="text"
-                                class="carousel-image flex-1 bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                class="carousel-image flex-1 bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                 placeholder="https://...">
                             <label
-                                class="cursor-pointer h-12 px-6 flex items-center justify-center bg-violet-600 text-white rounded-xl text-xs font-black uppercase tracking-[0.1em] hover:bg-gray-900 transition-all active:scale-95 shadow-lg shadow-violet-500/10">
+                                class="cursor-pointer h-9 px-6 flex items-center justify-center bg-violet-600 text-white rounded text-xs font-semibold hover:bg-gray-900 transition-all shadow">
                                 Upload
                                 <input type="file" class="hidden" accept="image/*" onchange="uploadImage(this)">
                             </label>
                         </div>
                     </div>
                 </div>
-                <div class="space-y-6 border-l border-gray-50 pl-12">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Right Block
+                <div class="space-y-4 border-l border-gray-50 pl-12">
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Right Block
                         Products</label>
                     <div class="product-scroll-container space-y-4 mb-6"></div>
                     <button type="button"
-                        class="group h-14 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-700 hover:border-black hover:text-black hover:bg-gray-50 transition-all shadow-sm"
+                        class="group h-10 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-md text-xs font-semibold text-gray-700 hover:border-black hover:text-black hover:bg-gray-50 transition-all shadow-sm"
                         onclick="addScrollProduct(this)">
-                        <svg class="w-4 h-4 transition-transform group-hover:scale-125" fill="none"
+                        <svg class="w-4 h-4 transition-transform" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4">
                             </path>
@@ -741,9 +714,9 @@
 
     <template id="tpl-product_scroll_item">
         <div
-            class="product-item bg-gray-50 p-6 rounded-2xl border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow-lg hover:shadow-black/5 flex items-center gap-6">
+            class="product-item bg-gray-50 p-6 rounded-md border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow hover:shadow-black/5 flex items-center gap-6">
             <button type="button"
-                class="absolute -top-2 -right-2 w-8 h-8 bg-white shadow-lg shadow-black/5 flex items-center justify-center rounded-full text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20"
+                class="absolute -top-2 -right-2 w-8 h-8 bg-white shadow shadow-black/5 flex items-center justify-center rounded-md text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20"
                 onclick="this.closest('.product-item').remove()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12">
@@ -751,11 +724,11 @@
                 </svg>
             </button>
             <div class="flex-1 space-y-2">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Select
+                <label class="text-sm font-semibold text-gray-700 ml-1">Select
                     Product</label>
                 <div class="relative">
                     <select
-                        class="item-product-slug w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
+                        class="item-product-slug w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
                         <option value="">-- Choose a Product --</option>
                         @if(isset($products) && $products->count() > 0)
                             @foreach($products as $product)
@@ -776,29 +749,29 @@
     {{-- ===================== NEW SECTION TEMPLATES ===================== --}}
 
     <template id="tpl-announcement_marquee">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="announcement_marquee">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-amber-50 flex items-center justify-center text-amber-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Announcement Marquee</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Scrolling text
+                    <h3 class="text-xs font-semibold text-gray-900">Announcement Marquee</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Scrolling text
                         ticker</p>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+            <div class="space-y-4 mb-6">
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Scroll
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Scroll
                         Speed</label>
                     <div class="relative">
                         <select
-                            class="marquee-speed w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none appearance-none">
+                            class="marquee-speed w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none appearance-none">
                             <option value="slow">Slow</option>
                             <option value="medium" selected>Medium</option>
                             <option value="fast">Fast</option>
@@ -812,26 +785,26 @@
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Background
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Background
                         Color</label>
                     <input type="color"
-                        class="marquee-bg-color h-[46px] w-full rounded-xl border-none bg-gray-50 p-1 cursor-pointer"
+                        class="marquee-bg-color h-[46px] w-full rounded border-none bg-gray-50 p-1 cursor-pointer"
                         value="#000000">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Text
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Text
                         Color</label>
                     <input type="color"
-                        class="marquee-text-color h-[46px] w-full rounded-xl border-none bg-gray-50 p-1 cursor-pointer"
+                        class="marquee-text-color h-[46px] w-full rounded border-none bg-gray-50 p-1 cursor-pointer"
                         value="#ffffff">
                 </div>
             </div>
-            <div class="space-y-8">
-                <div class="marquee-items-container space-y-6"></div>
+            <div class="space-y-5">
+                <div class="marquee-items-container space-y-4"></div>
                 <button type="button"
-                    class="group h-14 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-700 hover:border-amber-500 hover:text-amber-600 hover:bg-amber-50 transition-all shadow-sm"
+                    class="group h-10 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-md text-xs font-semibold text-gray-700 hover:border-amber-500 hover:text-amber-600 hover:bg-amber-50 transition-all shadow-sm"
                     onclick="addMarqueeItem(this)">
-                    <svg class="w-4 h-4 transition-transform group-hover:scale-125" fill="none" stroke="currentColor"
+                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -844,9 +817,9 @@
 
     <template id="tpl-marquee-item">
         <div
-            class="marquee-item bg-gray-50/50 p-8 rounded-3xl border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-black/5 flex items-center gap-8">
+            class="marquee-item bg-white p-5 rounded-md border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow hover:shadow-black/5 flex items-center gap-5">
             <button type="button"
-                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow-xl shadow-black/5 flex items-center justify-center rounded-full text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
+                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow shadow-black/5 flex items-center justify-center rounded-md text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
                 onclick="this.closest('.marquee-item').remove()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12">
@@ -854,57 +827,57 @@
                 </svg>
             </button>
             <div class="flex-1 space-y-2">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Scrolling
+                <label class="text-sm font-semibold text-gray-700 ml-1">Scrolling
                     Text</label>
                 <input type="text"
-                    class="item-marquee-text w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                    class="item-marquee-text w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                     placeholder="e.g. Free Shipping on orders over $50">
             </div>
             <div class="flex-1 space-y-2">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Link
+                <label class="text-sm font-semibold text-gray-700 ml-1">Link
                     (Optional)</label>
                 <input type="text"
-                    class="item-marquee-link w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                    class="item-marquee-link w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                     placeholder="/collections/all">
             </div>
         </div>
     </template>
 
     <template id="tpl-feature_highlights">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="feature_highlights">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-emerald-50 flex items-center justify-center text-emerald-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Feature Highlights</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Trust signals & key
+                    <h3 class="text-xs font-semibold text-gray-900">Feature Highlights</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Trust signals & key
                         benefits</p>
                 </div>
             </div>
 
-            <div class="mb-10">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Text Color</label>
+            <div class="mb-6">
+                <label class="text-sm font-semibold text-gray-700 ml-1">Text Color</label>
                 <div class="flex items-center gap-4 mt-2">
                     <input type="color"
-                        class="hl-text-color h-12 w-24 rounded-xl border-none bg-gray-50 p-1 cursor-pointer"
+                        class="hl-text-color h-9 w-24 rounded border-none bg-gray-50 p-1 cursor-pointer"
                         value="#000000">
-                    <span class="text-sm font-bold text-gray-700 uppercase tracking-widest">Pick a theme
+                    <span class="text-sm font-bold text-gray-700">Pick a theme
                         color</span>
                 </div>
             </div>
 
-            <div class="space-y-8">
-                <div class="highlights-items-container space-y-6"></div>
+            <div class="space-y-5">
+                <div class="highlights-items-container space-y-4"></div>
                 <button type="button"
-                    class="group h-14 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-700 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all shadow-sm"
+                    class="group h-10 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-md text-xs font-semibold text-gray-700 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 transition-all shadow-sm"
                     onclick="addHighlightItem(this)">
-                    <svg class="w-4 h-4 transition-transform group-hover:scale-125" fill="none" stroke="currentColor"
+                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -917,9 +890,9 @@
 
     <template id="tpl-highlight-item">
         <div
-            class="highlight-item bg-gray-50/50 p-8 rounded-3xl border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-black/5 grid grid-cols-1 md:grid-cols-3 gap-8">
+            class="highlight-item bg-white p-5 rounded-md border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow hover:shadow-black/5 space-y-4">
             <button type="button"
-                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow-xl shadow-black/5 flex items-center justify-center rounded-full text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
+                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow shadow-black/5 flex items-center justify-center rounded-md text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
                 onclick="this.closest('.highlight-item').remove()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12">
@@ -927,58 +900,58 @@
                 </svg>
             </button>
             <div class="space-y-2">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Icon
+                <label class="text-sm font-semibold text-gray-700 ml-1">Icon
                     (Emoji/SVG)</label>
                 <input type="text"
-                    class="item-hl-icon w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                    class="item-hl-icon w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                     placeholder="🚚">
             </div>
             <div class="space-y-2">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Label</label>
+                <label class="text-sm font-semibold text-gray-700 ml-1">Label</label>
                 <input type="text"
-                    class="item-hl-label w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                    class="item-hl-label w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                     placeholder="Free Shipping">
             </div>
             <div class="space-y-2">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Description</label>
+                <label class="text-sm font-semibold text-gray-700 ml-1">Description</label>
                 <input type="text"
-                    class="item-hl-desc w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                    class="item-hl-desc w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                     placeholder="On orders over $50">
             </div>
         </div>
     </template>
 
     <template id="tpl-category_grid">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="category_grid">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-blue-50 flex items-center justify-center text-blue-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Category Grid</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Visual category
+                    <h3 class="text-xs font-semibold text-gray-900">Category Grid</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Visual category
                         navigation</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+            <div class="space-y-4 mb-6">
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Section
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Section
                         Title</label>
                     <input type="text"
-                        class="catgrid-title w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none"
+                        class="catgrid-title w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none"
                         placeholder="Shop by Category">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Columns</label>
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Columns</label>
                     <div class="relative">
                         <select
-                            class="catgrid-columns w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none appearance-none">
+                            class="catgrid-columns w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none appearance-none">
                             <option value="2">2 Columns</option>
                             <option value="3">3 Columns</option>
                             <option value="4" selected>4 Columns</option>
@@ -993,12 +966,12 @@
                 </div>
             </div>
 
-            <div class="space-y-8">
-                <div class="catgrid-items-container space-y-6"></div>
+            <div class="space-y-5">
+                <div class="catgrid-items-container space-y-4"></div>
                 <button type="button"
-                    class="group h-14 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-2xl text-sm font-black uppercase tracking-widest text-gray-700 hover:border-violet-500 hover:text-violet-600 hover:bg-violet-50 transition-all shadow-sm"
+                    class="group h-10 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-md text-sm font-semibold text-gray-700 hover:border-violet-500 hover:text-violet-600 hover:bg-violet-50 transition-all shadow-sm"
                     onclick="addCategoryItem(this)">
-                    <svg class="w-4 h-4 transition-transform group-hover:scale-125" fill="none" stroke="currentColor"
+                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -1011,9 +984,9 @@
 
     <template id="tpl-category-item">
         <div
-            class="category-item bg-gray-50/50 p-8 rounded-3xl border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-black/5 grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
+            class="category-item bg-white p-5 rounded-md border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow hover:shadow-black/5 space-y-4 items-end">
             <button type="button"
-                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow-xl shadow-black/5 flex items-center justify-center rounded-full text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
+                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow shadow-black/5 flex items-center justify-center rounded-md text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
                 onclick="this.closest('.category-item').remove()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12">
@@ -1021,90 +994,90 @@
                 </svg>
             </button>
             <div class="space-y-2">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Image URL</label>
+                <label class="text-sm font-semibold text-gray-700 ml-1">Image URL</label>
                 <div class="flex items-center gap-2">
                     <input type="text"
-                        class="item-cat-image flex-1 bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                        class="item-cat-image flex-1 bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                         placeholder="https://...">
                     <label
-                        class="cursor-pointer h-12 px-6 flex items-center justify-center bg-gray-800 text-white rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-900 transition-all shadow-lg shadow-black/5">
+                        class="cursor-pointer h-9 px-6 flex items-center justify-center bg-gray-800 text-white rounded text-sm font-semibold hover:bg-gray-900 transition-all shadow shadow-black/5">
                         Upload
                         <input type="file" class="hidden" accept="image/*" onchange="uploadImage(this)">
                     </label>
                 </div>
             </div>
             <div class="space-y-2">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Category
+                <label class="text-sm font-semibold text-gray-700 ml-1">Category
                     Name</label>
                 <input type="text"
-                    class="item-cat-name w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                    class="item-cat-name w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                     placeholder="Tops">
             </div>
             <div class="space-y-2">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Link</label>
+                <label class="text-sm font-semibold text-gray-700 ml-1">Link</label>
                 <input type="text"
-                    class="item-cat-link w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                    class="item-cat-link w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                     placeholder="/collections/tops">
             </div>
         </div>
     </template>
 
     <template id="tpl-split_banner">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="split_banner">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center text-pink-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-pink-50 flex items-center justify-center text-pink-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-black text-gray-900 uppercase tracking-widest">Split Banner</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Dual column content
+                    <h3 class="text-xs font-semibold text-gray-900">Split Banner</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Dual column content
                         block</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div class="space-y-8">
+            <div class="space-y-4 gap-6">
+                <div class="space-y-5">
                     <div class="space-y-4">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Visual
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Visual
                             Content</label>
-                        <div class="grid grid-cols-1 gap-6 bg-gray-50 p-8 rounded-3xl">
+                        <div class="grid grid-cols-1 gap-6 bg-gray-50 p-5 rounded-md">
                             <div class="space-y-2">
                                 <label
-                                    class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Image
+                                    class="text-sm font-semibold text-gray-700 ml-1">Image
                                     URL</label>
                                 <div class="flex items-center gap-2">
                                     <input type="text"
-                                        class="split-image flex-1 bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                        class="split-image flex-1 bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                         placeholder="https://...">
                                     <label
-                                        class="cursor-pointer h-12 px-6 flex items-center justify-center bg-gray-800 text-white rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-900 transition-all shadow-lg shadow-black/5">
+                                        class="cursor-pointer h-9 px-6 flex items-center justify-center bg-gray-800 text-white rounded text-sm font-semibold hover:bg-gray-900 transition-all shadow shadow-black/5">
                                         Upload
                                         <input type="file" class="hidden" accept="image/*" onchange="uploadImage(this)">
                                     </label>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-4">
                                 <div class="space-y-2">
                                     <label
-                                        class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Image
+                                        class="text-sm font-semibold text-gray-700 ml-1">Image
                                         Side</label>
                                     <select
-                                        class="split-image-side w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
+                                        class="split-image-side w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
                                         <option value="left">Left</option>
                                         <option value="right">Right</option>
                                     </select>
                                 </div>
                                 <div class="space-y-2">
                                     <label
-                                        class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Object
+                                        class="text-sm font-semibold text-gray-700 ml-1">Object
                                         Fit</label>
                                     <select
-                                        class="split-object-fit w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
+                                        class="split-object-fit w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
                                         <option value="cover">Cover</option>
                                         <option value="contain">Contain</option>
                                     </select>
@@ -1114,57 +1087,57 @@
                     </div>
                 </div>
 
-                <div class="space-y-8">
+                <div class="space-y-5">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Editorial
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Editorial
                             Content</label>
                         <div class="grid grid-cols-1 gap-6">
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-4">
                                 <div class="space-y-2">
                                     <label
-                                        class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Badge</label>
+                                        class="text-sm font-semibold text-gray-700 ml-1">Badge</label>
                                     <input type="text"
-                                        class="split-badge w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                        class="split-badge w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                         placeholder="New Arrival">
                                 </div>
                                 <div class="space-y-2">
                                     <label
-                                        class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">BG
+                                        class="text-sm font-semibold text-gray-700 ml-1">BG
                                         Color</label>
                                     <input type="color"
-                                        class="split-text-bg h-[46px] w-full rounded-xl border-none bg-gray-50 p-1 cursor-pointer"
+                                        class="split-text-bg h-[46px] w-full rounded border-none bg-gray-50 p-1 cursor-pointer"
                                         value="#ffffff">
                                 </div>
                             </div>
                             <div class="space-y-2">
                                 <label
-                                    class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Headline</label>
+                                    class="text-sm font-semibold text-gray-700 ml-1">Headline</label>
                                 <input type="text"
-                                    class="split-title w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                    class="split-title w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                     placeholder="Bold Headline">
                             </div>
                             <div class="space-y-2">
                                 <label
-                                    class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Subtitle</label>
+                                    class="text-sm font-semibold text-gray-700 ml-1">Subtitle</label>
                                 <textarea
-                                    class="split-subtitle w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none h-20"
+                                    class="split-subtitle w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none h-20"
                                     placeholder="Subheading text..."></textarea>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-4">
                                 <div class="space-y-2">
                                     <label
-                                        class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">CTA
+                                        class="text-sm font-semibold text-gray-700 ml-1">CTA
                                         Text</label>
                                     <input type="text"
-                                        class="split-cta-text w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                        class="split-cta-text w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                         placeholder="Shop Now">
                                 </div>
                                 <div class="space-y-2">
                                     <label
-                                        class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">CTA
+                                        class="text-sm font-semibold text-gray-700 ml-1">CTA
                                         Link</label>
                                     <input type="text"
-                                        class="split-cta-link w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                        class="split-cta-link w-full bg-gray-50 border-none rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                         placeholder="/collections/new">
                                 </div>
                             </div>
@@ -1177,38 +1150,38 @@
     </template>
 
     <template id="tpl-newsletter_signup">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="newsletter_signup">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center text-violet-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-violet-50 flex items-center justify-center text-violet-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-widest">Newsletter Signup</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Email collection &
+                    <h3 class="text-xs font-bold text-gray-900">Newsletter Signup</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Email collection &
                         growth</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                <div class="space-y-6">
+            <div class="space-y-4 mb-6">
+                <div class="space-y-4">
                     <div class="space-y-2">
                         <label
-                            class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Headline</label>
+                            class="text-sm font-semibold text-gray-700 ml-1">Headline</label>
                         <input type="text"
-                            class="nl-title w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none"
+                            class="nl-title w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none"
                             placeholder="Join the List">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Background
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Background
                             Style</label>
                         <div class="relative">
                             <select
-                                class="nl-bg-style w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none appearance-none">
+                                class="nl-bg-style w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none appearance-none">
                                 <option value="light">Light Minimal</option>
                                 <option value="dark">Dark Premium</option>
                                 <option value="image">Custom Image</option>
@@ -1222,43 +1195,43 @@
                         </div>
                     </div>
                 </div>
-                <div class="space-y-6">
+                <div class="space-y-4">
                     <div class="space-y-2">
                         <label
-                            class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Description</label>
+                            class="text-sm font-semibold text-gray-700 ml-1">Description</label>
                         <textarea
-                            class="nl-description w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none h-[115px]"
+                            class="nl-description w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none h-[115px]"
                             placeholder="Get early access to drops and exclusive discounts."></textarea>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+            <div class="space-y-4 mb-6">
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Input
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Input
                         Placeholder</label>
                     <input type="text"
-                        class="nl-placeholder w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none"
+                        class="nl-placeholder w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none"
                         placeholder="Enter your email">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Button
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Button
                         Text</label>
                     <input type="text"
-                        class="nl-button-text w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none"
+                        class="nl-button-text w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none"
                         placeholder="Subscribe">
                 </div>
             </div>
 
             <div class="space-y-2">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Background Image
+                <label class="text-sm font-semibold text-gray-700 ml-1">Background Image
                     (Optional)</label>
                 <div class="flex items-center gap-2">
                     <input type="text"
-                        class="nl-bg-image flex-1 bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none"
+                        class="nl-bg-image flex-1 bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none"
                         placeholder="https://...">
                     <label
-                        class="cursor-pointer h-14 px-8 flex items-center justify-center bg-gray-800 text-white rounded-xl text-sm font-black uppercase tracking-widest hover:bg-gray-800 transition-all shadow-lg shadow-black/5">
+                        class="cursor-pointer h-10 px-8 flex items-center justify-center bg-gray-800 text-white rounded text-sm font-semibold hover:bg-gray-800 transition-all shadow shadow-black/5">
                         Upload Image
                         <input type="file" class="hidden" accept="image/*" onchange="uploadImage(this)">
                     </label>
@@ -1270,37 +1243,37 @@
     </template>
 
     <template id="tpl-video_banner">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="video_banner">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center text-rose-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-rose-50 flex items-center justify-center text-rose-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-widest">Video Banner</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Cinematic
+                    <h3 class="text-xs font-bold text-gray-900">Video Banner</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Cinematic
                         background experience</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+            <div class="space-y-4 mb-6">
                 <div class="md:col-span-2 space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Video Source
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Video Source
                         (MP4 URL)</label>
                     <input type="text"
-                        class="vid-url w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none"
+                        class="vid-url w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none"
                         placeholder="https://...video.mp4">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Section
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Section
                         Height</label>
                     <div class="relative">
                         <select
-                            class="vid-height w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none appearance-none">
+                            class="vid-height w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none appearance-none">
                             <option value="small">Small (40vh)</option>
                             <option value="medium" selected>Medium (60vh)</option>
                             <option value="large">Large (80vh)</option>
@@ -1316,46 +1289,46 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                <div class="space-y-6">
+            <div class="space-y-4 mb-6">
+                <div class="space-y-4">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Overlay
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Overlay
                             Branding</label>
                         <div class="grid grid-cols-1 gap-4">
                             <div class="space-y-2">
                                 <label
-                                    class="text-[8px] font-bold text-gray-700 uppercase tracking-tighter">Title</label>
+                                    class="text-[8px] font-bold text-gray-700">Title</label>
                                 <input type="text"
-                                    class="vid-title w-full bg-gray-50 border-none rounded-xl px-5 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                    class="vid-title w-full bg-gray-50 border-none rounded px-5 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                     placeholder="Bold Headline">
                             </div>
                             <div class="space-y-2">
                                 <label
-                                    class="text-[8px] font-bold text-gray-700 uppercase tracking-tighter">Subtitle</label>
+                                    class="text-[8px] font-bold text-gray-700">Subtitle</label>
                                 <input type="text"
-                                    class="vid-subtitle w-full bg-gray-50 border-none rounded-xl px-5 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                    class="vid-subtitle w-full bg-gray-50 border-none rounded px-5 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                     placeholder="Supporting text">
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="space-y-6">
+                <div class="space-y-4">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Call to
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Call to
                             Action</label>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-4">
                             <div class="space-y-2">
-                                <label class="text-[8px] font-bold text-gray-700 uppercase tracking-tighter">Button
+                                <label class="text-[8px] font-bold text-gray-700">Button
                                     Text</label>
                                 <input type="text"
-                                    class="vid-cta-text w-full bg-gray-50 border-none rounded-xl px-5 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                    class="vid-cta-text w-full bg-gray-50 border-none rounded px-5 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                     placeholder="Shop Now">
                             </div>
                             <div class="space-y-2">
-                                <label class="text-[8px] font-bold text-gray-700 uppercase tracking-tighter">URL
+                                <label class="text-[8px] font-bold text-gray-700">URL
                                     Link</label>
                                 <input type="text"
-                                    class="vid-cta-link w-full bg-gray-50 border-none rounded-xl px-5 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                                    class="vid-cta-link w-full bg-gray-50 border-none rounded px-5 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                                     placeholder="/collections/all">
                             </div>
                         </div>
@@ -1364,16 +1337,16 @@
             </div>
 
             <div class="space-y-2">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Visual
+                <label class="text-sm font-semibold text-gray-700 ml-1">Visual
                     Settings</label>
-                <div class="bg-gray-50 p-6 rounded-2xl flex items-center justify-between">
-                    <span class="text-xs font-bold text-gray-700 uppercase tracking-widest">Dark Overlay
+                <div class="bg-gray-50 p-6 rounded-md flex items-center justify-between">
+                    <span class="text-xs font-bold text-gray-700">Dark Overlay
                         Opacity</span>
                     <div class="flex items-center gap-4 w-1/3">
                         <input type="number"
-                            class="vid-overlay w-full bg-white border border-gray-100 rounded-xl px-4 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                            class="vid-overlay w-full bg-white border border-gray-100 rounded px-4 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                             value="40" min="0" max="100">
-                        <span class="text-sm font-bold text-gray-700 uppercase">%</span>
+                        <span class="text-sm font-bold text-gray-700">%</span>
                     </div>
                 </div>
             </div>
@@ -1383,37 +1356,37 @@
     </template>
 
     <template id="tpl-testimonials_slider">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="testimonials_slider">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-orange-50 flex items-center justify-center text-orange-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-widest">Testimonials Slider</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Community trust &
+                    <h3 class="text-xs font-bold text-gray-900">Testimonials Slider</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Community trust &
                         reviews</p>
                 </div>
             </div>
 
-            <div class="mb-10">
-                <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Section
+            <div class="mb-6">
+                <label class="text-sm font-semibold text-gray-700 ml-1">Section
                     Title</label>
                 <input type="text"
-                    class="testimonials-title w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none"
+                    class="testimonials-title w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none"
                     placeholder="What Our Customers Say">
             </div>
 
-            <div class="space-y-8">
-                <div class="testimonials-items-container space-y-6"></div>
+            <div class="space-y-5">
+                <div class="testimonials-items-container space-y-4"></div>
                 <button type="button"
-                    class="group h-14 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-700 hover:border-orange-500 hover:text-orange-600 hover:bg-orange-50 transition-all shadow-sm"
+                    class="group h-10 w-full flex items-center justify-center gap-3 border-2 border-dashed border-gray-100 rounded-md text-xs font-semibold text-gray-700 hover:border-orange-500 hover:text-orange-600 hover:bg-orange-50 transition-all shadow-sm"
                     onclick="addTestimonialItem(this)">
-                    <svg class="w-4 h-4 transition-transform group-hover:scale-125" fill="none" stroke="currentColor"
+                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -1426,43 +1399,43 @@
 
     <template id="tpl-testimonial-item">
         <div
-            class="testimonial-item bg-gray-50/50 p-8 rounded-3xl border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-black/5">
+            class="testimonial-item bg-white p-5 rounded-md border border-gray-100 relative group/item transition-all duration-300 hover:bg-white hover:shadow hover:shadow-black/5">
             <button type="button"
-                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow-xl shadow-black/5 flex items-center justify-center rounded-full text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
+                class="absolute -top-3 -right-3 w-10 h-10 bg-white shadow shadow-black/5 flex items-center justify-center rounded-md text-gray-400 hover:text-red-500 opacity-0 group-hover/item:opacity-100 transition-all border border-gray-50 z-20 shadow-sm"
                 onclick="this.closest('.testimonial-item').remove()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12">
                     </path>
                 </svg>
             </button>
-            <div class="grid grid-cols-1 gap-8">
+            <div class="grid grid-cols-1 gap-5">
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Quote</label>
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Quote</label>
                     <textarea
-                        class="item-t-quote w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold text-gray-900 focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none h-24"
+                        class="item-t-quote w-full bg-white border border-gray-100 rounded px-4 py-3 text-sm font-bold text-gray-900 focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 transition-all outline-none h-24"
                         placeholder="Amazing product, love it!"></textarea>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4 gap-6">
                     <div class="space-y-2">
                         <label
-                            class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Name</label>
+                            class="text-sm font-semibold text-gray-700 ml-1">Name</label>
                         <input type="text"
-                            class="item-t-name w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                            class="item-t-name w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                             placeholder="Jane Doe">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Role /
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Role /
                             Location</label>
                         <input type="text"
-                            class="item-t-role w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                            class="item-t-role w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                             placeholder="Verified Buyer">
                     </div>
                     <div class="space-y-2">
                         <label
-                            class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Rating</label>
+                            class="text-sm font-semibold text-gray-700 ml-1">Rating</label>
                         <div class="relative">
                             <select
-                                class="item-t-rating w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
+                                class="item-t-rating w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none appearance-none">
                                 <option value="5" selected>5 ★ Rating</option>
                                 <option value="4">4 ★ Rating</option>
                                 <option value="3">3 ★ Rating</option>
@@ -1478,10 +1451,10 @@
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Avatar URL
+                        <label class="text-sm font-semibold text-gray-700 ml-1">Avatar URL
                             (optional)</label>
                         <input type="text"
-                            class="item-t-avatar w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
+                            class="item-t-avatar w-full bg-white border border-gray-100 rounded px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-violet-500/20 transition-all outline-none"
                             placeholder="Avatar URL">
                     </div>
                 </div>
@@ -1490,73 +1463,73 @@
     </template>
 
     <template id="tpl-countdown_timer">
-        <div class="builder-section bg-white rounded-[2.5rem] border border-gray-100 p-12 relative group transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.04)]"
+        <div class="builder-section bg-white rounded-lg border border-gray-100 p-6 relative group transition-all duration-500 hover:shadow-sm"
             data-type="countdown_timer">
             @include('admin.pages.partials.builder_controls')
-            <div class="flex items-center gap-4 mb-10 border-b border-gray-50 pb-8">
-                <div class="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center text-cyan-600">
+            <div class="flex items-center gap-4 mb-6 border-b border-gray-50 pb-8">
+                <div class="w-10 h-10 rounded bg-cyan-50 flex items-center justify-center text-cyan-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-widest">Countdown Timer</h3>
-                    <p class="text-sm font-bold text-gray-700 mt-0.5 uppercase tracking-tighter">Urgency & sale
+                    <h3 class="text-xs font-bold text-gray-900">Countdown Timer</h3>
+                    <p class="text-sm font-bold text-gray-700 mt-0.5">Urgency & sale
                         highlights</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                <div class="space-y-6">
+            <div class="space-y-4 mb-6">
+                <div class="space-y-4">
                     <div class="space-y-2">
                         <label
-                            class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Headline</label>
+                            class="text-sm font-semibold text-gray-700 ml-1">Headline</label>
                         <input type="text"
-                            class="cd-title w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none"
+                            class="cd-title w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none"
                             placeholder="Sale Ends In">
                     </div>
                 </div>
-                <div class="space-y-6">
+                <div class="space-y-4">
                     <div class="space-y-2">
-                        <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">End Date &
+                        <label class="text-sm font-semibold text-gray-700 ml-1">End Date &
                             Time</label>
                         <input type="datetime-local"
-                            class="cd-end-date w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none">
+                            class="cd-end-date w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none">
                     </div>
                 </div>
             </div>
 
-            <div class="space-y-6 mb-10">
+            <div class="space-y-4 mb-6">
                 <div class="space-y-2">
                     <label
-                        class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Description</label>
+                        class="text-sm font-semibold text-gray-700 ml-1">Description</label>
                     <textarea
-                        class="cd-description w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none h-20"
+                        class="cd-description w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none h-20"
                         placeholder="Don't miss out on these limited prices"></textarea>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="space-y-4">
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">CTA
+                    <label class="text-sm font-semibold text-gray-700 ml-1">CTA
                         Text</label>
                     <input type="text"
-                        class="cd-cta-text w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none"
+                        class="cd-cta-text w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none"
                         placeholder="Shop the Sale">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">CTA
+                    <label class="text-sm font-semibold text-gray-700 ml-1">CTA
                         Link</label>
                     <input type="text"
-                        class="cd-cta-link w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none"
+                        class="cd-cta-link w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none"
                         placeholder="/collections/sale">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-black uppercase tracking-[0.15em] text-gray-700 ml-1">Style</label>
+                    <label class="text-sm font-semibold text-gray-700 ml-1">Style</label>
                     <div class="relative">
                         <select
-                            class="cd-bg-style w-full bg-gray-50 border-none rounded-xl px-5 py-4 text-sm font-bold text-gray-900 outline-none appearance-none">
+                            class="cd-bg-style w-full bg-gray-50 border-none rounded px-5 py-4 text-sm font-bold text-gray-900 outline-none appearance-none">
                             <option value="light">Light Minimal</option>
                             <option value="dark">Dark High Contrast</option>
                         </select>
@@ -1600,7 +1573,7 @@
                         toolbar: [
                             [{ 'font': [] }, { 'size': [] }],
                             [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                            ['bold', 'italic', 'underline', 'strike'],
+                            ['bold', '', 'underline', 'strike'],
                             [{ 'color': [] }, { 'background': [] }],
                             [{ 'script': 'sub' }, { 'script': 'super' }],
                             ['blockquote', 'code-block'],
@@ -1619,6 +1592,10 @@
             }
 
             if (type === 'hero_slider') {
+                if (data && data.image_fit) {
+                    const fitSelect = lastSection.querySelector('.section-image-fit');
+                    if (fitSelect) fitSelect.value = data.image_fit;
+                }
                 if (data && data.slides) {
                     data.slides.forEach(slide => addSlide(lastSection.querySelector('button[onclick="addSlide(this)"]'), slide));
                 } else {
@@ -1993,6 +1970,13 @@
                         .then(data => {
                             if (data.success && autoSaveStatus) {
                                 autoSaveStatus.innerText = 'Saved';
+
+                                // Reload iframe for live preview
+                                const iframe = document.getElementById('live-preview-iframe');
+                                if (iframe) {
+                                    iframe.contentWindow.location.reload();
+                                }
+
                                 setTimeout(() => {
                                     autoSaveStatus.classList.remove('opacity-100');
                                     autoSaveStatus.classList.add('opacity-0');
@@ -2017,6 +2001,14 @@
             }, 1000); // Debounce 1s
         }
 
+        // Live Preview Functions
+        function setPreviewWidth(width) {
+            const wrapper = document.getElementById('iframe-wrapper');
+            if (wrapper) {
+                wrapper.style.maxWidth = width;
+            }
+        }
+
         // Attach listeners for auto-save
         container.addEventListener('input', triggerAutoSave);
         container.addEventListener('change', triggerAutoSave);
@@ -2034,6 +2026,7 @@
                 let data = {};
 
                 if (type === 'hero_slider') {
+                    data.image_fit = section.querySelector('.section-image-fit')?.value || 'cover';
                     data.slides = [];
                     section.querySelectorAll('.slide-item').forEach(slide => {
                         data.slides.push({
@@ -2322,6 +2315,175 @@
             }
         });
     </script>
+
+<!-- Add Section Modal -->
+<div id="add-section-modal" class="fixed inset-0 z-[100] bg-gray-900/40 backdrop-blur-sm hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[85vh] flex flex-col scale-95 transition-transform duration-300 relative overflow-hidden" id="add-section-modal-content">
+        <!-- Header -->
+        <div class="px-8 py-5 border-b border-gray-100 flex items-center justify-between bg-white relative z-10">
+            <div>
+                <h3 class="text-xl font-bold text-gray-900">Add a New Section</h3>
+                <p class="text-sm text-gray-500 mt-1">Select a pre-built component to add to your page</p>
+            </div>
+            <button type="button" onclick="closeAddSectionModal()" class="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        
+        <!-- Body -->
+        <div class="p-8 overflow-y-auto custom-scrollbar flex-1 bg-gray-50">
+            <div class="space-y-12">
+                <!-- Base Components -->
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-5 flex items-center gap-3">
+                        <span class="w-8 h-px bg-gray-200"></span> Base Components <span class="flex-1 h-px bg-gray-200"></span>
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <button onclick="addSectionAndClose('hero_slider')" class="text-left p-5 rounded-xl border border-gray-200 hover:border-violet-500 hover:shadow-md transition-all group bg-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                            <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-violet-50 group-hover:text-violet-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Hero Slider</h5>
+                            <p class="text-xs text-gray-500 leading-relaxed">Full width rotating banner with text and links</p>
+                        </button>
+                        
+                        <button onclick="addSectionAndClose('product_carousel')" class="text-left p-5 rounded-xl border border-gray-200 hover:border-violet-500 hover:shadow-md transition-all group bg-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 group-hover:bg-violet-50 group-hover:text-violet-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                            </div>
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Product Carousel</h5>
+                            <p class="text-xs text-gray-500 leading-relaxed">Automated scrolling grid of your products</p>
+                        </button>
+
+                        <button onclick="addSectionAndClose('text_block')" class="text-left p-5 rounded-xl border border-gray-200 hover:border-violet-500 hover:shadow-md transition-all group bg-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                            <div class="w-10 h-10 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center mb-4 group-hover:bg-violet-50 group-hover:text-violet-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z"></path></svg>
+                            </div>
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Text Block</h5>
+                            <p class="text-xs text-gray-500 leading-relaxed">Rich text editor for storytelling and content</p>
+                        </button>
+
+                        <button onclick="addSectionAndClose('image_grid')" class="text-left p-5 rounded-xl border border-gray-200 hover:border-violet-500 hover:shadow-md transition-all group bg-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                            <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 group-hover:bg-violet-50 group-hover:text-violet-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                            </div>
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Image Grid</h5>
+                            <p class="text-xs text-gray-500 leading-relaxed">Multi-column visual gallery for photos</p>
+                        </button>
+
+                        <button onclick="addSectionAndClose('image_banner')" class="text-left p-5 rounded-xl border border-gray-200 hover:border-violet-500 hover:shadow-md transition-all group bg-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                            <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center mb-4 group-hover:bg-violet-50 group-hover:text-violet-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Image Banner</h5>
+                            <p class="text-xs text-gray-500 leading-relaxed">Standalone high-impact visual with text</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interactive -->
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-5 flex items-center gap-3">
+                        <span class="w-8 h-px bg-gray-200"></span> Interactive <span class="flex-1 h-px bg-gray-200"></span>
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <button onclick="addSectionAndClose('horizontal_scroll_cards')" class="text-left p-5 rounded-xl border border-gray-200 hover:border-violet-500 hover:shadow-md transition-all group bg-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                            <div class="w-10 h-10 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center mb-4 group-hover:bg-violet-50 group-hover:text-violet-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                            </div>
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Horizontal Cards</h5>
+                            <p class="text-xs text-gray-500 leading-relaxed">Swipeable custom card gallery</p>
+                        </button>
+                        
+                        <button onclick="addSectionAndClose('product_horizontal_scroll')" class="text-left p-5 rounded-xl border border-gray-200 hover:border-violet-500 hover:shadow-md transition-all group bg-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                            <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center mb-4 group-hover:bg-violet-50 group-hover:text-violet-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </div>
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Product Scroll</h5>
+                            <p class="text-xs text-gray-500 leading-relaxed">Swipeable product listing area</p>
+                        </button>
+
+                        <button onclick="addSectionAndClose('image_product_carousel')" class="text-left p-5 rounded-xl border border-gray-200 hover:border-violet-500 hover:shadow-md transition-all group bg-white focus:outline-none focus:ring-2 focus:ring-violet-500">
+                            <div class="w-10 h-10 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center mb-4 group-hover:bg-violet-50 group-hover:text-violet-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Image + Products</h5>
+                            <p class="text-xs text-gray-500 leading-relaxed">Mixed media and product carousel</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Essentials -->
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-5 flex items-center gap-3">
+                        <span class="w-8 h-px bg-gray-200"></span> Essentials <span class="flex-1 h-px bg-gray-200"></span>
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <button onclick="addSectionAndClose('announcement_marquee')" class="text-left p-4 rounded-xl border border-gray-200 hover:border-violet-500 transition-all group bg-white">
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Marquee</h5>
+                            <p class="text-[11px] text-gray-500">Scrolling text</p>
+                        </button>
+                        <button onclick="addSectionAndClose('feature_highlights')" class="text-left p-4 rounded-xl border border-gray-200 hover:border-violet-500 transition-all group bg-white">
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Features</h5>
+                            <p class="text-[11px] text-gray-500">Icons and text</p>
+                        </button>
+                        <button onclick="addSectionAndClose('category_grid')" class="text-left p-4 rounded-xl border border-gray-200 hover:border-violet-500 transition-all group bg-white">
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Categories</h5>
+                            <p class="text-[11px] text-gray-500">Visual navigation</p>
+                        </button>
+                        <button onclick="addSectionAndClose('split_banner')" class="text-left p-4 rounded-xl border border-gray-200 hover:border-violet-500 transition-all group bg-white">
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Split Banner</h5>
+                            <p class="text-[11px] text-gray-500">50/50 layout</p>
+                        </button>
+                        <button onclick="addSectionAndClose('newsletter_signup')" class="text-left p-4 rounded-xl border border-gray-200 hover:border-violet-500 transition-all group bg-white">
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Newsletter</h5>
+                            <p class="text-[11px] text-gray-500">Email capture</p>
+                        </button>
+                        <button onclick="addSectionAndClose('video_banner')" class="text-left p-4 rounded-xl border border-gray-200 hover:border-violet-500 transition-all group bg-white">
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Video Banner</h5>
+                            <p class="text-[11px] text-gray-500">Autoplay video</p>
+                        </button>
+                        <button onclick="addSectionAndClose('testimonials_slider')" class="text-left p-4 rounded-xl border border-gray-200 hover:border-violet-500 transition-all group bg-white">
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Testimonials</h5>
+                            <p class="text-[11px] text-gray-500">Customer reviews</p>
+                        </button>
+                        <button onclick="addSectionAndClose('countdown_timer')" class="text-left p-4 rounded-xl border border-gray-200 hover:border-violet-500 transition-all group bg-white">
+                            <h5 class="text-sm font-bold text-gray-900 mb-1">Countdown</h5>
+                            <p class="text-[11px] text-gray-500">Urgency banner</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openAddSectionModal() {
+        const modal = document.getElementById('add-section-modal');
+        const content = document.getElementById('add-section-modal-content');
+        modal.classList.remove('hidden');
+        // trigger reflow
+        void modal.offsetWidth;
+        modal.classList.remove('opacity-0');
+        content.classList.remove('scale-95');
+    }
+
+    function closeAddSectionModal() {
+        const modal = document.getElementById('add-section-modal');
+        const content = document.getElementById('add-section-modal-content');
+        modal.classList.add('opacity-0');
+        content.classList.add('scale-95');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    function addSectionAndClose(type) {
+        addSection(type);
+        closeAddSectionModal();
+    }
+</script>
 </body>
 
 </html>

@@ -88,8 +88,6 @@ class ProductController extends Controller
             $file = $request->file('preview_image');
             $fileName = time() . '_' . $file->getClientOriginalName();
             $relativePath = "storage/products/preview";
-            $destinationPath = base_path("../frontend-user/public/{$relativePath}");
-
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true);
             }
@@ -229,7 +227,7 @@ class ProductController extends Controller
 
             // Delete old image if exists
             if ($product->preview_image) {
-                $oldPath = base_path("../frontend-user/public/{$product->preview_image}");
+                $oldPath = public_path("/{$product->preview_image}");
                 if (file_exists($oldPath)) {
                     unlink($oldPath);
                 }
@@ -238,8 +236,6 @@ class ProductController extends Controller
             $file = $request->file('preview_image');
             $fileName = time() . '_' . $file->getClientOriginalName();
             $relativePath = "storage/products/preview";
-            $destinationPath = base_path("../frontend-user/public/{$relativePath}");
-
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true);
             }

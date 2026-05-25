@@ -77,8 +77,6 @@ class CategoryController extends Controller
             $file = $request->file('image');
             $fileName = time() . '_' . $file->getClientOriginalName();
             $relativePath = "storage/categories";
-            $destinationPath = base_path("../frontend-user/public/{$relativePath}");
-
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true);
             }
@@ -111,7 +109,7 @@ class CategoryController extends Controller
         if ($request->hasFile('image')) {
             // Delete old image if exists
             if ($category->image) {
-                $oldPath = base_path("../frontend-user/public/{$category->image}");
+                $oldPath = public_path("/{$category->image}");
                 if (file_exists($oldPath)) {
                     unlink($oldPath);
                 }
@@ -120,8 +118,6 @@ class CategoryController extends Controller
             $file = $request->file('image');
             $fileName = time() . '_' . $file->getClientOriginalName();
             $relativePath = "storage/categories";
-            $destinationPath = base_path("../frontend-user/public/{$relativePath}");
-
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true);
             }

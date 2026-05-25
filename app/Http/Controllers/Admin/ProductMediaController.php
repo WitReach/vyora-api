@@ -19,7 +19,7 @@ class ProductMediaController extends Controller
         ]);
 
         if ($product->preview_image) {
-            $oldPath = base_path("../frontend-user/public/{$product->preview_image}");
+            $oldPath = public_path("/{$product->preview_image}");
             if (file_exists($oldPath)) {
                 unlink($oldPath);
             }
@@ -29,11 +29,9 @@ class ProductMediaController extends Controller
         $fileName = time() . '_' . $file->getClientOriginalName();
         $relativePath = "uploads/products/preview"; // Use uploads for consistency
 
-        $frontendPath = base_path("../frontend-user/public/{$relativePath}");
         $backendPath = public_path($relativePath);
 
         // Create directories
-        if (!file_exists($frontendPath)) mkdir($frontendPath, 0755, true);
         if (!file_exists($backendPath)) mkdir($backendPath, 0755, true);
 
         // Move to frontend
@@ -67,7 +65,7 @@ class ProductMediaController extends Controller
         $pathField = $type === 'video' ? 'video_path' : 'image_path';
 
         if ($catImage && $catImage->$pathField) {
-            $oldPath = base_path("../frontend-user/public{$catImage->$pathField}");
+            $oldPath = public_path("{$catImage->$pathField}");
             if (file_exists($oldPath)) {
                 unlink($oldPath);
             }
@@ -78,16 +76,13 @@ class ProductMediaController extends Controller
         $isVideo = in_array($extension, ['mp4', 'mov', 'qt', 'webm']);
 
         $relativePath = "uploads/products/preview/category_" . $request->category_id;
-        $frontendPath = base_path("../frontend-user/public/{$relativePath}");
         $backendPath = public_path($relativePath);
 
-        if (!file_exists($frontendPath)) mkdir($frontendPath, 0755, true);
         if (!file_exists($backendPath)) mkdir($backendPath, 0755, true);
 
         if ($isVideo) {
             $fileName = time() . '_' . pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '.webm';
             $tempPath = $file->getRealPath();
-            $frontendDest = $frontendPath . '/' . $fileName;
             $backendDest = $backendPath . '/' . $fileName;
 
             if ($extension !== 'webm') {
@@ -105,22 +100,19 @@ class ProductMediaController extends Controller
                 }
 
                 if ($conversionSuccess) {
-                    copy($backendDest, $frontendDest);
+                    // copy($backendDest, $frontendDest);
                 } else {
                     // Fallback to original if conversion fails
                     $fileName = time() . '_' . $file->getClientOriginalName();
-                    $file->move($frontendPath, $fileName);
-                    copy($frontendPath . '/' . $fileName, $backendPath . '/' . $fileName);
+                    $file->move($backendPath, $fileName);
                     \Log::error("FFmpeg conversion failed: " . implode("\n", $output));
                 }
             } else {
-                $file->move($frontendPath, $fileName);
-                copy($frontendPath . '/' . $fileName, $backendPath . '/' . $fileName);
+                $file->move($backendPath, $fileName);
             }
         } else {
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move($frontendPath, $fileName);
-            copy($frontendPath . '/' . $fileName, $backendPath . '/' . $fileName);
+            $file->move($backendPath, $fileName);
         }
 
         ProductCategoryMasterImage::updateOrCreate(
@@ -151,7 +143,7 @@ class ProductMediaController extends Controller
         $pathField = $type === 'video' ? 'video_path' : 'image_path';
 
         if ($catImage->$pathField) {
-            $oldPath = base_path("../frontend-user/public{$catImage->$pathField}");
+            $oldPath = public_path("{$catImage->$pathField}");
             $backendPath = public_path($catImage->$pathField);
             if (file_exists($oldPath)) unlink($oldPath);
             if (file_exists($backendPath)) unlink($backendPath);
@@ -185,14 +177,11 @@ class ProductMediaController extends Controller
                 // Handle video upload and convert to WebM
                 $fileName = uniqid() . '.webm';
                 $relativePath = "uploads/products/{$product->id}/colors/{$request->color_id}";
-                $frontendPath = base_path("../frontend-user/public/{$relativePath}");
                 $backendPath = public_path($relativePath);
 
-                if (!file_exists($frontendPath)) mkdir($frontendPath, 0755, true);
                 if (!file_exists($backendPath)) mkdir($backendPath, 0755, true);
 
                 $tempPath = $file->getRealPath();
-                $frontendDest = $frontendPath . '/' . $fileName;
                 $backendDest = $backendPath . '/' . $fileName;
 
                 if (strtolower($extension) !== 'webm') {
@@ -210,17 +199,15 @@ class ProductMediaController extends Controller
                     }
 
                     if ($conversionSuccess) {
-                        copy($backendDest, $frontendDest);
+                        // copy($backendDest, $frontendDest);
                     } else {
                         // Fallback to original if conversion fails
                         $fileName = uniqid() . '.' . $extension;
-                        $file->move($frontendPath, $fileName);
-                        copy($frontendPath . '/' . $fileName, $backendPath . '/' . $fileName);
+                        $file->move($backendPath, $fileName);
                         \Log::error("FFmpeg conversion failed: " . implode("\n", $output));
                     }
                 } else {
-                    $file->move($frontendPath, $fileName);
-                    copy($frontendPath . '/' . $fileName, $backendPath . '/' . $fileName);
+                    $file->move($backendPath, $fileName);
                 }
 
                 $media = ProductImage::create([
@@ -234,10 +221,8 @@ class ProductMediaController extends Controller
                 // Handle image upload with WebP conversion
                 $fileName = uniqid() . '.webp';
                 $relativePath = "uploads/products/{$product->id}/colors/{$request->color_id}";
-                $frontendPath = base_path("../frontend-user/public/{$relativePath}");
                 $backendPath = public_path($relativePath);
 
-                if (!file_exists($frontendPath)) mkdir($frontendPath, 0755, true);
                 if (!file_exists($backendPath)) mkdir($backendPath, 0755, true);
 
                 try {
@@ -250,7 +235,7 @@ class ProductMediaController extends Controller
                     try {
                         $image = Image::read($backendPath . '/' . $fileName);
                         $image->toWebp(85)->save($backendPath . '/' . $fileName);
-                        $image->toWebp(85)->save($frontendPath . '/' . $fileName);
+                        
                     } catch (\Exception $e) {
                         \Log::warning("WebP conversion failed: " . $e->getMessage());
                     }
@@ -290,7 +275,7 @@ class ProductMediaController extends Controller
         }
 
         // Delete file from storage
-        $fullPath = base_path("../frontend-user/public/{$productImage->image_path}");
+        $fullPath = public_path("/{$productImage->image_path}");
         if (file_exists($fullPath)) {
             unlink($fullPath);
         }

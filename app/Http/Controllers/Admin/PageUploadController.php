@@ -19,26 +19,20 @@ class PageUploadController extends Controller
             $file = $request->file('image');
             $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.webp';
 
-            // Store in frontend-user/public/uploads
-            $destinationPath = base_path('../frontend-user/public/uploads');
+            // Store in public/uploads
             $backendPath = public_path('uploads');
 
             // Create directories if not exists
-            if (!file_exists($destinationPath)) mkdir($destinationPath, 0755, true);
             if (!file_exists($backendPath)) mkdir($backendPath, 0755, true);
 
             try {
-                // First move to frontend
-                $file->move($destinationPath, $filename);
-                
-                // Then copy to backend
-                copy($destinationPath . '/' . $filename, $backendPath . '/' . $filename);
+                // Move to backend
+                $file->move($backendPath, $filename);
 
                 // Try to convert to webp if it's not already (Optional, don't fail if processing fails)
                 try {
                     $img = \Intervention\Image\Laravel\Facades\Image::read($backendPath . '/' . $filename);
                     $img->toWebp(80)->save($backendPath . '/' . $filename);
-                    $img->toWebp(80)->save($destinationPath . '/' . $filename);
                 } catch (\Exception $e) {
                     \Log::warning("WebP conversion failed for CMS upload: " . $e->getMessage());
                 }

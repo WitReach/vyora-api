@@ -56,7 +56,20 @@ class InstallerController extends Controller
             return back()->withErrors(['connection' => 'Could not connect to database: ' . $e->getMessage()])->withInput();
         }
 
-        // Write to .env
+        // Dynamically update config for this request so migrations use the new DB
+        config([
+            'database.connections.mysql.host' => $request->db_host,
+            'database.connections.mysql.port' => $request->db_port,
+            'database.connections.mysql.database' => $request->db_database,
+            'database.connections.mysql.username' => $request->db_username,
+            'database.connections.mysql.password' => $request->db_password,
+        ]);
+        DB::purge('mysql');
+
+        // Run Migrations FIRST before modifying .env to avoid php artisan serve restarting and killing the process
+        Artisan::call('migrate:fresh --force');
+
+        // Write to .env LAST
         $this->updateEnv([
             'DB_HOST' => $request->db_host,
             'DB_PORT' => $request->db_port,
@@ -64,9 +77,6 @@ class InstallerController extends Controller
             'DB_USERNAME' => $request->db_username,
             'DB_PASSWORD' => $request->db_password,
         ]);
-
-        // Run Migrations
-        Artisan::call('migrate:fresh --force');
 
         return redirect()->route('install.admin');
     }
@@ -79,6 +89,7 @@ class InstallerController extends Controller
     public function processAdmin(Request $request)
     {
         $request->validate([
+            'admin_path' => 'required|string|min:3|max:20|alpha_dash',
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required|confirmed|min:8',
@@ -92,10 +103,16 @@ class InstallerController extends Controller
             'role' => 'administrator',
         ]);
 
+        // Write Admin path to env
+        $this->updateEnv([
+            'ADMIN_PATH' => $request->admin_path,
+        ]);
+        Artisan::call('config:clear');
+
         // Mark installed
         File::put(storage_path('installed'), 'installed');
 
-        return redirect()->route('dashboard');
+        return redirect('/' . $request->admin_path . '/login')->with('success', 'Installation Complete! Please login.');
     }
 
     private function updateEnv($data)

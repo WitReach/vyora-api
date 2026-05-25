@@ -14,9 +14,33 @@ use App\Http\Controllers\InstallerController;
 |
 */
 
-Route::get('/', function () {
-    return redirect()->route('login');
-})->name('home');
+// Frontend Routes
+Route::get('/', [\App\Http\Controllers\Frontend\PageController::class, 'home'])->name('frontend.home');
+Route::get('/shop', [\App\Http\Controllers\Frontend\PageController::class, 'shop'])->name('frontend.shop');
+Route::get('/search', [\App\Http\Controllers\Frontend\PageController::class, 'search'])->name('frontend.search');
+Route::get('/product/{slug}', [\App\Http\Controllers\Frontend\PageController::class, 'product'])->name('frontend.product');
+Route::get('/category/{slug}', [\App\Http\Controllers\Frontend\PageController::class, 'category'])->name('frontend.category');
+Route::get('/collection/{slug}', [\App\Http\Controllers\Frontend\PageController::class, 'collection'])->name('frontend.collection');
+Route::get('/cart', [\App\Http\Controllers\Frontend\PageController::class, 'cart'])->name('frontend.cart');
+Route::get('/checkout', [\App\Http\Controllers\Frontend\PageController::class, 'checkout'])->name('frontend.checkout');
+
+// User Dashboard Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/account', function () {
+        return \Inertia\Inertia::render('Account/Index');
+    })->name('frontend.account');
+
+    Route::get('/orders', function () {
+        return \Inertia\Inertia::render('Account/Orders');
+    })->name('frontend.orders');
+
+    Route::get('/orders/{uuid}', function ($uuid) {
+        return \Inertia\Inertia::render('Account/OrderDetails', ['uuid' => $uuid]);
+    })->name('frontend.orders.show');
+});
+
+Route::get('/p/{slug}', [\App\Http\Controllers\Frontend\PageController::class, 'show'])->name('frontend.page');
+
 Route::get('/add-tax-class', function () {
     try {
         if (!\Illuminate\Support\Facades\Schema::hasColumn('products', 'tax_class')) {
@@ -37,13 +61,27 @@ Route::prefix('install')->name('install.')->group(function () {
     Route::post('/admin', [InstallerController::class, 'processAdmin'])->name('processAdmin');
 });
 
-// Auth Routes
-Route::get('/login', [\App\Http\Controllers\Admin\LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [\App\Http\Controllers\Admin\LoginController::class, 'login']);
-Route::post('/logout', [\App\Http\Controllers\Admin\LoginController::class, 'logout'])->name('logout');
+// Frontend Auth Routes
+Route::get('/login', function () {
+    return \Inertia\Inertia::render('Auth/Login');
+})->name('login');
 
-// Admin Dashboard Routes
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin_access'])->group(function () {
+Route::get('/register', function () {
+    return \Inertia\Inertia::render('Auth/Register');
+})->name('register');
+
+$adminPath = config('app.admin_path', 'admin');
+
+// Admin Auth and Dashboard Routes
+Route::prefix($adminPath)->name('admin.')->group(function () {
+    
+    // Admin Auth Routes
+    Route::get('/login', [\App\Http\Controllers\Admin\LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [\App\Http\Controllers\Admin\LoginController::class, 'login']);
+    Route::post('/logout', [\App\Http\Controllers\Admin\LoginController::class, 'logout'])->name('logout');
+
+    Route::middleware(['auth', 'verified', 'admin_access'])->group(function () {
+
     Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard'); // Explicit admin dashboard
 
     // Products Management Group
@@ -143,6 +181,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin_a
         Route::put('/integrations/{slug}', [\App\Http\Controllers\Admin\IntegrationSettingsController::class, 'update'])->name('integrations.update');
         Route::post('/integrations/razorpay/test', [\App\Http\Controllers\Admin\IntegrationSettingsController::class, 'testRazorpay'])->name('integrations.razorpay.test');
         Route::post('/integrations/qikink/test', [\App\Http\Controllers\Admin\IntegrationSettingsController::class, 'testQikink'])->name('integrations.qikink.test');
+        Route::post('/integrations/algolia/test', [\App\Http\Controllers\Admin\IntegrationSettingsController::class, 'testAlgolia'])->name('integrations.algolia.test');
 
         // Navbar Settings
         Route::get('/navbar-settings', [\App\Http\Controllers\Admin\NavbarSettingsController::class, 'index'])->name('navbar-settings.index');
@@ -150,6 +189,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin_a
 
         // Coupons
         Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
+
+        // Marketing / Search Queries
+        Route::prefix('marketing/search-queries')->name('marketing.search-queries.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\SearchQueryController::class, 'index'])->name('index');
+            Route::post('/export', [\App\Http\Controllers\Admin\SearchQueryController::class, 'export'])->name('export');
+            Route::delete('/delete-by-date', [\App\Http\Controllers\Admin\SearchQueryController::class, 'deleteByDate'])->name('deleteByDate');
+        });
 
         // Gift Cards – Templates
         Route::prefix('gift-cards')->name('gift-cards.')->group(function () {
@@ -173,6 +219,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin_a
         Route::resource('mnpages', \App\Http\Controllers\Admin\PageController::class);
     });
 
+    // Customers
+    Route::resource('customers', \App\Http\Controllers\Admin\CustomerController::class)->only(['index', 'show']);
+
     // Admin Settings Section
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::get('/admin', [\App\Http\Controllers\Admin\AdminSettingController::class, 'index'])->name('index');
@@ -190,4 +239,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin_a
         Route::post('/update', [\App\Http\Controllers\Admin\SystemUpdateController::class, 'update'])->name('update.process');
         Route::post('/update/maintenance', [\App\Http\Controllers\Admin\SystemUpdateController::class, 'toggleMaintenance'])->name('update.maintenance');
     });
+});
+
 });

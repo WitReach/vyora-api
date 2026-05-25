@@ -123,4 +123,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Path
+    |--------------------------------------------------------------------------
+    |
+    | Defines the URL prefix for the backend administrator panel.
+    | Can be dynamically configured via the ADMIN_PATH environment variable.
+    |
+    */
+
+    'admin_path' => env('ADMIN_PATH', 'admin'),
+
 ];

@@ -27,6 +27,9 @@ class AuthController extends Controller
             'role' => 'user',
         ]);
 
+        \Illuminate\Support\Facades\Auth::login($user);
+        $request->session()->regenerate();
+        
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -39,17 +42,24 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
+            'identifier' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $identifier = $request->identifier;
+
+        $user = User::where('email', $identifier)
+                    ->orWhere('phone', $identifier)
+                    ->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['Invalid credentials provided.'],
+                'identifier' => ['Invalid credentials provided.'],
             ]);
         }
+
+        \Illuminate\Support\Facades\Auth::login($user);
+        $request->session()->regenerate();
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
