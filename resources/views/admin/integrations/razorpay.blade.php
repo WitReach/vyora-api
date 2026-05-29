@@ -1,37 +1,24 @@
 @extends('layouts.admin')
-@section('header', 'Razorpay Integration')
 
 @section('content')
-<div class="space-y-6">
+<div class="max-w-6xl mx-auto space-y-6">
 
-    {{-- Breadcrumb --}}
-    <div class="flex items-center gap-2 text-sm text-gray-400">
-        <a href="{{ route('admin.online-store.integrations.index') }}" class="hover:text-gray-700 transition-colors">Integrations</a>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        <span class="text-gray-700 font-semibold">Razorpay</span>
-    </div>
-
-    {{-- Header Card --}}
-    <div class="bg-[#072654] rounded-2xl p-8 flex items-center gap-6 overflow-hidden relative">
-        <div class="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-white/5"></div>
-        <div class="absolute -right-4 bottom-0 w-32 h-32 rounded-full bg-[#3395FF]/10"></div>
-        <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center shrink-0 relative z-10">
-            <svg class="w-10 h-10" viewBox="0 0 40 40" fill="none">
-                <path d="M8 32L20 8l12 24H8z" fill="#3395FF" opacity=".9"/>
-                <path d="M14 24l6-12 6 12h-12z" fill="white" opacity=".5"/>
+    {{-- Header --}}
+    <div class="flex items-center gap-4">
+        <div class="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+            <svg class="w-6 h-6 text-blue-600" viewBox="0 0 40 40" fill="none">
+                <path d="M8 32L20 8l12 24H8z" fill="currentColor"/>
+                <path d="M14 24l6-12 6 12h-12z" fill="#072654"/>
             </svg>
         </div>
-        <div class="relative z-10">
-            <h1 class="text-2xl font-black text-white tracking-tight">Razorpay</h1>
-            <p class="text-blue-300 text-sm mt-1">Accept UPI, Cards, Net Banking, Wallets & more</p>
-            <div class="flex items-center gap-3 mt-3">
-                <span id="statusBadge" class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full {{ $saved['enabled'] ? 'bg-green-500/20 text-green-300' : 'bg-white/10 text-white/40' }}">
-                    {{ $saved['enabled'] ? '● Active' : '○ Inactive' }}
-                </span>
-                <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full {{ $saved['mode'] === 'live' ? 'bg-green-500/20 text-green-300' : 'bg-amber-500/20 text-amber-300' }}">
-                    {{ $saved['mode'] === 'live' ? '🟢 Live Mode' : '🧪 Test Mode' }}
+        <div>
+            <div class="flex items-center gap-3 mb-1">
+                <h1 class="text-2xl font-black tracking-tight text-gray-900">{{ $integration['name'] }}</h1>
+                <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-100">
+                    Payment Gateway
                 </span>
             </div>
+            <p class="text-sm text-gray-500 font-medium">{{ $integration['description'] }}</p>
         </div>
     </div>
 
@@ -46,100 +33,82 @@
         @csrf @method('PUT')
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            {{-- Main Config --}}
-            <div class="lg:col-span-2 space-y-5">
-
-                {{-- Enable & Mode --}}
-                <div class="bg-white border border-gray-200 rounded-2xl p-6 space-y-5">
-                    <h2 class="text-xs font-black uppercase tracking-widest text-gray-400">Gateway Settings</h2>
-
-                    {{-- Enable Toggle --}}
+            {{-- Main Form --}}
+            <div class="lg:col-span-2 space-y-6">
+                
+                {{-- Status --}}
+                <div class="bg-white border border-gray-200 rounded-2xl p-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-bold text-gray-900">Enable Razorpay</p>
-                            <p class="text-xs text-gray-400 mt-0.5">Allow customers to pay via Razorpay at checkout</p>
+                            <h2 class="text-base font-bold text-gray-900 mb-1">Enable Integration</h2>
+                            <p class="text-sm text-gray-500">Allow customers to pay via Razorpay at checkout</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="enabled" id="enabledToggle" class="sr-only peer" {{ $saved['enabled'] ? 'checked' : '' }}>
-                            <div class="w-12 h-6 bg-gray-200 rounded-full peer peer-checked:bg-black after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-6"></div>
+                            <input type="checkbox" name="enabled" value="1" class="sr-only peer" {{ $saved['enabled'] ? 'checked' : '' }}>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                         </label>
-                    </div>
-
-                    {{-- Mode Toggle --}}
-                    <div>
-                        <p class="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">Mode</p>
-                        <div class="flex gap-2">
-                            <label class="flex-1 cursor-pointer">
-                                <input type="radio" name="mode" value="test" class="sr-only peer" {{ $saved['mode'] !== 'live' ? 'checked' : '' }}>
-                                <div class="border-2 rounded-xl px-4 py-3 transition-all peer-checked:border-amber-400 peer-checked:bg-amber-50 border-gray-200 text-center">
-                                    <p class="text-sm font-black text-gray-800">🧪 Test Mode</p>
-                                    <p class="text-[11px] text-gray-400 mt-0.5">Use Razorpay test credentials</p>
-                                </div>
-                            </label>
-                            <label class="flex-1 cursor-pointer">
-                                <input type="radio" name="mode" value="live" class="sr-only peer" {{ $saved['mode'] === 'live' ? 'checked' : '' }}>
-                                <div class="border-2 rounded-xl px-4 py-3 transition-all peer-checked:border-green-400 peer-checked:bg-green-50 border-gray-200 text-center">
-                                    <p class="text-sm font-black text-gray-800">🟢 Live Mode</p>
-                                    <p class="text-[11px] text-gray-400 mt-0.5">Real transactions enabled</p>
-                                </div>
-                            </label>
-                        </div>
                     </div>
                 </div>
 
-                {{-- API Credentials --}}
-                <div class="bg-white border border-gray-200 rounded-2xl p-6 space-y-5">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-xs font-black uppercase tracking-widest text-gray-400">API Credentials</h2>
-                        <a href="https://dashboard.razorpay.com/app/keys" target="_blank"
-                            class="text-[11px] font-bold text-blue-600 hover:underline flex items-center gap-1">
-                            Get from Dashboard
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                        </a>
+                {{-- Tracking ID / API Credentials --}}
+                <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+                    <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+                        <h2 class="text-base font-bold text-gray-900">API Credentials</h2>
+                        <a href="https://dashboard.razorpay.com/app/keys" target="_blank" class="text-xs font-semibold text-gray-400 hover:text-blue-600 transition-colors">Razorpay Dashboard →</a>
                     </div>
-
-                    {{-- Key ID --}}
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-1.5">Key ID</label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 text-xs font-mono">rzp_</span>
-                            <input type="text" name="key_id" id="keyId" value="{{ $saved['key_id'] }}"
-                                class="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm font-mono text-gray-900 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all"
-                                placeholder="test_xxxxxxxxxxxxxxxxxxxx" required>
+                    
+                    <div class="p-6 space-y-6">
+                        {{-- Mode Toggle --}}
+                        <div>
+                            <label class="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Mode</label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="mode" value="test" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-600" {{ $saved['mode'] !== 'live' ? 'checked' : '' }}>
+                                    <span class="text-sm font-bold text-gray-900">Test Mode</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="mode" value="live" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-600" {{ $saved['mode'] === 'live' ? 'checked' : '' }}>
+                                    <span class="text-sm font-bold text-gray-900">Live Mode</span>
+                                </label>
+                            </div>
                         </div>
-                        <p class="text-[11px] text-gray-400 mt-1">Starts with <code class="bg-gray-100 px-1 rounded">rzp_test_</code> for test or <code class="bg-gray-100 px-1 rounded">rzp_live_</code> for live</p>
-                    </div>
 
-                    {{-- Key Secret --}}
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-1.5">Key Secret</label>
-                        <div class="relative">
-                            <input type="password" name="key_secret" id="keySecret" value="{{ $saved['key_secret'] }}"
-                                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-mono text-gray-900 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all pr-12"
-                                placeholder="••••••••••••••••••••" required>
-                            <button type="button" onclick="toggleSecret()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors">
-                                <svg id="eyeIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                            </button>
+                        {{-- Key ID --}}
+                        <div>
+                            <label class="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Key ID</label>
+                            <input type="text" name="key_id" id="keyId" value="{{ $saved['key_id'] }}" required
+                                class="w-full bg-gray-50 border-0 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-blue-600 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 placeholder:text-gray-400"
+                                placeholder="rzp_test_xxxxxxxxxxxxxxxxxxxx">
+                            <p class="mt-2 text-xs text-gray-500">Starts with <code class="bg-gray-100 px-1 py-0.5 rounded text-gray-600">rzp_test_</code> for test or <code class="bg-gray-100 px-1 py-0.5 rounded text-gray-600">rzp_live_</code> for live</p>
                         </div>
-                        <p class="text-[11px] text-gray-400 mt-1">Stored encrypted in the database. Leave unchanged to keep existing secret.</p>
+
+                        {{-- Key Secret --}}
+                        <div>
+                            <label class="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2">Key Secret</label>
+                            <div class="relative">
+                                <input type="password" name="key_secret" id="keySecret" value="{{ $saved['key_secret'] }}" required
+                                    class="w-full bg-gray-50 border-0 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-blue-600 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 placeholder:text-gray-400 pr-12"
+                                    placeholder="••••••••••••••••••••">
+                                <button type="button" onclick="toggleSecret()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors">
+                                    <svg id="eyeIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </button>
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500">Stored encrypted in the database. Leave unchanged to keep existing secret.</p>
+                        </div>
                     </div>
 
-                    {{-- Test Connection Button --}}
-                    <div class="flex items-center gap-3 pt-2">
-                        <button type="button" onclick="testConnection()"
-                            id="testBtn"
-                            class="flex items-center gap-2 px-5 py-2.5 border border-gray-300 text-sm font-bold rounded-xl hover:bg-gray-50 hover:border-gray-900 transition-all">
+                    <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                        <div id="testResult" class="text-sm font-semibold hidden"></div>
+                        <button type="button" id="testBtn" onclick="testConnection()" class="flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-blue-600 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                             Test Connection
                         </button>
-                        <div id="testResult" class="text-sm font-semibold hidden"></div>
                     </div>
                 </div>
 
-                {{-- Save --}}
-                <div class="flex items-center gap-3">
-                    <button type="submit" class="px-8 py-3 bg-black text-white text-sm font-black rounded-xl hover:bg-gray-800 transition-all shadow-lg shadow-gray-200">
+                {{-- Action Buttons --}}
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="submit" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-xl transition-all shadow-sm shadow-blue-200">
                         Save Configuration
                     </button>
                     <a href="{{ route('admin.online-store.integrations.index') }}" class="px-5 py-3 border border-gray-200 text-sm font-bold rounded-xl text-gray-600 hover:bg-gray-50 transition-all">
@@ -150,56 +119,28 @@
 
             {{-- Sidebar --}}
             <div class="space-y-5">
-
-                {{-- Test Sandbox --}}
-                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">
-                    <h3 class="text-xs font-black uppercase tracking-widest text-amber-700 mb-3">🧪 Test Credentials</h3>
-                    <p class="text-xs text-amber-800 leading-relaxed mb-4">Use these Razorpay-provided test cards for sandbox purchases.</p>
-
-                    <div class="space-y-3">
-                        <div class="bg-white rounded-xl p-3 border border-amber-100">
-                            <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Success Card</p>
-                            <p class="font-mono text-sm font-bold text-gray-900">4111 1111 1111 1111</p>
-                            <p class="text-[11px] text-gray-400 mt-0.5">CVV: any · Expiry: any future date</p>
-                        </div>
-                        <div class="bg-white rounded-xl p-3 border border-amber-100">
-                            <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Failure Card</p>
-                            <p class="font-mono text-sm font-bold text-gray-900">4000 0000 0000 0002</p>
-                            <p class="text-[11px] text-gray-400 mt-0.5">Simulates a declined payment</p>
-                        </div>
-                        <div class="bg-white rounded-xl p-3 border border-amber-100">
-                            <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Test UPI ID</p>
-                            <p class="font-mono text-sm font-bold text-gray-900">success@razorpay</p>
-                        </div>
-                    </div>
-
-                    <a href="https://razorpay.com/docs/payments/payments/test-card-details/" target="_blank"
-                        class="mt-4 block text-center text-[11px] font-black uppercase tracking-widest text-amber-700 hover:text-amber-900 transition-colors">
-                        View All Test Cards →
-                    </a>
-                </div>
-
                 {{-- How it Works --}}
                 <div class="bg-white border border-gray-200 rounded-2xl p-5">
                     <h3 class="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">How it works</h3>
                     <ol class="space-y-3">
-                        @foreach([
-                            ['Get API keys from Razorpay Dashboard', 'https://dashboard.razorpay.com/app/keys'],
-                            ['Enable Test Mode & paste your test keys', null],
-                            ['Use test cards to simulate purchases', null],
-                            ['Switch to Live Mode when ready to go live', null],
-                        ] as $i => [$step, $link])
                         <li class="flex items-start gap-3">
-                            <span class="w-5 h-5 rounded-full bg-gray-900 text-white text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">{{ $i + 1 }}</span>
+                            <span class="w-5 h-5 rounded-full bg-gray-900 text-white text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">1</span>
                             <span class="text-xs text-gray-600 leading-relaxed">
-                                @if($link)
-                                    <a href="{{ $link }}" target="_blank" class="font-bold text-blue-600 hover:underline">{{ $step }}</a>
-                                @else
-                                    {{ $step }}
-                                @endif
+                                Get API keys from <a href="https://dashboard.razorpay.com/app/keys" target="_blank" class="font-bold text-blue-600 hover:underline">Razorpay Dashboard</a>.
                             </span>
                         </li>
-                        @endforeach
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 rounded-full bg-gray-900 text-white text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">2</span>
+                            <span class="text-xs text-gray-600 leading-relaxed">
+                                Enable Test Mode & paste your test keys to simulate purchases.
+                            </span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="w-5 h-5 rounded-full bg-gray-900 text-white text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">3</span>
+                            <span class="text-xs text-gray-600 leading-relaxed">
+                                Switch to Live Mode when ready to accept real payments.
+                            </span>
+                        </li>
                     </ol>
                 </div>
 

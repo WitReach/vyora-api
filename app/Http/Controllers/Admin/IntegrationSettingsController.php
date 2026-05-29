@@ -60,13 +60,13 @@ class IntegrationSettingsController extends Controller
             'name'        => 'Google Analytics',
             'description' => 'Track visitors and trace conversion data using GA4 properties',
             'icon'        => 'google-analytics',
-            'status'      => 'soon',
+            'status'      => 'active',
         ],
         'meta-pixel' => [
             'name'        => 'Meta Pixel API',
             'description' => 'Track user behaviors and optimize Meta/Facebook ad campaigns',
             'icon'        => 'meta-pixel',
-            'status'      => 'soon',
+            'status'      => 'active',
         ],
         'bing-webmaster' => [
             'name'        => 'Bing Webmaster',
@@ -151,8 +151,11 @@ class IntegrationSettingsController extends Controller
             'admin_api_key'   => $rows->get('admin_api_key') ? $this->maskedSecret($rows->get('admin_api_key')->value) : '',
             'key_id'        => $rows->get('key_id') ? $this->maybeDecrypt($rows->get('key_id')->value) : '',
             'key_secret'    => $rows->get('key_secret') ? $this->maskedSecret($rows->get('key_secret')->value) : '',
-            'client_id'     => $rows->get('client_id') ? $this->maybeDecrypt($rows->get('client_id')->value) : '',
             'client_secret' => $rows->get('client_secret') ? $this->maskedSecret($rows->get('client_secret')->value) : '',
+            'measurement_id' => $rows->get('measurement_id') ? $this->maybeDecrypt($rows->get('measurement_id')->value) : '',
+            'pixel_id'      => $rows->get('pixel_id') ? $this->maybeDecrypt($rows->get('pixel_id')->value) : '',
+            'access_token'  => $rows->get('access_token') ? $this->maskedSecret($rows->get('access_token')->value) : '',
+            'test_event_code' => $rows->get('test_event_code') ? $this->maybeDecrypt($rows->get('test_event_code')->value) : '',
         ];
 
         return view("admin.integrations.{$slug}", compact('integration', 'slug', 'saved'));
@@ -176,6 +179,14 @@ class IntegrationSettingsController extends Controller
 
         if ($slug === 'qikink') {
             return $this->updateQikink($request);
+        }
+
+        if ($slug === 'google-analytics') {
+            return $this->updateGoogleAnalytics($request);
+        }
+
+        if ($slug === 'meta-pixel') {
+            return $this->updateMetaPixel($request);
         }
 
         return redirect()->back()->with('success', 'Integration settings updated successfully.');
@@ -325,6 +336,44 @@ class IntegrationSettingsController extends Controller
         }
 
         return redirect()->back()->with('success', 'Qikink settings saved successfully.');
+    }
+
+    private function updateGoogleAnalytics(Request $request)
+    {
+        $request->validate([
+            'measurement_id' => 'required|string',
+        ]);
+
+        $group = 'integration.google-analytics';
+
+        ThemeSetting::updateOrCreate(['group' => $group, 'key' => 'enabled'],  ['value' => $request->boolean('enabled') ? '1' : '0']);
+        ThemeSetting::updateOrCreate(['group' => $group, 'key' => 'measurement_id'], ['value' => Crypt::encryptString($request->measurement_id)]);
+
+        return redirect()->back()->with('success', 'Google Analytics settings saved successfully.');
+    }
+
+    private function updateMetaPixel(Request $request)
+    {
+        $request->validate([
+            'pixel_id' => 'required|string',
+        ]);
+
+        $group = 'integration.meta-pixel';
+
+        ThemeSetting::updateOrCreate(['group' => $group, 'key' => 'enabled'],  ['value' => $request->boolean('enabled') ? '1' : '0']);
+        ThemeSetting::updateOrCreate(['group' => $group, 'key' => 'pixel_id'], ['value' => Crypt::encryptString($request->pixel_id)]);
+
+        if ($request->filled('access_token') && !str_contains($request->access_token, '****')) {
+            ThemeSetting::updateOrCreate(['group' => $group, 'key' => 'access_token'], ['value' => Crypt::encryptString($request->access_token)]);
+        }
+
+        if ($request->filled('test_event_code')) {
+            ThemeSetting::updateOrCreate(['group' => $group, 'key' => 'test_event_code'], ['value' => Crypt::encryptString($request->test_event_code)]);
+        } else {
+            ThemeSetting::where('group', $group)->where('key', 'test_event_code')->delete();
+        }
+
+        return redirect()->back()->with('success', 'Meta Pixel settings saved successfully.');
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

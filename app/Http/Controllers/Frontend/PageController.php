@@ -60,10 +60,12 @@ class PageController extends Controller
 
     public function product($slug)
     {
-        $product = Product::where('slug', $slug)->with(['images', 'variants'])->firstOrFail();
+        $product = Product::where('slug', $slug)
+            ->with(['images', 'skus.color', 'skus.size', 'sizeChart', 'categories', 'productType'])
+            ->firstOrFail();
 
         return Inertia::render('Product/Show', [
-            'product' => $product,
+            'product' => (new \App\Http\Resources\ProductResource($product))->resolve(),
         ]);
     }
 
@@ -102,4 +104,21 @@ class PageController extends Controller
     {
         return Inertia::render('Checkout');
     }
+
+    public function thankYou($uuid)
+    {
+        $order = \App\Models\Order::with(['items.product', 'items.sku.color', 'items.sku.size'])
+            ->where('uuid', $uuid)
+            ->firstOrFail();
+
+        return Inertia::render('Checkout/ThankYou', [
+            'order' => $order
+        ]);
+    }
+
+    public function wishlist()
+    {
+        return Inertia::render('Wishlist');
+    }
+
 }

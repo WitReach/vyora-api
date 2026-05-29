@@ -34,10 +34,8 @@ class ProductMediaController extends Controller
         // Create directories
         if (!file_exists($backendPath)) mkdir($backendPath, 0755, true);
 
-        // Move to frontend
-        $file->move($frontendPath, $fileName);
-        // Copy to backend
-        copy($frontendPath . '/' . $fileName, $backendPath . '/' . $fileName);
+        // Move to backend
+        $file->move($backendPath, $fileName);
 
         $product->update(['preview_image' => "/{$relativePath}/{$fileName}"]);
 
@@ -226,10 +224,8 @@ class ProductMediaController extends Controller
                 if (!file_exists($backendPath)) mkdir($backendPath, 0755, true);
 
                 try {
-                    // Save original first to frontend
-                    $file->move($frontendPath, $fileName);
-                    // Copy to backend
-                    copy($frontendPath . '/' . $fileName, $backendPath . '/' . $fileName);
+                    // Save original first to backend
+                    $file->move($backendPath, $fileName);
                     
                     // Optional WebP conversion
                     try {

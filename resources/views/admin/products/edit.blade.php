@@ -40,7 +40,7 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Slug</label>
-                            <input type="text" name="slug" value="{{ old('slug', $product->slug) }}"
+                            <input type="text" name="slug" id="slug" value="{{ old('slug', $product->slug) }}"
                                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm border p-2">
                         </div>
 
@@ -684,6 +684,17 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Auto-format Slug
+            const slugInput = document.getElementById('slug');
+            if (slugInput) {
+                slugInput.addEventListener('input', function(e) {
+                    this.value = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+/, '');
+                });
+                slugInput.addEventListener('blur', function(e) {
+                    this.value = this.value.replace(/-+$/, '');
+                });
+            }
+
             // Tab Switching
             const tabButtons = document.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
@@ -796,7 +807,7 @@
                 const overlay = createProgressOverlay(container);
 
                 const xhr = new XMLHttpRequest();
-                xhr.open('POST', `/admin/products/{{ $product->id }}/media/upload-cat-preview`);
+                xhr.open('POST', "{{ route('admin.products.media.upload-cat-preview', $product->id) }}");
                 xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
                 xhr.setRequestHeader('Accept', 'application/json');
 
@@ -849,7 +860,7 @@
                 const container = document.getElementById(inputId + categoryId).parentElement;
                 container.style.opacity = '0.5';
 
-                fetch(`/admin/products/{{ $product->id }}/media/delete-cat-preview`, {
+                fetch("{{ route('admin.products.media.delete-cat-preview', $product->id) }}", {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -882,7 +893,7 @@
                 const overlay = createProgressOverlay(container);
 
                 const xhr = new XMLHttpRequest();
-                xhr.open('POST', `/admin/products/{{ $product->id }}/media/upload-preview`);
+                xhr.open('POST', "{{ route('admin.products.media.upload-preview', $product->id) }}");
                 xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
                 xhr.setRequestHeader('Accept', 'application/json');
 
@@ -946,7 +957,7 @@
                 const overlay = createProgressOverlay(container);
 
                 const xhr = new XMLHttpRequest();
-                xhr.open('POST', `/admin/products/{{ $product->id }}/media/upload?color_id=${colorId}`);
+                xhr.open('POST', "{{ route('admin.products.media.upload', $product->id) }}?color_id=" + colorId);
                 xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
                 xhr.setRequestHeader('Accept', 'application/json');
 
@@ -1006,7 +1017,7 @@
                     handle: '.drag-handle',
                     onEnd: function() {
                         const mediaIds = Array.from(el.querySelectorAll('.media-item')).map(i => i.dataset.mediaId);
-                        fetch(`/admin/products/{{ $product->id }}/media/reorder`, {
+                        fetch("{{ route('admin.products.media.reorder', $product->id) }}", {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                             body: JSON.stringify({ media_ids: mediaIds })
@@ -1019,7 +1030,8 @@
             document.addEventListener('click', (e) => {
                 const btn = e.target.closest('.delete-media-btn');
                 if (btn && confirm('Permanently remove this asset?')) {
-                    fetch(`/admin/products/${btn.dataset.productId}/media/${btn.dataset.mediaId}`, {
+                    let url = "{{ route('admin.products.media.delete', ['product' => 'PROD_ID', 'productImage' => 'MEDIA_ID']) }}".replace('PROD_ID', btn.dataset.productId).replace('MEDIA_ID', btn.dataset.mediaId);
+                    fetch(url, {
                         method: 'DELETE',
                         headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
                     }).then(r => r.json()).then(d => { if(d.success) btn.closest('.media-item').remove(); });

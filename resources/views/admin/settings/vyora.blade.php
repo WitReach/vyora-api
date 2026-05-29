@@ -121,9 +121,9 @@
                         <div>
                             <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Support
                                 Email</span>
-                            <a href="mailto:vyora.support@zohomail.in"
+                            <a href="mailto:vyora.support@saasance.com"
                                 class="text-sm font-semibold text-gray-800 hover:text-indigo-600 transition-colors">
-                                vyora.support@zohomail.in
+                                vyora.support@saasance.com
                             </a>
                         </div>
                         <button type="button" onclick="copySupportEmail()"
@@ -168,7 +168,7 @@
 
     <script>
         function copySupportEmail() {
-            navigator.clipboard.writeText('vyora.support@zohomail.in').then(() => {
+            navigator.clipboard.writeText('vyora.support@saasance.com').then(() => {
                 const copyIcon = document.getElementById('copy-icon');
                 const toast = document.getElementById('copied-toast');
 

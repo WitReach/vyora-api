@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ThemeSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 class GeneralSettingsController extends Controller
 {
@@ -37,16 +39,34 @@ class GeneralSettingsController extends Controller
 
     public function index()
     {
+        // Load general settings
         $rows = ThemeSetting::where('group', self::GROUP)->get()->keyBy('key');
-
-        // Build a simple key→value array for the view
         $settings = collect(self::KEYS)->mapWithKeys(fn($k) => [$k => $rows->get($k)?->value ?? '']);
+
+        // Load all theme settings (for colors, typography, logos)
+        $themeSettings = ThemeSetting::all()->groupBy('group');
+
+        $googleFonts = Cache::remember('google_fonts_list', now()->addDays(7), function () {
+            try {
+                $response = Http::get('https://gwfh.mranftl.com/api/fonts');
+                if ($response->successful()) {
+                    return collect($response->json())
+                        ->pluck('family')
+                        ->sort()
+                        ->values()
+                        ->toArray();
+                }
+            } catch (\Exception $e) {
+                // Ignore and fall back to defaults
+            }
+            return ['Inter', 'Roboto', 'Open Sans', 'Montserrat', 'Playfair Display'];
+        });
 
         $timezones = [];
         foreach (\DateTimeZone::listIdentifiers() as $tz) {
             $dt = new \DateTime('now', new \DateTimeZone($tz));
             $offsetSeconds = $dt->getOffset();
-            $offsetLabel = $dt->format('P'); // e.g. +05:30
+            $offsetLabel = $dt->format('P');
             $timezones[] = [
                 'id' => $tz,
                 'label' => "({$offsetLabel}) {$tz}",
@@ -54,7 +74,6 @@ class GeneralSettingsController extends Controller
             ];
         }
 
-        // Sort by offset, then by ID
         usort($timezones, function ($a, $b) {
             return $a['offset'] <=> $b['offset'] ?: strcmp($a['id'], $b['id']);
         });
@@ -70,11 +89,12 @@ class GeneralSettingsController extends Controller
             'AED' => 'UAE Dirham (د.إ)',
         ];
 
-        return view('admin.general-settings.index', compact('settings', 'timezones', 'currencies'));
+        return view('admin.general-settings.index', compact('settings', 'themeSettings', 'timezones', 'currencies', 'googleFonts'));
     }
 
     public function update(Request $request)
     {
+        // 1. Save standard general settings (KEYS)
         foreach (self::KEYS as $key) {
             ThemeSetting::updateOrCreate(
                 ['key' => $key],
@@ -82,6 +102,61 @@ class GeneralSettingsController extends Controller
             );
         }
 
+        // 2. Save dynamic theme settings (colors, typography)
+        $dynamicData = $request->except(array_merge(['_token', '_method', 'logos'], self::KEYS));
+        foreach ($dynamicData as $key => $value) {
+            ThemeSetting::updateOrCreate(
+                ['key' => $key],
+                [
+                    'value' => $value,
+                    'group' => $this->getGroupForKey($key)
+                ]
+            );
+        }
+
+        // 3. Handle File Uploads (Logos)
+        if ($request->hasFile('logos')) {
+            foreach ($request->file('logos') as $key => $file) {
+                $fileName = time() . '_' . $key . '.' . $file->getClientOriginalExtension();
+                $relativePath = "storage/theme/logos";
+                $backendPath = public_path($relativePath);
+                if (!file_exists($backendPath)) {
+                    mkdir($backendPath, 0755, true);
+                }
+
+                $file->move($backendPath, $fileName);
+                $finalPath = "{$relativePath}/{$fileName}";
+
+                ThemeSetting::updateOrCreate(
+                    ['key' => $key],
+                    [
+                        'value' => $finalPath,
+                        'group' => 'logos'
+                    ]
+                );
+            }
+        }
+
         return redirect()->back()->with('success', 'General settings saved successfully.');
+    }
+
+    private function getGroupForKey($key)
+    {
+        if (str_starts_with($key, 'mega_deal_'))
+            return 'mega_deal';
+        if (str_contains($key, 'color'))
+            return 'colors';
+        if (str_contains($key, 'font'))
+            return 'typography';
+        if (str_starts_with($key, 'social_'))
+            return 'social';
+        if (str_starts_with($key, 'contact_'))
+            return 'contact';
+        if (str_starts_with($key, 'store_'))
+            return 'store_info';
+        if (str_contains($key, 'layout'))
+            return 'layout';
+        
+        return 'general';
     }
 }

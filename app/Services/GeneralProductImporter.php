@@ -78,10 +78,19 @@ class GeneralProductImporter
 
             $sizeValue = $row['Attribute Size'] ?? $row['Size'] ?? null;
             if (!empty($sizeValue)) {
-                $size = \App\Models\Size::firstOrCreate(
-                    ['name' => trim($sizeValue)],
-                    ['code' => strtoupper(trim($sizeValue))]
-                );
+                $val = trim($sizeValue);
+                $code = strtoupper($val);
+                
+                $size = \App\Models\Size::where('code', $code)
+                    ->orWhere('name', $val)
+                    ->first();
+
+                if (!$size) {
+                    $size = \App\Models\Size::create([
+                        'name' => $val,
+                        'code' => $code
+                    ]);
+                }
                 $sizeId = $size->id;
             }
 

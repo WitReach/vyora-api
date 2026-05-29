@@ -142,7 +142,18 @@ $shipping = $order->shippingAddress;
           <span class="font-semibold">₹{{ number_format($order->shipping_amount) }}</span>
         </div>
         @endif
-        @if($order->tax_amount > 0)
+        @php
+          $taxBreakdown = json_decode($order->tax_breakdown ?? '{}', true);
+          $isTaxIncluded = abs(($order->total_amount + $order->discount_amount) - ($order->subtotal + $order->shipping_amount)) < 0.1;
+        @endphp
+        @if(!empty($taxBreakdown))
+          @foreach($taxBreakdown as $rate => $amount)
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-500">Tax @ {{ $rate }}% {{ $isTaxIncluded ? '(Included)' : '' }}</span>
+            <span class="font-semibold">₹{{ number_format($amount, 2) }}</span>
+          </div>
+          @endforeach
+        @elseif($order->tax_amount > 0)
         <div class="flex justify-between text-sm">
           <span class="text-gray-500">Tax</span>
           <span class="font-semibold">₹{{ number_format($order->tax_amount) }}</span>

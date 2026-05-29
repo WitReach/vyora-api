@@ -108,10 +108,21 @@ class QikInkImporter
         if (empty(trim($name)))
             return null;
 
-        $size = \App\Models\Size::firstOrCreate(
-            ['name' => $name],
-            ['code' => Str::slug($name)]
-        );
+        $val = trim($name);
+        $code = strtoupper($val);
+
+        $size = \App\Models\Size::where('code', $code)
+            ->orWhere('name', $val)
+            ->first();
+
+        if ($size) {
+            return $size->id;
+        }
+
+        $size = \App\Models\Size::create([
+            'name' => $val,
+            'code' => $code
+        ]);
         return $size->id;
     }
 

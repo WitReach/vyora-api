@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { usePage, Head } from '@inertiajs/react';
 import Navbar from './Navbar';
 import AuthModal from './auth/AuthModal';
+import QuickViewModal from './product/QuickViewModal';
 
 // A mock context provider for Settings, since some components might still use it
 export const SettingsContext = React.createContext({});
@@ -54,6 +55,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     {children}
                 </main>
                 <AuthModal />
+                <QuickViewModal />
             </div>
         </SettingsContext.Provider>
     );

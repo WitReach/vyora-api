@@ -23,6 +23,16 @@ Route::get('/category/{slug}', [\App\Http\Controllers\Frontend\PageController::c
 Route::get('/collection/{slug}', [\App\Http\Controllers\Frontend\PageController::class, 'collection'])->name('frontend.collection');
 Route::get('/cart', [\App\Http\Controllers\Frontend\PageController::class, 'cart'])->name('frontend.cart');
 Route::get('/checkout', [\App\Http\Controllers\Frontend\PageController::class, 'checkout'])->name('frontend.checkout');
+Route::get('/checkout/thank-you/{uuid}', [\App\Http\Controllers\Frontend\PageController::class, 'thankYou'])->name('frontend.thank-you');
+Route::get('/wishlist', [\App\Http\Controllers\Frontend\PageController::class, 'wishlist'])->name('frontend.wishlist');
+
+Route::get('/gift-cards', function () {
+    return \Inertia\Inertia::render('GiftCards/Index');
+})->name('frontend.gift-cards.index');
+
+Route::get('/gift-cards/share/{token}', function ($token) {
+    return \Inertia\Inertia::render('GiftCards/Share', ['token' => $token]);
+})->name('frontend.gift-cards.share');
 
 // User Dashboard Routes
 Route::middleware('auth')->group(function () {
@@ -37,6 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{uuid}', function ($uuid) {
         return \Inertia\Inertia::render('Account/OrderDetails', ['uuid' => $uuid]);
     })->name('frontend.orders.show');
+
+    Route::get('/gift-cards/my-cards', function () {
+        return \Inertia\Inertia::render('GiftCards/MyCards');
+    })->name('frontend.gift-cards.my-cards');
 });
 
 Route::get('/p/{slug}', [\App\Http\Controllers\Frontend\PageController::class, 'show'])->name('frontend.page');
@@ -121,6 +135,9 @@ Route::prefix($adminPath)->name('admin.')->group(function () {
     Route::resource('collections', \App\Http\Controllers\Admin\CollectionController::class);
 
     // Attributes (Colors, Product Types)
+    Route::get('/attributes/export/{type}', [\App\Http\Controllers\Admin\AttributeImportExportController::class, 'export'])->name('attributes.export');
+    Route::post('/attributes/import/{type}', [\App\Http\Controllers\Admin\AttributeImportExportController::class, 'import'])->name('attributes.import');
+    Route::get('/attributes/sample/{type}', [\App\Http\Controllers\Admin\AttributeImportExportController::class, 'sample'])->name('attributes.sample');
     Route::get('/attributes', [\App\Http\Controllers\Admin\AttributeController::class, 'index'])->name('attributes.index');
     Route::post('/attributes/colors', [\App\Http\Controllers\Admin\AttributeController::class, 'storeColor'])->name('attributes.colors.store');
     Route::put('/attributes/colors/{color}', [\App\Http\Controllers\Admin\AttributeController::class, 'updateColor'])->name('attributes.colors.update');
@@ -143,9 +160,7 @@ Route::prefix($adminPath)->name('admin.')->group(function () {
 
     // Online Store
     Route::prefix('online-store')->name('online-store.')->group(function () {
-        // Theme Settings
-        Route::get('/theme-settings', [\App\Http\Controllers\Admin\ThemeSettingsController::class, 'index'])->name('theme-settings.index');
-        Route::post('/theme-settings', [\App\Http\Controllers\Admin\ThemeSettingsController::class, 'update'])->name('theme-settings.update');
+        // Theme Settings removed and merged into General Settings
 
         // General Settings
         Route::get('/general-settings', [\App\Http\Controllers\Admin\GeneralSettingsController::class, 'index'])->name('general-settings.index');

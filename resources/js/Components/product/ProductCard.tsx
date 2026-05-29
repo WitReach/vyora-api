@@ -1,14 +1,63 @@
-import { ProductList } from "@/types";
+import { ProductList, ProductDetail } from "@/types";
 import { formatPrice } from "@/lib/utils";
-import { Link, usePage } from '@inertiajs/react';
-
-
+import { Link, usePage, router } from '@inertiajs/react';
+import { Trash2, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import api from '@/lib/api';
+import { useUIStore } from "@/store/ui";
+import { useCartStore } from "@/store/cart";
 import { useWishlistStore } from "@/store/wishlist";
 
-export function ProductCard({ product, activeCategory }: { product: ProductList, activeCategory?: string }) {
+export function ProductCard({ product, activeCategory, onRemove }: { product: ProductList, activeCategory?: string, onRemove?: () => void }) {
     const { settings: settings } = usePage().props as any;
     const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
     const wishlisted = isInWishlist(product.id);
+    
+    const { openQuickView } = useUIStore();
+    const cart = useCartStore();
+    const [loadingAction, setLoadingAction] = useState<'cart' | 'buy' | null>(null);
+
+    const handleAction = async (e: React.MouseEvent, action: 'cart' | 'buy') => {
+        e.preventDefault();
+        e.stopPropagation();
+        setLoadingAction(action);
+        try {
+            const res = await api.get(`/api/products/${product.slug}`);
+            const data: ProductDetail = res.data.data || res.data;
+            
+            if (data.variants && data.variants.length > 1) {
+                openQuickView(data, action);
+            } else {
+                const v = data.variants?.[0];
+                const colorAttr = v?.attributes?.find((a: any) => a.name === 'Color');
+                const sizeAttr = v?.attributes?.find((a: any) => a.name === 'Size');
+                const colorImg = colorAttr ? data.images?.find((img: any) => img.color_id?.toString() === colorAttr.id?.toString()) : null;
+
+                cart.addItem({
+                    skuId: v?.id || data.id,
+                    productId: data.id,
+                    name: data.name,
+                    slug: data.slug,
+                    variant: v ? v.code : '',
+                    price: v?.price || data.price,
+                    mrp: v?.mrp || data.mrp,
+                    image: colorImg?.url || data.image || data.images?.[0]?.url || '',
+                    quantity: 1,
+                    colorName: colorAttr?.value || undefined,
+                    colorHex: colorAttr?.meta || undefined,
+                    sizeName: sizeAttr?.value || undefined,
+                    size: sizeAttr?.value || undefined,
+                });
+                if (action === 'buy') {
+                    router.visit('/checkout');
+                }
+            }
+        } catch (error) {
+            console.error('Failed to fetch product details', error);
+        } finally {
+            setLoadingAction(null);
+        }
+    };
 
     const handleWishlistToggle = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -133,6 +182,16 @@ export function ProductCard({ product, activeCategory }: { product: ProductList,
                             New
                         </span>
                     )}
+
+                    {onRemove && (
+                        <button 
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemove(); }}
+                            className="absolute top-3 right-3 bg-white/90 backdrop-blur-md hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-full p-2 shadow-sm transition-colors z-20"
+                            title="Remove from Wishlist"
+                        >
+                            <Trash2 size={15} />
+                        </button>
+                    )}
                 </Link>
 
                 {/* Text and Actions Wrapper */}
@@ -184,25 +243,45 @@ export function ProductCard({ product, activeCategory }: { product: ProductList,
 
                             {/* Buy Now */}
                             {buyNowStyle !== 'hidden' && (
-                                <button className="flex-1 flex items-center justify-center gap-1.5 bg-black text-white text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg hover:bg-gray-800 transition-colors shadow-sm focus:ring-2 focus:ring-offset-1 focus:ring-black cursor-pointer">
-                                    {(buyNowStyle === 'icon_only' || buyNowStyle === 'text_icon') && (
-                                        <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                        </svg>
+                                <button 
+                                    onClick={(e) => handleAction(e, 'buy')}
+                                    disabled={loadingAction !== null}
+                                    className="flex-1 flex items-center justify-center gap-1.5 bg-black text-white text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg hover:bg-gray-800 transition-colors shadow-sm focus:ring-2 focus:ring-offset-1 focus:ring-black cursor-pointer disabled:opacity-70 disabled:cursor-wait"
+                                >
+                                    {loadingAction === 'buy' ? (
+                                        <Loader2 className="w-4 h-4 shrink-0 animate-spin" />
+                                    ) : (
+                                        <>
+                                            {(buyNowStyle === 'icon_only' || buyNowStyle === 'text_icon') && (
+                                                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                                </svg>
+                                            )}
+                                            {buyNowStyle !== 'icon_only' && <span>Buy Now</span>}
+                                        </>
                                     )}
-                                    {buyNowStyle !== 'icon_only' && <span>Buy Now</span>}
                                 </button>
                             )}
 
                             {/* Add to Cart */}
                             {cartStyle !== 'hidden' && (
-                                <button className="flex-1 flex items-center justify-center gap-1.5 bg-gray-100 text-gray-800 text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg hover:bg-gray-200 transition-colors focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 cursor-pointer">
-                                    {(cartStyle === 'icon_only' || cartStyle === 'text_icon') && (
-                                        <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                        </svg>
+                                <button 
+                                    onClick={(e) => handleAction(e, 'cart')}
+                                    disabled={loadingAction !== null}
+                                    className="flex-1 flex items-center justify-center gap-1.5 bg-gray-100 text-gray-800 text-xs font-bold uppercase tracking-wider py-2.5 rounded-lg hover:bg-gray-200 transition-colors focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 cursor-pointer disabled:opacity-70 disabled:cursor-wait"
+                                >
+                                    {loadingAction === 'cart' ? (
+                                        <Loader2 className="w-4 h-4 shrink-0 animate-spin text-gray-400" />
+                                    ) : (
+                                        <>
+                                            {(cartStyle === 'icon_only' || cartStyle === 'text_icon') && (
+                                                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                </svg>
+                                            )}
+                                            {cartStyle !== 'icon_only' && <span>Add to Cart</span>}
+                                        </>
                                     )}
-                                    {cartStyle !== 'icon_only' && <span>Add to Cart</span>}
                                 </button>
                             )}
 

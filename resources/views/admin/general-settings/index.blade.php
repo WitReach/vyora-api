@@ -3,7 +3,7 @@
 @section('header', 'General Settings')
 
 @section('content')
-<form action="{{ route('admin.online-store.general-settings.update') }}" method="POST">
+<form action="{{ route('admin.online-store.general-settings.update') }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
@@ -196,6 +196,106 @@
                 </div>
             </div>
         </div>
+
+        {{-- ── BRAND ASSETS (LOGOS) ──────────────────────── --}}
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Brand Assets</h3>
+            <p class="text-sm text-gray-500 mb-6">Upload your store's main logo and favicon.</p>
+
+            <div class="space-y-6">
+                <!-- Main Logo -->
+                <div class="flex items-center gap-6 p-4 bg-gray-50 rounded-lg">
+                    <div class="w-24 h-24 bg-white border rounded flex items-center justify-center overflow-hidden" id="preview-container-main_logo">
+                        @if($logo = ($themeSettings->get('logos', collect())->where('key', 'main_logo')->first() ?? null))
+                            <img src="{{ asset($logo->value) }}" class="max-w-full max-h-full object-contain" id="img-main_logo">
+                        @else
+                            <div class="flex flex-col items-center gap-1">
+                                <span class="text-[10px] text-gray-400 font-bold uppercase">No Logo</span>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Main Logo</label>
+                        <input type="file" name="logos[main_logo]" onchange="previewImage(this, 'main_logo')" class="text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:font-medium file:bg-gray-100 hover:file:bg-gray-200">
+                    </div>
+                </div>
+
+                <!-- Favicon -->
+                <div class="flex items-center gap-6 p-4 bg-gray-50 rounded-lg">
+                    <div class="w-12 h-12 bg-white border rounded flex items-center justify-center overflow-hidden" id="preview-container-favicon">
+                        @if($favicon = ($themeSettings->get('logos', collect())->where('key', 'favicon')->first() ?? null))
+                            <img src="{{ asset($favicon->value) }}" class="max-w-full max-h-full object-contain" id="img-favicon">
+                        @else
+                            <span class="text-[10px] text-gray-400 font-bold uppercase">Fav</span>
+                        @endif
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Favicon</label>
+                        <input type="file" name="logos[favicon]" onchange="previewImage(this, 'favicon')" class="text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:font-medium file:bg-gray-100 hover:file:bg-gray-200">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ── VISUAL IDENTITY (COLORS) ──────────────────── --}}
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Visual Identity: Colors</h3>
+            <p class="text-sm text-gray-500 mb-6">Set your primary, secondary, and accent colors.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @php
+                    $primary = $themeSettings->get('colors', collect())->where('key', 'primary_color')->first()->value ?? '#000000';
+                    $secondary = $themeSettings->get('colors', collect())->where('key', 'secondary_color')->first()->value ?? '#ffffff';
+                    $accent = $themeSettings->get('colors', collect())->where('key', 'accent_color')->first()->value ?? '#3b82f6';
+                @endphp
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Primary Color</label>
+                    <div class="flex items-center gap-2">
+                        <input type="color" name="primary_color" value="{{ $primary }}" class="h-10 w-10 border border-gray-300 rounded cursor-pointer">
+                        <input type="text" value="{{ $primary }}" class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm font-mono uppercase bg-gray-50" readonly>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Secondary Color</label>
+                    <div class="flex items-center gap-2">
+                        <input type="color" name="secondary_color" value="{{ $secondary }}" class="h-10 w-10 border border-gray-300 rounded cursor-pointer">
+                        <input type="text" value="{{ $secondary }}" class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm font-mono uppercase bg-gray-50" readonly>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Accent Color</label>
+                    <div class="flex items-center gap-2">
+                        <input type="color" name="accent_color" value="{{ $accent }}" class="h-10 w-10 border border-gray-300 rounded cursor-pointer">
+                        <input type="text" value="{{ $accent }}" class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm font-mono uppercase bg-gray-50" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ── TYPOGRAPHY ────────────────────────────────── --}}
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Typography</h3>
+            <p class="text-sm text-gray-500 mb-6">Choose fonts for headings and body text.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Heading Font</label>
+                    <select name="heading_font" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                        @foreach($googleFonts as $font)
+                            <option value="{{ $font }}" {{ ($themeSettings->get('typography', collect())->where('key', 'heading_font')->first()->value ?? 'Inter') == $font ? 'selected' : '' }}>{{ $font }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Body Font</label>
+                    <select name="body_font" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                        @foreach($googleFonts as $font)
+                            <option value="{{ $font }}" {{ ($themeSettings->get('typography', collect())->where('key', 'body_font')->first()->value ?? 'Open Sans') == $font ? 'selected' : '' }}>{{ $font }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- ── STICKY SAVE BAR ──────────────────────────────── --}}
@@ -207,4 +307,24 @@
         </button>
     </div>
 </form>
+@push('scripts')
+<script>
+    function previewImage(input, type) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const container = document.getElementById(`preview-container-${type}`);
+                let img = document.getElementById(`img-${type}`);
+                
+                if (!img) {
+                    container.innerHTML = `<img src="${e.target.result}" class="max-w-full max-h-full object-contain" id="img-${type}">`;
+                } else {
+                    img.src = e.target.result;
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+@endpush
 @endsection

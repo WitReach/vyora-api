@@ -70,6 +70,9 @@ Route::post('/webhooks/qikink', [\App\Http\Controllers\Api\WebhookController::cl
 // Shortlinks
 Route::get('/shortlinks/{short_code}', [\App\Http\Controllers\Api\ShortlinkApiController::class, 'resolve']);
 
+// Tracking
+Route::post('/tracking/meta-event', [\App\Http\Controllers\Api\TrackingController::class, 'metaEvent']);
+
 // System Status
 Route::get('/maintenance-status', function () {
     return response()->json([

@@ -17,7 +17,7 @@ class CustomerController extends Controller
         $search = $request->input('search');
 
         $customers = User::where(function ($q) {
-                $q->where('role', 'customer')->orWhereNull('role')->orWhere('role', '');
+                $q->whereIn('role', ['customer', 'user'])->orWhereNull('role')->orWhere('role', '');
             })
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {

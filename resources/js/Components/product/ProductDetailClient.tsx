@@ -1,8 +1,12 @@
 import { ProductDetail, Variant } from "@/types";
 import { formatPrice, cn } from "@/lib/utils";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
+import { trackViewContent, trackAddToCart } from "@/lib/tracking";
 import { useCartStore } from "@/store/cart";
+import { useWishlistStore } from "@/store/wishlist";
+import { useUIStore } from "@/store/ui";
+import { usePage, router } from '@inertiajs/react';
 import { Star, Heart, ShoppingBag, Truck, ShieldCheck, ChevronDown, ChevronUp, X, Ruler, Zap } from "lucide-react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper/modules';
@@ -35,6 +39,24 @@ function CouponChip({ code, parentTextColor, parentSubtextColor }: { code: strin
 
 
 export default function ProductDetailClient({ product, policies = {}, coupons = [] }: { product: ProductDetail; policies?: Record<string, string>; coupons?: any[] }) {
+    const { openAuthModal } = useUIStore();
+    const { auth, settings } = usePage<any>().props;
+    
+    // Mega Deal Settings
+    const megaDealBgFrom = settings?.mega_deal_bg_from || '#2c2c2c';
+    const megaDealBgTo = settings?.mega_deal_bg_to || '#2c2c2c';
+    const megaDealTextColor = settings?.mega_deal_text_color || '#ffffff';
+    const megaDealSubtextColor = settings?.mega_deal_subtext_color || '#9ca3af';
+    const megaDealBadge = settings?.mega_deal_badge || 'Dope Deal';
+    const megaDealLabel = settings?.mega_deal_label || 'Get at';
+    const wishlist = useWishlistStore();
+    const wishlisted = wishlist.isInWishlist(product.id);
+
+    // Track ViewContent on mount
+    useEffect(() => {
+        trackViewContent(product);
+    }, [product.id]);
+
     // 1. Sanitize image URLs → always resolve to a local /storage/... path served by Next.js public/
     //    Gallery images come back as bare relative paths (e.g. "storage/products/...")
     //    Master images come back as full URLs (e.g. "http://127.0.0.1:8000/storage/...")
@@ -86,23 +108,30 @@ export default function ProductDetailClient({ product, policies = {}, coupons = 
 
     const sizes = useMemo(() => {
         const all = new Set<string>();
+        const codeMap = new Map<string, string>();
         product.variants.forEach(v => {
             const s = v.attributes.find(a => a.name === 'Size');
-            if (s) all.add(s.value);
+            if (s) {
+                all.add(s.value);
+                codeMap.set(s.value, s.code || s.value);
+            }
         });
 
         const availableInChart = (product.size_chart?.measurements as any)?.rows?.map((r: any) => r.size_code.toUpperCase()) || null;
 
         // Simplistic order mapping: XS, S, M, L, XL, XXL
-        const order = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL'];
+        const order = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL', '4XL', '5XL'];
         return Array.from(all)
             .filter(size => {
+                const code = codeMap.get(size) || size;
                 // If no size chart, show all sizes. If size chart exists, only show sizes in that chart.
-                return !availableInChart || availableInChart.includes(size.toUpperCase());
+                return !availableInChart || availableInChart.includes(code.toUpperCase());
             })
             .sort((a, b) => {
-                let iA = order.indexOf(a.toUpperCase());
-                let iB = order.indexOf(b.toUpperCase());
+                const codeA = codeMap.get(a) || a;
+                const codeB = codeMap.get(b) || b;
+                let iA = order.indexOf(codeA.toUpperCase());
+                let iB = order.indexOf(codeB.toUpperCase());
                 return (iA !== -1 ? iA : 99) - (iB !== -1 ? iB : 99);
             });
     }, [product.variants, product.size_chart]);
@@ -178,6 +207,9 @@ export default function ProductDetailClient({ product, policies = {}, coupons = 
 
     function addToCart() {
         if (!currentVariant) return alert('Please select a size first.');
+        const colorObj = colors.find(c => c.value === selectedColor);
+        const colorImg = colorObj ? product.images?.find((img: any) => img.color_id?.toString() === colorObj.id?.toString()) : null;
+        
         cart.addItem({
             skuId: currentVariant.id,
             productId: product.id,
@@ -186,11 +218,74 @@ export default function ProductDetailClient({ product, policies = {}, coupons = 
             variant: `${selectedColor} - ${selectedSize}`,
             price: currentVariant.price,
             mrp: Math.max(Number(currentVariant.mrp) || 0, Number(product.mrp) || 0, Number(currentVariant.price)),
-            image: cleanMasterImage || '',
+            image: colorImg?.url || cleanMasterImage || '',
             quantity: 1,
-            tax_class: product.tax_class
+            tax_class: product.tax_class,
+            colorName: selectedColor || undefined,
+            colorHex: colorObj?.meta || undefined,
+            sizeName: selectedSize || undefined,
+            size: selectedSize || undefined,
         });
-        alert("Added to cart!");
+        trackAddToCart(product, 1);
+    }
+
+    function handleWishlistToggle() {
+        if (!auth?.user) {
+            openAuthModal('login');
+            return;
+        }
+        if (wishlisted) {
+            wishlist.removeItem(product.id);
+        } else {
+            const colorObj = colors.find(c => c.value === selectedColor);
+            let variantLabel = '';
+            if (selectedColor && selectedSize) variantLabel = `${selectedColor} - ${selectedSize}`;
+            else if (selectedColor) variantLabel = selectedColor;
+            else if (selectedSize) variantLabel = selectedSize;
+
+            wishlist.addItem({
+                productId: product.id,
+                skuId: currentVariant?.id,
+                variant: variantLabel,
+                colorName: selectedColor || undefined,
+                colorHex: colorObj?.hex_code || undefined,
+                sizeName: selectedSize || undefined,
+                size: selectedSize || undefined,
+                name: product.name,
+                slug: product.slug,
+                price: currentVariant ? currentVariant.price : product.price,
+                mrp: currentVariant ? currentVariant.mrp : product.mrp,
+                discount_percentage: product.discount_percentage,
+                image: colorObj?.image || cleanMasterImage || '',
+                brand: product.brand,
+                category: product.category?.name || '',
+            });
+        }
+    }
+
+    function buyNow() {
+        if (!currentVariant) return alert('Please select a size first.');
+        const colorObj = colors.find(c => c.value === selectedColor);
+        const colorImg = colorObj ? product.images?.find((img: any) => img.color_id?.toString() === colorObj.id?.toString()) : null;
+
+        cart.addItem({
+            skuId: currentVariant.id,
+            productId: product.id,
+            name: product.name,
+            slug: product.slug,
+            variant: `${selectedColor} - ${selectedSize}`,
+            price: currentVariant.price,
+            mrp: Math.max(Number(currentVariant.mrp) || 0, Number(product.mrp) || 0, Number(currentVariant.price)),
+            image: colorImg?.url || cleanMasterImage || '',
+            quantity: 1,
+            tax_class: product.tax_class,
+            colorName: selectedColor || undefined,
+            colorHex: colorObj?.meta || undefined,
+            sizeName: selectedSize || undefined,
+            size: selectedSize || undefined,
+        });
+        trackAddToCart(product, 1);
+        router.visit('/checkout');
     }
 
     return (
@@ -293,7 +388,10 @@ export default function ProductDetailClient({ product, policies = {}, coupons = 
 
                         {/* MEGA DEAL CARD */}
                         {coupons.length > 0 && (
-                            <div className="bg-[#2c2c2c] rounded-2xl p-4 flex flex-col gap-4 shadow-xl border border-gray-700/50">
+                            <div 
+                                className="rounded-2xl p-4 flex flex-col gap-4 shadow-xl border border-gray-700/50"
+                                style={{ background: `linear-gradient(to right, ${megaDealBgFrom}, ${megaDealBgTo})` }}
+                            >
                                 {[...coupons].sort((a, b) => {
                                     const sellingPrice = currentVariant?.price ?? product.price;
                                     const getDiscount = (c: any) => {
@@ -336,12 +434,18 @@ export default function ProductDetailClient({ product, policies = {}, coupons = 
                                                 <Zap className="w-5 h-5 text-yellow-500 fill-yellow-500 shrink-0 mt-0.5" />
                                                 <div>
                                                     <div className="flex items-baseline gap-2">
-                                                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                                            Dope Deal
+                                                        <span 
+                                                            className="text-[10px] font-black uppercase tracking-widest"
+                                                            style={{ color: megaDealSubtextColor }}
+                                                        >
+                                                            {megaDealBadge}
                                                         </span>
                                                         {discountedPrice !== null && (
-                                                            <span className="text-base font-bold text-white">
-                                                                Get at {formatPrice(discountedPrice)}
+                                                            <span 
+                                                                className="text-base font-bold"
+                                                                style={{ color: megaDealTextColor }}
+                                                            >
+                                                                {megaDealLabel} {formatPrice(discountedPrice)}
                                                             </span>
                                                         )}
                                                     </div>
@@ -443,7 +547,7 @@ export default function ProductDetailClient({ product, policies = {}, coupons = 
                         {/* 9. Commerce Actions */}
                         <div className="flex flex-col sm:flex-row gap-3 pt-6">
                             <button
-                                onClick={addToCart}
+                                onClick={buyNow}
                                 className="flex-1 bg-black text-white py-4 px-2 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-gray-900 transition-colors shadow-xl shadow-black/20 active:scale-[0.98] outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                             >
                                 Buy It Now
@@ -456,8 +560,11 @@ export default function ProductDetailClient({ product, policies = {}, coupons = 
                                 >
                                     {currentVariant ? (currentVariant.stock > 0 ? "Add to Cart" : "Out of Stock") : "Add to Cart"}
                                 </button>
-                                <button className="w-14 sm:w-16 shrink-0 flex items-center justify-center border-2 border-gray-200 text-gray-500 rounded-xl hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all active:scale-95 outline-none">
-                                    <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
+                                <button 
+                                    onClick={handleWishlistToggle} 
+                                    className={`w-14 sm:w-16 shrink-0 flex items-center justify-center border-2 rounded-xl transition-all active:scale-95 outline-none ${wishlisted ? 'border-red-200 bg-red-50 text-red-500' : 'border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-200 hover:bg-red-50'}`}
+                                >
+                                    <Heart className={`w-5 h-5 sm:w-6 sm:h-6 ${wishlisted ? 'fill-red-500' : ''}`} />
                                 </button>
                             </div>
                         </div>

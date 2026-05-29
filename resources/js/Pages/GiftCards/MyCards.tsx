@@ -262,79 +262,68 @@ function GiftCardChip({ card, onShare, onAssign }: {
     onAssign: (card: GiftCard) => void;
 }) {
     return (
-        <div className={`relative group rounded-[2.5rem] p-1.5 transition-all duration-500 hover:shadow-[0_40px_100px_rgba(0,0,0,0.1)] ${card.is_redeemable ? 'opacity-100' : 'opacity-60 grayscale'}`}>
-            <div className="relative rounded-[2.2rem] overflow-hidden p-8 text-white min-h-[280px] flex flex-col justify-between shadow-2xl transition-transform duration-500 group-hover:scale-[1.01]"
-                style={{ background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 100%)' }}>
-                
-                {/* Textures & Effects */}
-                <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
-                <div className="absolute -right-20 -top-20 w-64 h-64 bg-white/5 rounded-full blur-[80px] pointer-events-none transition-transform duration-1000 group-hover:translate-x-10" />
-
-                <div className="flex justify-between items-start relative z-10">
-                    <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center">
-                            <Gift className="w-7 h-7 text-white" />
-                        </div>
-                        <div>
-                            <p className="text-[11px] font-black uppercase tracking-[0.4em] text-white/50">
-                                {card.template_name ?? 'Digital Voucher'}
-                            </p>
-                            <p className="font-mono text-[10px] tracking-widest mt-1 text-white/30 uppercase">{card.card_number}</p>
-                        </div>
+        <div className={`bg-white border border-gray-200 rounded-2xl p-6 transition-all hover:shadow-sm flex flex-col justify-between ${card.is_redeemable ? 'opacity-100' : 'opacity-60 grayscale'}`}>
+            <div className="flex justify-between items-start mb-6">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center border border-gray-100 shrink-0">
+                        <Gift className="w-5 h-5 text-gray-400" />
                     </div>
-                    <div className={`px-4 py-1.5 rounded-full border text-[9px] font-black uppercase tracking-widest flex items-center gap-2 ${
-                        card.status === 'active' ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400' :
-                        card.status === 'partially_used' ? 'border-amber-500/30 bg-amber-500/10 text-amber-400' :
-                        'border-white/10 bg-white/5 text-white/40'
-                    }`}>
-                        <div className={`w-1.5 h-1.5 rounded-full ${card.status === 'active' ? 'bg-emerald-400' : 'bg-amber-400 animate-pulse'}`} />
-                        {card.status_badge.label}
+                    <div>
+                        <p className="text-sm font-bold text-gray-900">{card.template_name ?? 'Gift Card'}</p>
+                        <p className="font-mono text-xs text-gray-500 mt-0.5">{card.card_number}</p>
                     </div>
                 </div>
+                <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shrink-0 ${
+                    card.status === 'active' ? 'bg-emerald-50 text-emerald-700' :
+                    card.status === 'partially_used' ? 'bg-amber-50 text-amber-700' :
+                    'bg-gray-100 text-gray-500'
+                }`}>
+                    {card.status_badge.label}
+                </span>
+            </div>
 
-                <div className="mt-8 relative z-10">
-                    <p className="text-[10px] uppercase tracking-[0.4em] text-white/20 mb-3 font-black">Available Credit</p>
-                    <div className="flex items-baseline gap-2">
-                        <span className="text-2xl font-bold opacity-30">₹</span>
-                        <p className="text-6xl font-black tracking-tighter leading-none">{card.remaining_amount.toLocaleString()}</p>
-                    </div>
-                    {card.used_amount > 0 && (
-                        <div className="mt-4 flex items-center gap-4">
-                            <div className="h-1 flex-1 bg-white/5 rounded-full overflow-hidden">
-                                <div 
-                                    className="h-full bg-emerald-400/50 rounded-full" 
-                                    style={{ width: `${(card.remaining_amount / card.amount) * 100}%` }}
-                                />
-                            </div>
-                            <p className="text-[9px] text-white/20 font-black uppercase tracking-widest whitespace-nowrap">
-                                Used ₹{card.used_amount.toLocaleString()}
-                            </p>
-                        </div>
-                    )}
+            <div className="mb-6">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1">Available Balance</p>
+                <div className="flex items-baseline gap-1">
+                    <span className="text-lg font-bold text-gray-400">₹</span>
+                    <p className="text-3xl font-bold text-gray-900">{card.remaining_amount.toLocaleString()}</p>
                 </div>
+                {card.used_amount > 0 && (
+                    <div className="mt-4 flex items-center gap-3">
+                        <div className="h-1.5 flex-1 bg-gray-100 rounded-full overflow-hidden">
+                            <div 
+                                className="h-full bg-gray-900 rounded-full" 
+                                style={{ width: `${(card.remaining_amount / card.amount) * 100}%` }}
+                            />
+                        </div>
+                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest whitespace-nowrap">
+                            Used ₹{card.used_amount.toLocaleString()}
+                        </p>
+                    </div>
+                )}
+            </div>
 
-                <div className="flex items-center justify-between mt-10 pt-6 border-t border-white/5 relative z-10">
-                    <div className="text-[10px] font-black uppercase tracking-widest text-white/20 flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        {card.expires_at ? `Expires ${new Date(card.expires_at).toLocaleDateString()}` : 'No Expiry Date'}
-                    </div>
-                    {card.is_redeemable && (
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={() => onShare(card)}
-                                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-white/10 hover:bg-white/20 text-white px-5 py-3 rounded-[1.2rem] transition-all active:scale-95 border border-white/5"
-                            >
-                                <Share2 className="w-3.5 h-3.5" /> Share
-                            </button>
-                            <button
-                                onClick={() => onAssign(card)}
-                                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest bg-white text-black px-5 py-3 rounded-[1.2rem] hover:bg-gray-100 transition-all active:scale-95 shadow-xl"
-                            >
-                                <ShieldCheck className="w-3.5 h-3.5" /> Transfer
-                            </button>
-                        </div>
-                    )}
+            <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
+                <div className="text-[11px] font-semibold text-gray-500 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5" />
+                    {card.expires_at ? `Exp ${new Date(card.expires_at).toLocaleDateString()}` : 'No Expiry'}
                 </div>
+                {card.is_redeemable && (
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => onShare(card)}
+                            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-xl transition-all border border-gray-200"
+                        >
+                            Share
+                        </button>
+                        <button
+                            onClick={() => onAssign(card)}
+                            className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider bg-black text-white px-4 py-2 rounded-xl hover:bg-gray-800 transition-all shadow-sm"
+                        >
+                            Transfer
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -382,88 +371,68 @@ export default function MyGiftCardsPage() {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50/50 pb-20 selection:bg-black selection:text-white">
-            {/* Elegant Header */}
-            <div className="bg-white border-b border-gray-100 overflow-hidden relative">
-                <div className="absolute top-0 right-0 w-1/3 h-full bg-gray-50/50 -skew-x-12 translate-x-32 pointer-events-none" />
-                
-                <div className="max-w-7xl mx-auto px-6 py-16 sm:py-24 relative z-10">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
-                        <div>
-                            <div className="inline-flex items-center gap-3 bg-black text-white text-[11px] font-black uppercase tracking-[0.3em] px-6 py-2 rounded-full mb-8">
-                                <ShieldCheck className="w-4 h-4 text-emerald-400" /> Secure Digital Vault
-                            </div>
-                            <h1 className="text-5xl sm:text-7xl font-black text-gray-900 tracking-tight leading-none mb-6">Asset Portfolio</h1>
-                            <p className="text-gray-400 text-lg font-medium max-w-lg">Manage your digital gift cards, monitor balances, and secure your transfers.</p>
-                        </div>
-                        <div className="shrink-0 flex items-center gap-4">
-                            <Link href="/gift-cards"
-                                className="inline-flex items-center gap-4 bg-black text-white px-10 py-5 text-[11px] font-black uppercase tracking-[0.2em] rounded-[1.5rem] hover:bg-gray-800 transition-all shadow-2xl shadow-gray-200 group active:scale-95">
-                                <Zap className="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform" /> Mint New Card
-                            </Link>
-                        </div>
+        <div className="min-h-screen bg-white pb-20 selection:bg-black selection:text-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">My Wallet</h1>
+                        <p className="text-gray-500 text-sm">Manage your gift cards, balances, and transfers.</p>
+                    </div>
+                    <div className="shrink-0 flex items-center gap-4">
+                        <Link href="/gift-cards"
+                            className="inline-flex items-center gap-2 bg-black text-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-gray-800 transition-all">
+                            <Gift className="w-4 h-4" /> Buy Gift Card
+                        </Link>
                     </div>
                 </div>
-            </div>
 
-            <div className="max-w-7xl mx-auto px-6">
                 {/* Refined Wallet Summary */}
                 {wallet && (
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 -mt-12 relative z-10 mb-20">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
                         {[
-                            { label: 'Portfolio Value', value: `₹${wallet.total_balance.toLocaleString()}`, icon: <Wallet className="w-5 h-5 text-gray-900" />, desc: 'Total usable credit' },
-                            { label: 'Assets Gifted', value: `₹${wallet.gifted_amount.toLocaleString()}`, icon: <History className="w-5 h-5 text-gray-900" />, desc: 'Outbound transfers' },
-                            { label: 'Active Holdings', value: wallet.active_cards, icon: <LayoutGrid className="w-5 h-5 text-gray-900" />, desc: 'Available digital cards' },
+                            { label: 'Total Balance', value: `₹${wallet.total_balance.toLocaleString()}`, icon: <Wallet className="w-4 h-4 text-gray-600" /> },
+                            { label: 'Total Gifted', value: `₹${wallet.gifted_amount.toLocaleString()}`, icon: <History className="w-4 h-4 text-gray-600" /> },
+                            { label: 'Active Cards', value: wallet.active_cards, icon: <LayoutGrid className="w-4 h-4 text-gray-600" /> },
                         ].map((stat, i) => (
-                            <div key={i} className="bg-white border border-gray-100 rounded-[3rem] p-10 shadow-[0_40px_80px_rgba(0,0,0,0.05)] hover:shadow-[0_40px_100px_rgba(0,0,0,0.08)] transition-all group overflow-hidden relative">
-                                <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                                    {stat.icon}
-                                </div>
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-10 h-10 bg-gray-50 rounded-[1.2rem] flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">
+                            <div key={i} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center border border-gray-100">
                                         {stat.icon}
                                     </div>
-                                    <p className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400">{stat.label}</p>
+                                    <p className="text-xs font-bold uppercase tracking-wider text-gray-500">{stat.label}</p>
                                 </div>
-                                <p className="text-5xl font-black text-gray-900 tracking-tighter mb-2">{stat.value}</p>
-                                <p className="text-[11px] text-gray-300 font-bold uppercase tracking-widest">{stat.desc}</p>
+                                <p className="text-3xl font-black text-gray-900">{stat.value}</p>
                             </div>
                         ))}
                     </div>
                 )}
 
                 {/* Cards Grid Container */}
-                <div className="py-10">
-                    <div className="mb-12 flex items-center justify-between border-b border-gray-200 pb-8">
-                        <div className="flex items-center gap-4">
-                            <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-black">Your Digital Assets</h2>
-                            <span className="bg-gray-100 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest text-gray-500">
-                                {cards.length} Total
-                            </span>
-                        </div>
+                <div className="mb-12">
+                    <div className="mb-6 flex items-center justify-between border-b border-gray-100 pb-4">
                         <div className="flex items-center gap-3">
-                            <button className="p-2.5 bg-white border border-gray-100 rounded-xl hover:bg-gray-50 transition-all">
-                                <ListFilter className="w-4 h-4 text-gray-400" />
-                            </button>
+                            <h2 className="text-lg font-bold text-gray-900">Your Cards</h2>
+                            <span className="bg-gray-100 text-xs font-bold px-2.5 py-0.5 rounded-md text-gray-500">
+                                {cards.length}
+                            </span>
                         </div>
                     </div>
 
                     {loading ? (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                            {[1, 2].map(i => <div key={i} className="h-72 rounded-[3rem] bg-white border border-gray-100 animate-pulse" />)}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            {[1, 2].map(i => <div key={i} className="h-64 rounded-2xl bg-gray-50 border border-gray-100 animate-pulse" />)}
                         </div>
                     ) : cards.length === 0 ? (
-                        <div className="text-center py-40 bg-white border border-dashed border-gray-100 rounded-[4rem] relative overflow-hidden">
-                            <div className="absolute inset-0 bg-noise opacity-[0.02] pointer-events-none" />
-                            <Gift className="w-20 h-20 text-gray-100 mx-auto mb-8 animate-bounce duration-[3s]" />
-                            <h3 className="text-2xl font-black text-gray-900 mb-3 tracking-tight">Vault is Empty</h3>
-                            <p className="text-gray-400 font-medium mb-12 max-w-xs mx-auto">No digital gift cards found in your holdings. Start your collection today.</p>
-                            <Link href="/gift-cards" className="inline-flex items-center gap-4 bg-black text-white text-[11px] font-black uppercase tracking-[0.2em] px-12 py-5 rounded-[1.5rem] hover:bg-gray-800 transition-all shadow-2xl active:scale-95">
-                                Shop Gift Cards <ArrowRight className="w-5 h-5" />
+                        <div className="text-center py-20 bg-gray-50 border border-dashed border-gray-200 rounded-2xl">
+                            <Gift className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                            <h3 className="text-lg font-bold text-gray-900 mb-2">No Gift Cards</h3>
+                            <p className="text-gray-500 text-sm mb-6 max-w-xs mx-auto">You don't have any gift cards in your wallet yet.</p>
+                            <Link href="/gift-cards" className="inline-flex items-center gap-2 bg-black text-white text-xs font-bold uppercase tracking-wider px-6 py-2.5 rounded-xl hover:bg-gray-800 transition-all">
+                                Buy a Gift Card <ArrowRight className="w-4 h-4" />
                             </Link>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                             {cards.map(card => (
                                 <GiftCardChip
                                     key={card.id}
@@ -474,28 +443,6 @@ export default function MyGiftCardsPage() {
                             ))}
                         </div>
                     )}
-                </div>
-
-                {/* Footer Insight */}
-                <div className="mt-20 p-12 bg-gray-900 rounded-[3rem] text-white overflow-hidden relative group">
-                    <div className="absolute inset-0 bg-noise opacity-10 pointer-events-none" />
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
-                        <div className="text-center md:text-left max-w-lg">
-                            <h4 className="text-2xl font-black mb-3 tracking-tight">Security Protocol</h4>
-                            <p className="text-gray-400 text-sm font-medium leading-relaxed">
-                                Every card in your vault is protected by unique 12-digit encryption. 
-                                In-app transfers are final and secured via our proprietary ledger system.
-                            </p>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center">
-                                <ShieldCheck className="w-6 h-6 text-emerald-400" />
-                            </div>
-                            <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center">
-                                <Zap className="w-6 h-6 text-amber-400" />
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 

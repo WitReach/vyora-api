@@ -88,6 +88,7 @@ class ProductController extends Controller
             $file = $request->file('preview_image');
             $fileName = time() . '_' . $file->getClientOriginalName();
             $relativePath = "storage/products/preview";
+            $destinationPath = public_path($relativePath);
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true);
             }
@@ -236,19 +237,13 @@ class ProductController extends Controller
             $file = $request->file('preview_image');
             $fileName = time() . '_' . $file->getClientOriginalName();
             $relativePath = "storage/products/preview";
+            $destinationPath = public_path($relativePath);
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true);
             }
 
             $file->move($destinationPath, $fileName);
             $data['preview_image'] = "{$relativePath}/{$fileName}";
-
-            // Mirror to backend for admin preview consistency
-            $backendPath = public_path($relativePath);
-            if (!file_exists($backendPath)) {
-                mkdir($backendPath, 0755, true);
-            }
-            copy($destinationPath . '/' . $fileName, $backendPath . '/' . $fileName);
         } elseif ($request->file('preview_image') && !$request->file('preview_image')->isValid()) {
             return redirect()->back()
                 ->withInput()
@@ -290,6 +285,10 @@ class ProductController extends Controller
                         'stock'       => $skuData['stock'],
                         'design_sku'  => $skuData['design_sku']  ?? null,
                         'product_sku' => $skuData['product_sku'] ?? null,
+                        'weight'      => isset($skuData['weight']) && $skuData['weight'] !== '' ? $skuData['weight'] : null,
+                        'width'       => isset($skuData['width']) && $skuData['width'] !== '' ? $skuData['width'] : null,
+                        'height'      => isset($skuData['height']) && $skuData['height'] !== '' ? $skuData['height'] : null,
+                        'length'      => isset($skuData['length']) && $skuData['length'] !== '' ? $skuData['length'] : null,
                     ];
                     if (array_key_exists('mrp', $skuData)) {
                         $skuDataToUpdate['mrp'] = $skuData['mrp'] !== null && $skuData['mrp'] !== '' ? $skuData['mrp'] : null;
@@ -323,6 +322,10 @@ class ProductController extends Controller
                         'size_id'     => $sizeId,
                         'design_sku'  => $newSku['design_sku']  ?? null,
                         'product_sku' => $newSku['product_sku'] ?? null,
+                        'weight'      => isset($newSku['weight']) && $newSku['weight'] !== '' ? $newSku['weight'] : null,
+                        'width'       => isset($newSku['width']) && $newSku['width'] !== '' ? $newSku['width'] : null,
+                        'height'      => isset($newSku['height']) && $newSku['height'] !== '' ? $newSku['height'] : null,
+                        'length'      => isset($newSku['length']) && $newSku['length'] !== '' ? $newSku['length'] : null,
                     ]);
                 }
             }

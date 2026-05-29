@@ -112,14 +112,14 @@
                     <span class="text-sm">Product Card</span>
                 </a>
 
+                <a href="{{ route('admin.online-store.pdp-settings.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.online-store.pdp-settings.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    <span class="text-sm">PDP Settings</span>
+                </a>
+
                 <a href="{{ route('admin.online-store.navbar-settings.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.online-store.navbar-settings.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     <span class="text-sm">Menu / Nav Bar</span>
-                </a>
-
-                <a href="{{ route('admin.online-store.theme-settings.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.online-store.theme-settings.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
-                    <span class="text-sm">Brand & Theme</span>
                 </a>
 
                 <a href="{{ route('admin.online-store.policy-settings.index') }}" class="flex items-center space-x-3 p-3 rounded-lg {{ request()->routeIs('admin.online-store.policy-settings.*') ? 'bg-gray-100 text-black font-semibold' : 'text-gray-600 hover:bg-gray-50' }}">
@@ -210,9 +210,16 @@
 
             <main class="p-8">
                 @if(session('success'))
-                    <div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center shadow-sm">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <div class="mb-8 p-4 rounded-lg bg-green-50 border border-green-100 flex items-start text-green-800">
+                        <svg class="w-5 h-5 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="font-medium">{{ session('success') }}</span>
+                    </div>
+                @endif
+                
+                @if(session('error'))
+                    <div class="mb-8 p-4 rounded-lg bg-red-50 border border-red-100 flex items-start text-red-800">
+                        <svg class="w-5 h-5 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="font-medium">{{ session('error') }}</span>
                     </div>
                 @endif
 

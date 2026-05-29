@@ -36,6 +36,13 @@
         </div>
         <div class="lg:col-span-2">
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                    <h3 class="font-bold text-gray-700">Colors</h3>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="openImportModal('colors')" class="px-3 py-1.5 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded hover:bg-gray-50 shadow-sm">Import</button>
+                        <a href="{{ route('admin.attributes.export', 'colors') }}" class="px-3 py-1.5 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded hover:bg-gray-50 shadow-sm">Export</a>
+                    </div>
+                </div>
                 <table class="w-full text-left text-sm">
                     <thead class="bg-gray-50 border-b border-gray-100 font-bold text-gray-500">
                         <tr>
@@ -77,7 +84,10 @@
                 <form id="form-sizes" action="{{ route('admin.attributes.sizes.store') }}" method="POST" class="space-y-4">
                     @csrf
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Size Name</label>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1 flex items-center gap-1">
+                            Size Display Name 
+                            <span title="This is what customer will see" class="cursor-help text-gray-400 bg-gray-200 rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">!</span>
+                        </label>
                         <input type="text" name="name" required class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-black focus:border-black">
                     </div>
                     <div>
@@ -90,10 +100,17 @@
         </div>
         <div class="lg:col-span-2">
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                    <h3 class="font-bold text-gray-700">Sizes</h3>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="openImportModal('sizes')" class="px-3 py-1.5 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded hover:bg-gray-50 shadow-sm">Import</button>
+                        <a href="{{ route('admin.attributes.export', 'sizes') }}" class="px-3 py-1.5 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded hover:bg-gray-50 shadow-sm">Export</a>
+                    </div>
+                </div>
                 <table class="w-full text-left text-sm">
                     <thead class="bg-gray-50 border-b border-gray-100 font-bold text-gray-500">
                         <tr>
-                            <th class="px-6 py-3">Name</th>
+                            <th class="px-6 py-3">Size Display Name</th>
                             <th class="px-6 py-3">Code</th>
                             <th class="px-6 py-3 text-right">Actions</th>
                         </tr>
@@ -138,6 +155,13 @@
         </div>
         <div class="lg:col-span-2">
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                    <h3 class="font-bold text-gray-700">HSN Types</h3>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="openImportModal('hsn')" class="px-3 py-1.5 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded hover:bg-gray-50 shadow-sm">Import</button>
+                        <a href="{{ route('admin.attributes.export', 'hsn') }}" class="px-3 py-1.5 bg-white border border-gray-300 text-gray-700 text-xs font-bold rounded hover:bg-gray-50 shadow-sm">Export</a>
+                    </div>
+                </div>
                 <table class="w-full text-left text-sm">
                     <thead class="bg-gray-50 border-b border-gray-100 font-bold text-gray-500">
                         <tr>
@@ -202,7 +226,37 @@
             </table>
         </div>
     </div>
+        </div>
+    </div>
 </div>
+
+<!-- Import Modal -->
+<div id="import-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold" id="import-modal-title">Import Data</h3>
+            <button onclick="closeImportModal()" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <form id="import-form" action="" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Select CSV or Excel File</label>
+                <input type="file" name="file" accept=".csv, .xlsx, .xls" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
+            </div>
+            <div class="mb-6 flex justify-between items-center text-sm">
+                <span class="text-gray-500">Need a template?</span>
+                <a id="import-sample-link" href="#" class="text-blue-600 font-bold hover:underline">Download Sample</a>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeImportModal()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-bold">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-black text-white rounded-lg text-sm font-bold">Upload & Import</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 @push('scripts')
 <script>
@@ -217,11 +271,34 @@
                 btn.classList.toggle('text-gray-500', btn.dataset.tab !== tabName);
             });
             tabContents.forEach(c => c.classList.toggle('hidden', c.id !== `tab-${tabName}`));
+            window.location.hash = tabName;
         }
 
         tabButtons.forEach(b => b.addEventListener('click', () => activateTab(b.dataset.tab)));
-        activateTab('colors');
+        
+        // Persistent tab on load
+        let initialTab = window.location.hash.replace('#', '');
+        if (!['colors', 'sizes', 'hsn', 'size-chart'].includes(initialTab)) {
+            initialTab = 'colors';
+        }
+        activateTab(initialTab);
     });
+
+    function openImportModal(type) {
+        document.getElementById('import-modal').classList.remove('hidden');
+        
+        const importUrlBase = "{{ route('admin.attributes.import', 'PLACEHOLDER') }}";
+        const sampleUrlBase = "{{ route('admin.attributes.sample', 'PLACEHOLDER') }}";
+        
+        document.getElementById('import-form').action = importUrlBase.replace('PLACEHOLDER', type);
+        document.getElementById('import-sample-link').href = sampleUrlBase.replace('PLACEHOLDER', type);
+        document.getElementById('import-modal-title').innerText = `Import ${type.toUpperCase()}`;
+    }
+
+    function closeImportModal() {
+        document.getElementById('import-modal').classList.add('hidden');
+        document.getElementById('import-form').reset();
+    }
 
     function editColor(url, name, hex) {
         const form = document.getElementById('form-colors');

@@ -13,6 +13,12 @@ export interface WishlistItem {
     brand: string | null;
     category: string;
     addedAt: string; // ISO timestamp
+    skuId?: number;
+    variant?: string;
+    colorName?: string;
+    colorHex?: string;
+    sizeName?: string;
+    size?: string;
 }
 
 interface WishlistState {

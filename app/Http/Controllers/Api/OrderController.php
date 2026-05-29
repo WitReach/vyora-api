@@ -136,54 +136,23 @@ class OrderController extends Controller
                 $taxes = json_decode($settings->get('taxes') ?? '[]', true);
                 $shippingRules = json_decode($settings->get('shipping_rules') ?? '{}', true);
 
-                $taxAmount = 0;
-
-                foreach ($skusToProcess as &$data) {
-                    $itemDiscount = $subtotal > 0 ? ($data['total'] / $subtotal) * $discountAmount : 0;
-                    $itemFinal = $data['total'] - $itemDiscount;
-
-                    if ($isTaxEnabled) {
-                        $taxRate = 0;
-                        if ($data['sku']->product && $data['sku']->product->tax_class) {
-                            $t = collect($taxes)->firstWhere('id', $data['sku']->product->tax_class);
-                            if ($t)
-                                $taxRate = floatval($t['rate']) / 100;
-                        }
-
-                        if ($taxInclusive) {
-                            $itemTax = $itemFinal - ($itemFinal / (1 + $taxRate));
-                            $taxAmount += $itemTax;
-                        } else {
-                            $itemTax = $itemFinal * $taxRate;
-                            $taxAmount += $itemTax;
-                        }
-                    }
-
-                    // Store calculated tax inside item for order items
-                    $data['tax_amount'] = $itemTax;
-
-                    // Deduct Stock
-                    $data['sku']->decrement('stock', $data['qty']);
-                    $orderItemsData[] = $data;
-                }
-
-                $method = $request->input('payment_method', 'prepaid');
-                $isCod = $method === 'cod';
-
+                // Calculate Shipping & Prepaid Discount
+                $isCod = $request->input('payment_method') === 'cod';
                 $shippingAmount = 0;
                 $prepaidDiscount = 0;
+                $activeRule = $isCod ? ($shippingRules['cod'] ?? null) : ($shippingRules['prepaid'] ?? null);
 
-                $activeRuleKey = $isCod ? 'cod' : 'prepaid';
-                if (!empty($shippingRules[$activeRuleKey])) {
-                    $rule = $shippingRules[$activeRuleKey];
-                    if ($rule['type'] === 'flat') {
-                        $shippingAmount = floatval($rule['fee']);
-                    } else if ($rule['type'] === 'conditional') {
-                        if ($subtotalAfterDiscount < floatval($rule['threshold'])) {
-                            $shippingAmount = floatval($rule['fee']);
+                if ($activeRule) {
+                    if (($activeRule['type'] ?? '') === 'flat') {
+                        $shippingAmount = floatval($activeRule['fee'] ?? 0);
+                    } elseif (($activeRule['type'] ?? '') === 'conditional') {
+                        if ($subtotalAfterDiscount >= floatval($activeRule['threshold'] ?? 0)) {
+                            $shippingAmount = 0;
+                        } else {
+                            $shippingAmount = floatval($activeRule['fee'] ?? 0);
                         }
-                    } else if ($rule['type'] === 'tiered') {
-                        $tiers = $rule['tiers'] ?? [];
+                    } elseif (($activeRule['type'] ?? '') === 'tiered') {
+                        $tiers = $activeRule['tiers'] ?? [];
                         $matchedFee = 0;
                         $applied = false;
                         foreach ($tiers as $t) {
@@ -200,25 +169,20 @@ class OrderController extends Controller
                     }
 
                     if (!$isCod) {
-                        if (($rule['discount_type'] ?? '') === 'percent') {
-                            $prepaidDiscount = ($subtotalAfterDiscount * floatval($rule['discount_value'] ?? 0)) / 100;
-                        } else if (($rule['discount_type'] ?? '') === 'flat') {
-                            $prepaidDiscount = floatval($rule['discount_value'] ?? 0);
+                        if (($activeRule['discount_type'] ?? '') === 'percent') {
+                            $prepaidDiscount = ($subtotalAfterDiscount * floatval($activeRule['discount_value'] ?? 0)) / 100;
+                        } elseif (($activeRule['discount_type'] ?? '') === 'flat') {
+                            $prepaidDiscount = floatval($activeRule['discount_value'] ?? 0);
                         }
                     }
                 }
-
-                $totalDiscount = $discountAmount + $prepaidDiscount;
 
                 // Apply Gift Card
                 $giftCardDiscount = 0;
                 $giftCardCode = $request->input('gift_card_code');
                 $giftCardService = app(GiftCardService::class);
-                $giftCardTransactionId = null;
 
                 if ($giftCardCode) {
-                    // We'll redeem after order creation so we have the order ID
-                    // First validate without deducting
                     $giftCardValidation = \App\Models\GiftCard::whereIn('status', ['active', 'partially_used'])->get()
                         ->first(fn($gc) => $gc->plain_code === strtoupper($giftCardCode));
 
@@ -230,11 +194,76 @@ class OrderController extends Controller
                     }
                 }
 
-                $totalAmount = ($isTaxEnabled && !$taxInclusive)
-                    ? max(0, $subtotalAfterDiscount + $taxAmount + $shippingAmount - $prepaidDiscount - $giftCardDiscount)
-                    : max(0, $subtotalAfterDiscount + $shippingAmount - $prepaidDiscount - $giftCardDiscount);
+                // TAX BREAKDOWN CALCULATION
+                $taxBreakdown = [];
+                $totalTaxAmount = 0;
+                $trueSubtotalAfterDiscount = 0;
+                $trueSubtotalBeforeDiscount = 0;
 
-                // Total amount calculated
+                foreach ($skusToProcess as &$data) {
+                    $itemDiscount = $subtotal > 0 ? ($data['total'] / $subtotal) * $discountAmount : 0;
+                    $itemFinal = $data['total'] - $itemDiscount;
+                    $itemTax = 0;
+
+                    if ($isTaxEnabled) {
+                        $taxRate = 0;
+                        if ($data['sku']->product && $data['sku']->product->tax_class) {
+                            $t = collect($taxes)->firstWhere('id', $data['sku']->product->tax_class);
+                            if ($t) $taxRate = floatval($t['rate']);
+                        }
+
+                        if ($taxRate > 0) {
+                            if ($taxInclusive) {
+                                $trueItemFinal = $itemFinal / (1 + ($taxRate / 100));
+                                $trueItemTotal = $data['total'] / (1 + ($taxRate / 100));
+                                $itemTax = $itemFinal - $trueItemFinal;
+                            } else {
+                                $trueItemFinal = $itemFinal;
+                                $trueItemTotal = $data['total'];
+                                $itemTax = $itemFinal * ($taxRate / 100);
+                            }
+                            
+                            $rateKey = (string)$taxRate;
+                            if (!isset($taxBreakdown[$rateKey])) $taxBreakdown[$rateKey] = 0;
+                            $taxBreakdown[$rateKey] += $itemTax;
+                            $totalTaxAmount += $itemTax;
+                        } else {
+                            $trueItemFinal = $itemFinal;
+                            $trueItemTotal = $data['total'];
+                        }
+                        
+                        $trueSubtotalAfterDiscount += $trueItemFinal;
+                        $trueSubtotalBeforeDiscount += $trueItemTotal;
+                    } else {
+                        $trueSubtotalAfterDiscount += $itemFinal;
+                        $trueSubtotalBeforeDiscount += $data['total'];
+                    }
+
+                    $data['tax_amount'] = $itemTax;
+                    $data['sku']->decrement('stock', $data['qty']);
+                    $orderItemsData[] = $data;
+                }
+
+                $trueShippingAmount = $shippingAmount;
+                if ($isTaxEnabled && $shippingAmount > 0) {
+                    $shippingTaxRate = floatval($settings->get('shipping_tax_rate') ?? '18');
+                    if ($shippingTaxRate > 0) {
+                        if ($taxInclusive) {
+                            $trueShippingAmount = $shippingAmount / (1 + ($shippingTaxRate / 100));
+                            $shippingTax = $shippingAmount - $trueShippingAmount;
+                        } else {
+                            $trueShippingAmount = $shippingAmount;
+                            $shippingTax = $shippingAmount * ($shippingTaxRate / 100);
+                        }
+                        $rateKey = (string)$shippingTaxRate;
+                        if (!isset($taxBreakdown[$rateKey])) $taxBreakdown[$rateKey] = 0;
+                        $taxBreakdown[$rateKey] += $shippingTax;
+                        $totalTaxAmount += $shippingTax;
+                    }
+                }
+
+                $totalAmount = $trueSubtotalAfterDiscount + $trueShippingAmount + $totalTaxAmount - $prepaidDiscount - $giftCardDiscount;
+                $totalAmount = max(0, $totalAmount);
 
                 $order = Order::create([
                     'user_id' => $request->user()?->id,
@@ -243,8 +272,9 @@ class OrderController extends Controller
                     'payment_method' => $totalAmount <= 0 ? 'Gift Card/Coupon' : ($isCod ? 'COD' : 'Prepaid'),
                     'total_amount' => $totalAmount,
                     'shipping_amount' => $shippingAmount,
-                    'tax_amount' => $taxAmount,
-                    'discount_amount' => $totalDiscount + $giftCardDiscount,
+                    'tax_amount' => $totalTaxAmount,
+                    'tax_breakdown' => json_encode($taxBreakdown),
+                    'discount_amount' => $discountAmount + $prepaidDiscount + $giftCardDiscount,
                     'coupon_code' => $couponCode,
                     'shipping_address_id' => $address->id,
                     'billing_address_id' => $address->id,
@@ -304,7 +334,7 @@ class OrderController extends Controller
                           $q->where('email', $user->email);
                       });
             })
-            ->with(['items', 'shippingAddress'])
+            ->with(['items.sku.product', 'shippingAddress'])
             ->firstOrFail();
 
         $data = $order->toArray();
@@ -313,6 +343,7 @@ class OrderController extends Controller
         $data['courier_partner'] = $order->courier_partner;
         $data['has_tracking']    = $order->has_tracking;
         $data['shipping_address'] = $order->shippingAddress;
+        $data['tax_breakdown'] = json_decode($order->tax_breakdown ?? '{}', true);
 
         return response()->json($data);
     }

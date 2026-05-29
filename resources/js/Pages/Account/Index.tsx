@@ -3,6 +3,7 @@ import { useUIStore } from '@/store/ui';
 import { useState, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
 import api from '@/lib/api';
+import { formatPrice } from '@/lib/utils';
 import {
     User, Lock, MapPin, Package, LogOut, ChevronRight,
     Eye, EyeOff, Check, AlertCircle, Plus, Trash2, Pencil,
@@ -271,8 +272,30 @@ export default function AccountPage() {
     const { user, logout } = useAuthStore();
     const { openAuthModal } = useUIStore();
     const [mounted, setMounted] = useState(false);
-    const [activeTab, setActiveTab] = useState<Tab>('profile');
+    const getInitialTab = (): Tab => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            const t = params.get('tab') as Tab;
+            if (t && ['profile', 'security', 'addresses', 'orders', 'gift-cards'].includes(t)) {
+                return t;
+            }
+        }
+        return 'profile';
+    };
+
+    const [activeTab, setActiveTab] = useState<Tab>(getInitialTab);
     const [userData, setUserData] = useState<any>(null);
+    const [latestOrders, setLatestOrders] = useState<any[]>([]);
+    const [ordersLoading, setOrdersLoading] = useState(false);
+
+    const handleTabChange = (tab: Tab) => {
+        setActiveTab(tab);
+        if (typeof window !== 'undefined') {
+            const url = new URL(window.location.href);
+            url.searchParams.set('tab', tab);
+            window.history.replaceState({}, '', url);
+        }
+    };
 
     const authAppearance = { ux_mode: 'modal' };
     const isModalMode = true;
@@ -283,6 +306,15 @@ export default function AccountPage() {
             api.get('/api/user').then(r => setUserData(r.data)).catch(() => setUserData(user));
         }
     }, [user]);
+
+    useEffect(() => {
+        if (activeTab === 'orders' && latestOrders.length === 0 && user) {
+            setOrdersLoading(true);
+            api.get('/api/my-orders?page=1').then(r => {
+                setLatestOrders(r.data.data.slice(0, 6));
+            }).catch(() => {}).finally(() => setOrdersLoading(false));
+        }
+    }, [activeTab, user, latestOrders.length]);
 
     if (!mounted) return <div className="min-h-[60vh]" />;
 
@@ -335,7 +367,7 @@ export default function AccountPage() {
                 <aside className="md:w-52 shrink-0">
                     <nav className="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_20px_rgba(0,0,0,0.04)] overflow-hidden">
                         {navTabs.map(tab => (
-                            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                            <button key={tab.id} onClick={() => handleTabChange(tab.id)}
                                 className={`w-full flex items-center gap-3 px-4 py-3.5 text-sm font-semibold transition-all border-l-2
                                     ${activeTab === tab.id
                                         ? 'border-gray-900 bg-gray-50 text-gray-900'
@@ -354,14 +386,47 @@ export default function AccountPage() {
                     {activeTab === 'security'    && <SecuritySection />}
                     {activeTab === 'addresses'   && <AddressesSection />}
                     {activeTab === 'orders'      && (
-                        <SectionCard title="My Orders" icon={Package}>
-                            <div className="text-center py-8">
-                                <Package className="w-10 h-10 text-gray-200 mx-auto mb-3" />
-                                <p className="text-sm text-gray-500 mb-4">View all your past orders.</p>
-                                <Link href="/orders" className="inline-flex items-center gap-2 bg-black text-white text-xs font-bold uppercase tracking-wider px-6 py-2.5 rounded-xl hover:bg-gray-800 transition-all">
-                                    Go to Orders <ArrowRight className="w-3.5 h-3.5" />
-                                </Link>
-                            </div>
+                        <SectionCard title="Recent Orders" icon={Package}>
+                            {ordersLoading ? (
+                                <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-20 rounded-xl bg-gray-50 animate-pulse" />)}</div>
+                            ) : latestOrders.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <Package className="w-10 h-10 text-gray-200 mx-auto mb-3" />
+                                    <p className="text-sm text-gray-500 mb-4">You haven't placed any orders yet.</p>
+                                    <Link href="/shop" className="inline-flex items-center gap-2 bg-black text-white text-xs font-bold uppercase tracking-wider px-6 py-2.5 rounded-xl hover:bg-gray-800 transition-all">
+                                        Start Shopping <ArrowRight className="w-3.5 h-3.5" />
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    <div className="divide-y divide-gray-50 border border-gray-100 rounded-xl overflow-hidden">
+                                        {latestOrders.map(order => (
+                                            <div key={order.uuid} className="p-4 bg-white hover:bg-gray-50 transition-colors flex items-center justify-between gap-4">
+                                                <div>
+                                                    <h3 className="text-sm font-bold text-gray-900 mb-1">#{order.order_number}</h3>
+                                                    <p className="text-xs text-gray-500">
+                                                        {new Date(order.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })} • {order.items_count} {order.items_count === 1 ? 'Item' : 'Items'}
+                                                    </p>
+                                                </div>
+                                                <div className="flex items-center gap-4 text-right">
+                                                    <div>
+                                                        <p className="text-sm font-bold text-gray-900">{formatPrice(order.total_amount)}</p>
+                                                        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1">{order.status}</p>
+                                                    </div>
+                                                    <Link href={`/orders/${order.uuid}`} className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-400 hover:text-black hover:border-black transition-all shrink-0">
+                                                        <ChevronRight className="w-4 h-4" />
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="pt-2 text-center">
+                                        <Link href="/orders" className="inline-flex items-center gap-2 bg-gray-900 text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl hover:bg-black transition-all">
+                                            View All Orders <ArrowRight className="w-3.5 h-3.5" />
+                                        </Link>
+                                    </div>
+                                </div>
+                            )}
                         </SectionCard>
                     )}
                     {activeTab === 'gift-cards' && (

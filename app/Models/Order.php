@@ -58,7 +58,9 @@ class Order extends Model
      */
     public function getSubtotalAttribute(): float
     {
-        return $this->items->sum(fn($item) => (float) $item->total);
+        return $this->items->sum(function($item) {
+            return $item->price * $item->quantity;
+        });
     }
 
     /**

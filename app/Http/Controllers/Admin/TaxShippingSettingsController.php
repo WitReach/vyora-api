@@ -20,6 +20,8 @@ class TaxShippingSettingsController extends Controller
             'tax_inclusion' => $rows->get('tax_inclusion')?->value ?? 'exclude',
             'taxes' => json_decode($rows->get('taxes')?->value ?? '[{"id":"t1","name":"GST 5%","rate":5},{"id":"t2","name":"GST 18%","rate":18}]', true),
             'shipping_rules' => json_decode($rows->get('shipping_rules')?->value ?? '{"prepaid":{"type":"free","threshold":0,"fee":0,"notes":""},"cod":{"type":"flat","threshold":0,"fee":0,"notes":""}}', true),
+            'show_tax_in_cart_checkout' => $rows->get('show_tax_in_cart_checkout')?->value ?? '1',
+            'shipping_tax_rate' => $rows->get('shipping_tax_rate')?->value ?? '18',
         ];
 
         return view('admin.tax-shipping.index', compact('settings'));
@@ -27,7 +29,7 @@ class TaxShippingSettingsController extends Controller
 
     public function update(Request $request)
     {
-        $keys = ['is_tax_enabled', 'tax_label', 'store_tax_number', 'tax_inclusion', 'taxes', 'shipping_rules'];
+        $keys = ['is_tax_enabled', 'tax_label', 'store_tax_number', 'tax_inclusion', 'taxes', 'shipping_rules', 'show_tax_in_cart_checkout', 'shipping_tax_rate'];
         foreach ($keys as $key) {
             if ($request->has($key)) {
                 $val = $request->input($key);

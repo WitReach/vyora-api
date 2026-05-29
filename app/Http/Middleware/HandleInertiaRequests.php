@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
                     ->groupBy('group')
                     ->map(function ($groupSettings) {
                         return $groupSettings->keyBy('key')->map(function ($s) {
-                            if (in_array($s->key, ['key_id', 'key_secret', 'smtp_password'])) {
+                            if (in_array($s->key, ['key_id', 'key_secret', 'smtp_password', 'access_token'])) {
                                 return null;
                             }
                             return $s->value;
